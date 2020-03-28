@@ -7,20 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C34E1E9242EF47600D5592C /* KNOTProjectItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */; };
 		2CEBFD2D24270526008807E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD2C24270526008807E1 /* AppDelegate.swift */; };
-		2CEBFD2F24270526008807E1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD2E24270526008807E1 /* SceneDelegate.swift */; };
 		2CEBFD3124270526008807E1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD3024270526008807E1 /* ViewController.swift */; };
 		2CEBFD5824271B89008807E1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD4E24271B89008807E1 /* InfoPlist.strings */; };
 		2CEBFD5924271B89008807E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD5124271B89008807E1 /* Assets.xcassets */; };
 		2CEBFD5A24271B89008807E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD5224271B89008807E1 /* LaunchScreen.storyboard */; };
 		2CEBFD5B24271B89008807E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD5424271B89008807E1 /* Main.storyboard */; };
 		2CEBFD6424271D2B008807E1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD6224271D2B008807E1 /* Localizable.strings */; };
+		2CEBFD6A242742F8008807E1 /* KNOTProjectEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */; };
+		2CEBFD6C242750F1008807E1 /* KNOTProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD6B242750F1008807E1 /* KNOTProjectModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectItemModel.swift; sourceTree = "<group>"; };
 		2CEBFD2924270526008807E1 /* Knot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Knot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CEBFD2C24270526008807E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2CEBFD2E24270526008807E1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2CEBFD3024270526008807E1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2CEBFD3A24270529008807E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CEBFD4024270588008807E1 /* Knot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Knot.entitlements; sourceTree = "<group>"; };
@@ -33,6 +35,8 @@
 		2CEBFD6124271C25008807E1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		2CEBFD6324271D2B008807E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2CEBFD6524271D33008807E1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectEntity.swift; sourceTree = "<group>"; };
+		2CEBFD6B242750F1008807E1 /* KNOTProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,10 +71,10 @@
 			children = (
 				2CEBFD2C24270526008807E1 /* AppDelegate.swift */,
 				2CEBFD3A24270529008807E1 /* Info.plist */,
-				2CEBFD2E24270526008807E1 /* SceneDelegate.swift */,
 				2CEBFD3024270526008807E1 /* ViewController.swift */,
 				2CEBFD4024270588008807E1 /* Knot.entitlements */,
 				2CEBFD4924271B89008807E1 /* Resources */,
+				2CEBFD6624273EDA008807E1 /* Business */,
 			);
 			path = Knot;
 			sourceTree = "<group>";
@@ -85,6 +89,32 @@
 				2CEBFD6224271D2B008807E1 /* Localizable.strings */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		2CEBFD6624273EDA008807E1 /* Business */ = {
+			isa = PBXGroup;
+			children = (
+				2CEBFD6724273EF3008807E1 /* Model */,
+			);
+			path = Business;
+			sourceTree = "<group>";
+		};
+		2CEBFD6724273EF3008807E1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2CEBFD6B242750F1008807E1 /* KNOTProjectModel.swift */,
+				2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */,
+				2CEBFD6824273F0F008807E1 /* Entity */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2CEBFD6824273F0F008807E1 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */,
+			);
+			path = Entity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -113,6 +143,7 @@
 		2CEBFD2124270526008807E1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = KNOT;
 				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = SUYANG;
@@ -161,9 +192,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C34E1E9242EF47600D5592C /* KNOTProjectItemModel.swift in Sources */,
 				2CEBFD3124270526008807E1 /* ViewController.swift in Sources */,
+				2CEBFD6A242742F8008807E1 /* KNOTProjectEntity.swift in Sources */,
 				2CEBFD2D24270526008807E1 /* AppDelegate.swift in Sources */,
-				2CEBFD2F24270526008807E1 /* SceneDelegate.swift in Sources */,
+				2CEBFD6C242750F1008807E1 /* KNOTProjectModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +293,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -315,7 +348,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
