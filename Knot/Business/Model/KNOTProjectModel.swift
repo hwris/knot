@@ -12,16 +12,16 @@ protocol KNOTProjectModel {
     
     var items: [KNOTProjectItemModel]? { get }
     
-    func loadItems(completion: @escaping (Error?) -> ())
-    func add(project: KNOTProjectEntity, completion: @escaping (KNOTProjectItemModel?, Error?) -> ())
-    func delete(project: KNOTProjectEntity, completion: @escaping (Error?) -> ())
+    func loadItems(completion: @escaping (Error?) -> ()) throws
+    func add(project: KNOTProjectEntity, completion: @escaping (KNOTProjectItemModel?, Error?) -> ()) throws
+    func delete(project: KNOTProjectEntity, completion: @escaping (Error?) -> ()) throws
 }
 
 class KNOTProjectModelImpl: KNOTProjectModel {
-    
     private let metadataQuery: NSMetadataQuery  = {
         let metadataQuery = NSMetadataQuery()
         metadataQuery.searchScopes = [ NSMetadataQueryUbiquitousDocumentsScope ]
+        metadataQuery.predicate = NSPredicate(format: "%K LIKE '*/TodoList/*.json'", NSMetadataItemPathKey)
         return metadataQuery
     }()
     
@@ -45,99 +45,99 @@ class KNOTProjectModelImpl: KNOTProjectModel {
         loadCompletion = nil
     }
     
-    private func containerURL() throws -> URL? {
+    private func containerURL() throws -> URL {
         guard let url = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
-            let error = NSError(domain: "KNOTProjectModelLoadError", code: 0, userInfo: [ NSLocalizedDescriptionKey : "No login to iCloud" ]);
+            let error = NSError(domain: "KNOTProjectModelContainerURLErrorDomain", code: 0, userInfo: [ NSLocalizedDescriptionKey : "No login to iCloud" ]);
             throw error
         }
         
-        return URL(fileURLWithPath: "Documents", relativeTo: url)
+        let containerURL = URL(fileURLWithPath: "Documents/TodoList", relativeTo: url)
+        
+        if FileManager.default.fileExists(atPath: containerURL.absoluteURL.path) == false {
+            try FileManager.default.createDirectory(at: containerURL, withIntermediateDirectories: true, attributes: nil)
+        }
+        
+        return containerURL
     }
     
     var items: [KNOTProjectItemModel]? {
         return _items
     }
     
-    func loadItems(completion: @escaping (Error?) -> ()) {
-        do {
-            _ = try containerURL()
-        } catch let error {
-            completion(error)
-        }
+    func loadItems(completion: @escaping (Error?) -> ()) throws {
+        _ = try containerURL()
         
-        loadCompletion = completion
-        if !metadataQuery.start() {
-            print("false")
+        let isSuccess = metadataQuery.start()
+        if isSuccess {
+            loadCompletion = completion
+        } else {
+            throw NSError(domain: "KNOTProjectModelloadItemsErrorDomain", code: 0, userInfo: [ NSLocalizedDescriptionKey : "Data loading failed" ]);
         }
     }
     
-    func add(project: KNOTProjectEntity, completion: @escaping (KNOTProjectItemModel?, Error?) -> ()) {
-        do {
-            guard let container = try containerURL() else {
-                return
-            }
-           
-            let data = try JSONEncoder().encode(project)
-            
-            let fileURL = project.urlForContainer(container)
-            try data.write(to: fileURL, options: Data.WritingOptions.atomicWrite)
-            
-            let itmeModel = KNOTProjectItemModelImpl(fileURL: fileURL, projectEntity: project)
-            
-            _items?.insert(itmeModel, at: 0)
-            completion(itmeModel, nil)
-        } catch let error {
-            completion(nil, error)
-            return
-        }
-    }
-    
-    func delete(project: KNOTProjectEntity, completion: @escaping (Error?) -> ()) {
-        do {
-            guard let container = try containerURL() else {
-                return
-            }
-            
-            let fileURL = project.urlForContainer(container)
-            DispatchQueue.global(qos: .default).async { [weak self] in
-                let fileCoordinator = NSFileCoordinator()
-                var error: NSError?
+    func add(project: KNOTProjectEntity, completion: @escaping (KNOTProjectItemModel?, Error?) -> ()) throws {
+        let container = try containerURL()
+        let fileURL = project.urlForContainer(container)
+        
+        DispatchQueue.global(qos: .default).async { [weak self] in
+            do {
+                let data = try JSONEncoder().encode(project)
+                try data.write(to: fileURL, options: Data.WritingOptions.atomicWrite)
                 
-                let mainThreadCompletion = { (error: Error?) -> () in
-                    DispatchQueue.main.async {
-                        if error != nil {
-                            completion(error)
-                        } else {
-                            guard let _self = self, let _items = _self._items else {
-                                return
-                            }
-                            
-                            _self._items = _items.filter({ $0.fileURL == fileURL })
+                DispatchQueue.main.async {
+                    let itmeModel = KNOTProjectItemModelImpl(fileURL: fileURL, projectEntity: project)
+                    self?._items?.insert(itmeModel, at: 0)
+                    completion(itmeModel, nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+    
+    func delete(project: KNOTProjectEntity, completion: @escaping (Error?) -> ()) throws {
+        let container = try containerURL()
+        let fileURL = project.urlForContainer(container)
+        
+        DispatchQueue.global(qos: .default).async { [weak self] in
+            let fileCoordinator = NSFileCoordinator()
+            var error: NSError?
+            
+            let mainThreadCompletion = { (error: Error?) -> () in
+                DispatchQueue.main.async {
+                    if error != nil {
+                        completion(error)
+                    } else {
+                        guard let _self = self, let _items = _self._items else {
+                            return
                         }
+                        
+                        _self._items = _items.filter({ $0.fileURL == fileURL })
+                        completion(nil)
                     }
                 }
-                
-                fileCoordinator.coordinate(writingItemAt: fileURL, options: [ .forDeleting ], error: &error) {
-                    do {
-                        try FileManager.default.removeItem(at: $0)
-                        mainThreadCompletion(nil)
-                    } catch let error {
-                        mainThreadCompletion(error)
-                    }
-                }
-                
-                if error != nil {
+            }
+            
+            fileCoordinator.coordinate(writingItemAt: fileURL, options: [ .forDeleting ], error: &error) {
+                do {
+                    try FileManager.default.removeItem(at: $0)
+                    mainThreadCompletion(nil)
+                } catch {
                     mainThreadCompletion(error)
                 }
             }
-        } catch let error {
-            completion(error)
+            
+            if error != nil {
+                mainThreadCompletion(error)
+            }
         }
     }
 }
 
 extension KNOTProjectEntity {
     func urlForContainer(_ container: URL) -> URL {
-        return URL(fileURLWithPath: "\(UInt64(createDate.timeIntervalSince1970 * 1000))", relativeTo: container)
+        return URL(fileURLWithPath: "\(UInt64(createDate.timeIntervalSince1970 * 1000)).json", relativeTo: container)
     }
 }
