@@ -8,8 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		2C34E1E9242EF47600D5592C /* KNOTProjectItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */; };
+		2CE792032430C33900975D99 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792022430C33900975D99 /* UIImage+Color.swift */; };
+		2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792052430C94900975D99 /* KNOTHomeViewController.swift */; };
+		2CE792082430CFE000975D99 /* UIColor+Dynamic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */; };
+		2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792092430D49F00975D99 /* UIColor+Hex.swift */; };
+		2CE7920C2430DA5900975D99 /* KNOTButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7920B2430DA5900975D99 /* KNOTButton.swift */; };
 		2CEBFD2D24270526008807E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD2C24270526008807E1 /* AppDelegate.swift */; };
-		2CEBFD3124270526008807E1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD3024270526008807E1 /* ViewController.swift */; };
 		2CEBFD5824271B89008807E1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD4E24271B89008807E1 /* InfoPlist.strings */; };
 		2CEBFD5924271B89008807E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD5124271B89008807E1 /* Assets.xcassets */; };
 		2CEBFD5A24271B89008807E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD5224271B89008807E1 /* LaunchScreen.storyboard */; };
@@ -21,9 +25,13 @@
 
 /* Begin PBXFileReference section */
 		2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectItemModel.swift; sourceTree = "<group>"; };
+		2CE792022430C33900975D99 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
+		2CE792052430C94900975D99 /* KNOTHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeViewController.swift; sourceTree = "<group>"; };
+		2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Dynamic.swift"; sourceTree = "<group>"; };
+		2CE792092430D49F00975D99 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
+		2CE7920B2430DA5900975D99 /* KNOTButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTButton.swift; sourceTree = "<group>"; };
 		2CEBFD2924270526008807E1 /* Knot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Knot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CEBFD2C24270526008807E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2CEBFD3024270526008807E1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2CEBFD3A24270529008807E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CEBFD4024270588008807E1 /* Knot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Knot.entitlements; sourceTree = "<group>"; };
 		2CEBFD4F24271B89008807E1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -50,6 +58,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2CE791FD2430806700975D99 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2CE791FE2430BF3F00975D99 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				2CE792022430C33900975D99 /* UIImage+Color.swift */,
+				2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */,
+				2CE792092430D49F00975D99 /* UIColor+Hex.swift */,
+				2CE7920B2430DA5900975D99 /* KNOTButton.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		2CE792042430C92000975D99 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2CE792052430C94900975D99 /* KNOTHomeViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		2CEBFD2024270526008807E1 = {
 			isa = PBXGroup;
 			children = (
@@ -71,9 +105,9 @@
 			children = (
 				2CEBFD2C24270526008807E1 /* AppDelegate.swift */,
 				2CEBFD3A24270529008807E1 /* Info.plist */,
-				2CEBFD3024270526008807E1 /* ViewController.swift */,
 				2CEBFD4024270588008807E1 /* Knot.entitlements */,
 				2CEBFD4924271B89008807E1 /* Resources */,
+				2CE791FE2430BF3F00975D99 /* Base */,
 				2CEBFD6624273EDA008807E1 /* Business */,
 			);
 			path = Knot;
@@ -94,6 +128,8 @@
 		2CEBFD6624273EDA008807E1 /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				2CE792042430C92000975D99 /* View */,
+				2CE791FD2430806700975D99 /* ViewModel */,
 				2CEBFD6724273EF3008807E1 /* Model */,
 			);
 			path = Business;
@@ -150,6 +186,7 @@
 				TargetAttributes = {
 					2CEBFD2824270526008807E1 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1140;
 					};
 				};
 			};
@@ -193,10 +230,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C34E1E9242EF47600D5592C /* KNOTProjectItemModel.swift in Sources */,
-				2CEBFD3124270526008807E1 /* ViewController.swift in Sources */,
+				2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */,
+				2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */,
+				2CE7920C2430DA5900975D99 /* KNOTButton.swift in Sources */,
 				2CEBFD6A242742F8008807E1 /* KNOTProjectEntity.swift in Sources */,
 				2CEBFD2D24270526008807E1 /* AppDelegate.swift in Sources */,
 				2CEBFD6C242750F1008807E1 /* KNOTProjectModel.swift in Sources */,
+				2CE792082430CFE000975D99 /* UIColor+Dynamic.swift in Sources */,
+				2CE792032430C33900975D99 /* UIImage+Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +403,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Knot/Knot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZCCBFMN3L4;
@@ -372,6 +414,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.suyang.knot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -381,6 +424,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Knot/Knot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZCCBFMN3L4;

@@ -1,24 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="KNOTHomeViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1PL-2u-aFd">
+                                <rect key="frame" x="0.0" y="802" width="414" height="118"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="hkY-Sa-dXY">
+                                        <rect key="frame" x="24" y="16" width="247" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M7t-vJ-0Kx" customClass="KNOTButton" customModule="Knot" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="112" height="44"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <state key="normal" title="Plan" image="tab_plan">
+                                                    <color key="titleColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </state>
+                                                <state key="selected" image="tab_plan_hl">
+                                                    <color key="titleColor" red="0.32156862749999998" green="0.46274509800000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zdA-Fi-qVw" customClass="KNOTButton" customModule="Knot" customModuleProvider="target">
+                                                <rect key="frame" x="135" y="0.0" width="112" height="44"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <state key="normal" title="Project" image="tab_project">
+                                                    <color key="titleColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </state>
+                                                <state key="selected" image="tab_project_hl">
+                                                    <color key="titleColor" red="0.32156862749999998" green="0.46274509800000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="edG-Jg-Da3"/>
+                                            <constraint firstAttribute="width" constant="247" id="za3-uV-iMq"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="hkY-Sa-dXY" firstAttribute="top" secondItem="1PL-2u-aFd" secondAttribute="top" constant="16" id="YF2-t7-Dvk"/>
+                                    <constraint firstItem="hkY-Sa-dXY" firstAttribute="leading" secondItem="1PL-2u-aFd" secondAttribute="leading" constant="24" id="wLR-wt-9mU"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.shadowColor">
+                                        <color key="value" red="0.027450980392156862" green="0.050980392156862744" blue="0.12549019607843137" alpha="0.059999999999999998" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowRadius">
+                                        <integer key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEo-41-0sM" customClass="KNOTButton" customModule="Knot" customModuleProvider="target">
+                                <rect key="frame" x="333" y="784" width="56" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="56" id="ZHE-0V-PU0"/>
+                                    <constraint firstAttribute="width" secondItem="wEo-41-0sM" secondAttribute="height" id="r72-NC-TtT"/>
+                                </constraints>
+                                <state key="normal" image="ic_add"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="1PL-2u-aFd" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-60" id="6n2-IJ-h3l"/>
+                            <constraint firstItem="wEo-41-0sM" firstAttribute="top" secondItem="1PL-2u-aFd" secondAttribute="top" constant="-18" id="Sbg-Y0-enw"/>
+                            <constraint firstAttribute="bottom" secondItem="1PL-2u-aFd" secondAttribute="bottom" constant="-24" id="Xpj-qy-N69"/>
+                            <constraint firstItem="1PL-2u-aFd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="eXi-FK-aLK"/>
+                            <constraint firstItem="1PL-2u-aFd" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ugx-Aq-LmO"/>
+                            <constraint firstItem="wEo-41-0sM" firstAttribute="trailing" secondItem="1PL-2u-aFd" secondAttribute="trailing" constant="-25" id="zmG-rZ-1r3"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="addButton" destination="wEo-41-0sM" id="uQ0-2V-Fdl"/>
+                        <outlet property="planButton" destination="M7t-vJ-0Kx" id="LvD-1h-YK7"/>
+                        <outlet property="projectButton" destination="zdA-Fi-qVw" id="ezS-MA-xs8"/>
+                        <outlet property="tabBarView" destination="1PL-2u-aFd" id="JdW-Fs-gZw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="428.98550724637687" y="92.410714285714278"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="ic_add" width="21" height="21"/>
+        <image name="tab_plan" width="48" height="34"/>
+        <image name="tab_plan_hl" width="48" height="34"/>
+        <image name="tab_project" width="48" height="34"/>
+        <image name="tab_project_hl" width="48" height="34"/>
+    </resources>
 </document>
