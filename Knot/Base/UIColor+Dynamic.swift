@@ -36,4 +36,25 @@ extension UIColor {
             self.init(cgColor: color.cgColor)
         }
     }
+    
+    convenience init(_ dark: UIColor, _ notDark: UIColor) {
+        self.init { $0 == .dark ? dark : notDark}
+    }
+    
+    convenience init(_ darkRGB: UInt32, _ darkAlpha: CGFloat, _ notDarkRGB: UInt32, _ notDarkAlpha: CGFloat) {
+        self.init(UIColor(darkRGB, darkAlpha), UIColor(notDarkRGB, notDarkAlpha))
+    }
+    
+    convenience init(_ darkRGB: UInt32, _ notDarkRGB: UInt32) {
+        self.init(darkRGB, 1.0, notDarkRGB, 1.0)
+    }
+    
+    func resolvedColor(with style: KNOTUserInterfaceStyle) -> UIColor {
+        if #available(iOS 13.0, *) {
+            let t = UITraitCollection(userInterfaceStyle: UIUserInterfaceStyle(rawValue: style.rawValue) ?? .unspecified)
+            return resolvedColor(with: t)
+        } else {
+            return self
+        }
+    }
 }

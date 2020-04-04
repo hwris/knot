@@ -10,36 +10,42 @@ import UIKit
 
 class KNOTHomeViewController: UIViewController {
     
-    @IBOutlet weak var planButton: KNOTButton!
-    @IBOutlet weak var projectButton: KNOTButton!
-    @IBOutlet weak var addButton: KNOTButton!
-    @IBOutlet weak var tabBarView: UIView!
+    @IBOutlet var buttons: [KNOTButton]!
+    @IBOutlet private weak var addButton: KNOTButton!
+    private weak var _tabBarController: UITabBarController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let normalTitleColor = UIColor { $0 == .dark ? UIColor(hex: 0xFFFFFF, alpha: 0.7) : UIColor(hex: 0x070D20)}
-        let selectedTitleColor = UIColor { $0 == .dark ? UIColor(hex: 0xFFFFFF, alpha: 0.87) : UIColor(hex: 0x5276FF)}
-        let selectedBgImage = { (style: KNOTUserInterfaceStyle) -> UIImage? in
-            let selectedBgColor = UIColor { $0 == .dark ? UIColor(hex: 0xFFFFFF, alpha: 0.04) : UIColor(hex: 0xF5F6F9)}
-            return UIImage.fromColor(color: selectedBgColor, cornerRadius: 22.0)
-        }
-        let addButtonBgImage = { (style: KNOTUserInterfaceStyle) -> UIImage? in
-            return UIImage.fromColor(color: UIColor(hex: 0x5276FF), cornerRadius: 28.0)
+        buttons.forEach {
+            $0.setTitleColor(UIColor(0xFFFFFF, 0.7, 0x070D20, 1.0), for: .normal)
+            $0.setTitleColor(UIColor(0xFFFFFF, 0.87, 0x5276FF, 1.0), for: .selected)
+            $0.setBackgroundImage(dynamicProvider: {
+                let selectedBgColor = $0 == .dark ? UIColor(0xFFFFFF, 0.04) : UIColor(0xF5F6F9, 1.0);
+                return UIImage.fromColor(color: selectedBgColor, cornerRadius: 22.0)
+            }, for: .selected)
         }
         
-        view.backgroundColor = UIColor { $0 == .dark ? UIColor(hex: 0x070D20) : UIColor(hex: 0xf2f2f2) }
-        planButton.setTitleColor(normalTitleColor, for: .normal)
-        planButton.setTitleColor(selectedTitleColor, for: .selected)
-        planButton.setBackgroundImage(dynamicProvider: selectedBgImage, for: .selected)
-        projectButton.setTitleColor(normalTitleColor, for: .normal)
-        projectButton.setTitleColor(selectedTitleColor, for: .selected)
-        projectButton.setBackgroundImage(dynamicProvider: selectedBgImage, for: .selected)
-        addButton.setBackgroundImage(dynamicProvider: addButtonBgImage, for: .normal)
-        tabBarView.backgroundColor = UIColor { $0 == .dark ? UIColor(hex: 0x070D20) : UIColor.white }
+        let image = UIImage.fromColor(color: UIColor(0x5276FF), cornerRadius: 28.0)
+        addButton.setBackgroundImage(dynamicProvider: {_ in
+            return image
+        }, for: .normal)
+        
+        _tabBarController = children.first as? UITabBarController
+        _tabBarController.delegate = self
+        _tabBarController.selectedIndex = 0;
+        buttonDidClicked(buttons[_tabBarController.selectedIndex])
     }
     
-
+    @IBAction func buttonDidClicked(_ sender: KNOTButton) {
+        if (sender.isSelected) {
+            return
+        }
+        
+        buttons.forEach { $0.isSelected = sender == $0 }
+        _tabBarController.selectedIndex = buttons.firstIndex(of: sender)!
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -50,4 +56,10 @@ class KNOTHomeViewController: UIViewController {
     }
     */
 
+}
+
+extension KNOTHomeViewController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        buttonDidClicked(buttons[_tabBarController.selectedIndex])
+    }
 }

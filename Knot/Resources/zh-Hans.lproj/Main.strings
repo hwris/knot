@@ -1,1 +1,12 @@
 
+/* Class = "UILabel"; text = "Today"; ObjectID = "7FY-de-HMo"; */
+"7FY-de-HMo.text" = "今天";
+
+/* Class = "UIButton"; normalTitle = "Plan"; ObjectID = "M7t-vJ-0Kx"; */
+"M7t-vJ-0Kx.normalTitle" = "计划";
+
+/* Class = "UILabel"; text = "Project"; ObjectID = "qQ0-Q7-CT9"; */
+"qQ0-Q7-CT9.text" = "项目";
+
+/* Class = "UIButton"; normalTitle = "Project"; ObjectID = "zdA-Fi-qVw"; */
+"zdA-Fi-qVw.normalTitle" = "项目";
