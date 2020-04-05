@@ -86,12 +86,12 @@ extension KNOTPlanViewController: KNOTHomeItemViewController {
             if _emptyIndexPath == indexpath {
                 let visibleRows = tableView.indexPathsForVisibleRows
                 if _emptyIndexPath == visibleRows?.first {
-                    let emptyIndexPath = IndexPath(row: max(_emptyIndexPath.row - 1, 0), section: _emptyIndexPath.section)
-                    tableView.scrollToRow(at: emptyIndexPath, at: .top, animated: true)
+                    let targetIndexPath = IndexPath(row: max(_emptyIndexPath.row - 1, 0), section: _emptyIndexPath.section)
+                    tableView.scrollToRow(at: targetIndexPath, at: .top, animated: true)
                 } else if indexpath == visibleRows?.last {
                     let allRows = tableView.dataSource?.tableView(tableView, numberOfRowsInSection: indexpath.section) ?? 0
-                    let emptyIndexPath = IndexPath(row: min(_emptyIndexPath.row + 1, allRows - 1), section: _emptyIndexPath.section)
-                    tableView.scrollToRow(at: emptyIndexPath, at: .bottom, animated: true)
+                    let targetIndexPath = IndexPath(row: min(_emptyIndexPath.row + 1, allRows - 1), section: _emptyIndexPath.section)
+                    tableView.scrollToRow(at: targetIndexPath, at: .bottom, animated: true)
                 }
             } else {
                 emptyIndexPath = indexpath
@@ -99,6 +99,11 @@ extension KNOTPlanViewController: KNOTHomeItemViewController {
                     tableView.moveRow(at: _emptyIndexPath, to: emptyIndexPath!)
                 } else {
                     tableView.moveRow(at: emptyIndexPath!, to: _emptyIndexPath)
+                }
+                
+                if #available(iOS 10.0, *) {
+                    let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                    impactFeedback.impactOccurred()
                 }
             }
         }

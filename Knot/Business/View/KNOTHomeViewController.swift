@@ -61,28 +61,40 @@ class KNOTHomeViewController: UIViewController {
 extension KNOTHomeViewController: KNOTHomeAddButtonDelegate {
     func addButton(_ button: KNOTHomeAddButton, beginTracking touch: UITouch, with event: UIEvent?) {
         if let snapshotAddButton = button.snapshotView(afterScreenUpdates: false) {
+            snapshotAddButton.alpha = 0
             self.snapshotAddButton = snapshotAddButton
             view.addSubview(snapshotAddButton)
         }
+        
         button.isSelected = true
+        
+        if #available(iOS 10.0, *) {
+            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+            impactFeedback.impactOccurred()
+        }
         
         selectedItemViewController.homeViewController(self, addButton: button, continueTracking: touch)
     }
     
     func addButton(_ button: KNOTHomeAddButton, continueTracking touch: UITouch, with event: UIEvent?) {
+        let inButton = button.bounds.contains(touch.location(in: button))
+        snapshotAddButton?.alpha = inButton ? 0 : 1.0
         snapshotAddButton?.center = touch.location(in: view)
+        
         selectedItemViewController.homeViewController(self, addButton: button, continueTracking: touch)
     }
     
     func addButton(_ button: KNOTHomeAddButton, endTracking touch: UITouch?, with event: UIEvent?) {
         snapshotAddButton?.removeFromSuperview()
         snapshotAddButton = nil
+        
         button.isSelected = false
         
         var isEndInAddbutton = false
         if let p = touch?.location(in: button), button.bounds.contains(p) {
             isEndInAddbutton = true
         }
+        
         selectedItemViewController.homeViewController(self,
                                                       addButton: addButton,
                                                       endTracking:touch,
