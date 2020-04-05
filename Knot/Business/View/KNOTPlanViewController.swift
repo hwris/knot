@@ -32,10 +32,10 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController {
 
 }
 
-class KNOTPlanEmptyItemCell: UITableViewCell {
+class KNOTPlanItemCell: KNOTPlanEmptyItemCell {
     
 }
 
-class KNOTPlanItemCell: KNOTPlanEmptyItemCell {
+class KNOTPlanEmptyItemCell: UITableViewCell {
     
 }

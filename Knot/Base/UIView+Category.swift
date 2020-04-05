@@ -26,6 +26,22 @@ extension UIView {
     }
     
     @IBInspectable
+    var darkTintColor: UIColor? {
+        get {
+            return tintColor?.resolvedColor(with: .dark)
+        }
+        
+        set {
+            guard let dark = newValue else {
+                return
+            }
+            
+            let lightColor = tintColor ?? dark
+            tintColor = UIColor(dark, lightColor)
+        }
+    }
+    
+    @IBInspectable
     var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius

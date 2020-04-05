@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "img_card_corner@2x.png",
+      "filename" : "ic_card_corner_alarm@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "img_card_corner@3x.png",
+      "filename" : "ic_card_corner_alarm@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
