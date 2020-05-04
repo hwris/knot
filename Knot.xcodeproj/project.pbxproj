@@ -9,7 +9,11 @@
 /* Begin PBXBuildFile section */
 		2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA57B243823FE0056B84F /* UIView+Category.swift */; };
 		2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */; };
-		2C34E1E9242EF47600D5592C /* KNOTProjectItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */; };
+		2C34E1E9242EF47600D5592C /* KNOTDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34E1E8242EF47600D5592C /* KNOTDocument.swift */; };
+		2C7F261B244A8D1600F13299 /* SubjectSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */; };
+		2C7F261D244C4BA500F13299 /* KNOTViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F261C244C4BA500F13299 /* KNOTViewModel.swift */; };
+		2C7F261F244C4FC500F13299 /* KNOTPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F261E244C4FC500F13299 /* KNOTPlanModel.swift */; };
+		2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F2620244C507B00F13299 /* KNOTPlanViewModel.swift */; };
 		2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */; };
 		2CE792032430C33900975D99 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792022430C33900975D99 /* UIImage+Color.swift */; };
 		2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792052430C94900975D99 /* KNOTHomeViewController.swift */; };
@@ -22,13 +26,17 @@
 		2CEBFD5B24271B89008807E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD5424271B89008807E1 /* Main.storyboard */; };
 		2CEBFD6424271D2B008807E1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CEBFD6224271D2B008807E1 /* Localizable.strings */; };
 		2CEBFD6A242742F8008807E1 /* KNOTProjectEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */; };
-		2CEBFD6C242750F1008807E1 /* KNOTProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD6B242750F1008807E1 /* KNOTProjectModel.swift */; };
+		2CEBFD6C242750F1008807E1 /* KNOTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD6B242750F1008807E1 /* KNOTModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2C2AA57B243823FE0056B84F /* UIView+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Category.swift"; sourceTree = "<group>"; };
 		2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanViewController.swift; sourceTree = "<group>"; };
-		2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectItemModel.swift; sourceTree = "<group>"; };
+		2C34E1E8242EF47600D5592C /* KNOTDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTDocument.swift; sourceTree = "<group>"; };
+		2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectSubscription.swift; sourceTree = "<group>"; };
+		2C7F261C244C4BA500F13299 /* KNOTViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTViewModel.swift; sourceTree = "<group>"; };
+		2C7F261E244C4FC500F13299 /* KNOTPlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanModel.swift; sourceTree = "<group>"; };
+		2C7F2620244C507B00F13299 /* KNOTPlanViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KNOTPlanViewModel.swift; sourceTree = "<group>"; };
 		2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeItemTableViewController.swift; sourceTree = "<group>"; };
 		2CE792022430C33900975D99 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
 		2CE792052430C94900975D99 /* KNOTHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeViewController.swift; sourceTree = "<group>"; };
@@ -47,7 +55,7 @@
 		2CEBFD6324271D2B008807E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2CEBFD6524271D33008807E1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectEntity.swift; sourceTree = "<group>"; };
-		2CEBFD6B242750F1008807E1 /* KNOTProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectModel.swift; sourceTree = "<group>"; };
+		2CEBFD6B242750F1008807E1 /* KNOTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +72,8 @@
 		2CE791FD2430806700975D99 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				2C7F261C244C4BA500F13299 /* KNOTViewModel.swift */,
+				2C7F2620244C507B00F13299 /* KNOTPlanViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -75,6 +85,7 @@
 				2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */,
 				2CE792092430D49F00975D99 /* UIColor+Hex.swift */,
 				2C2AA57B243823FE0056B84F /* UIView+Category.swift */,
+				2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -143,8 +154,8 @@
 		2CEBFD6724273EF3008807E1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				2CEBFD6B242750F1008807E1 /* KNOTProjectModel.swift */,
-				2C34E1E8242EF47600D5592C /* KNOTProjectItemModel.swift */,
+				2CEBFD6B242750F1008807E1 /* KNOTModel.swift */,
+				2C7F261E244C4FC500F13299 /* KNOTPlanModel.swift */,
 				2CEBFD6824273F0F008807E1 /* Entity */,
 			);
 			path = Model;
@@ -153,6 +164,7 @@
 		2CEBFD6824273F0F008807E1 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
+				2C34E1E8242EF47600D5592C /* KNOTDocument.swift */,
 				2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */,
 			);
 			path = Entity;
@@ -234,15 +246,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C34E1E9242EF47600D5592C /* KNOTProjectItemModel.swift in Sources */,
+				2C34E1E9242EF47600D5592C /* KNOTDocument.swift in Sources */,
+				2C7F261D244C4BA500F13299 /* KNOTViewModel.swift in Sources */,
 				2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */,
 				2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */,
 				2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */,
+				2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */,
 				2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */,
 				2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */,
+				2C7F261B244A8D1600F13299 /* SubjectSubscription.swift in Sources */,
 				2CEBFD6A242742F8008807E1 /* KNOTProjectEntity.swift in Sources */,
 				2CEBFD2D24270526008807E1 /* AppDelegate.swift in Sources */,
-				2CEBFD6C242750F1008807E1 /* KNOTProjectModel.swift in Sources */,
+				2C7F261F244C4FC500F13299 /* KNOTPlanModel.swift in Sources */,
+				2CEBFD6C242750F1008807E1 /* KNOTModel.swift in Sources */,
 				2CE792082430CFE000975D99 /* UIColor+Dynamic.swift in Sources */,
 				2CE792032430C33900975D99 /* UIImage+Color.swift in Sources */,
 			);

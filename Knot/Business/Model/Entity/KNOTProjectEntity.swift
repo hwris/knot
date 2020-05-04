@@ -9,18 +9,33 @@
 import Foundation
 
 class KNOTProjectEntity: Codable {
-    
-    static var supportsSecureCoding = false
-    
-    var createDate: Date
+    let id: Int64
     var name: String
-    var labelColor: UInt32
-    var itemList: [String]?
-    var remindTimeInterval: TimeInterval?
+    var planIds: [String]?
     
-    init(createDate: Date, name: String, labelColor: UInt32) {
-        self.createDate = createDate
+    init(id: Int64, name: String) {
+        self.id = id
         self.name = name
-        self.labelColor = labelColor
     }
+}
+
+class KNOTPlanEntity: Codable {
+    let id: Int64
+    var content: String
+    var flagColor: UInt32
+    var items: [KNOTPlanItemEntity]?
+    var remindTimeInterval: TimeInterval?
+    var remindTime: Date?
+    var projectId: String?
+    
+    init(id: Int64, content: String, flagColor: UInt32) {
+        self.id = id
+        self.content = content
+        self.flagColor = flagColor
+    }
+}
+
+class KNOTPlanItemEntity: Codable {
+    var content: String
+    var isDone = false
 }

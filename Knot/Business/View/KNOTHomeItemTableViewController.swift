@@ -16,11 +16,7 @@ class KNOTHomeItemTableViewController: UIViewController, UITableViewDataSource {
     fileprivate var emptyIndexPath: IndexPath?
     fileprivate var isTrackingOutInAddButton = false
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    var  numberOfDateRows: Int {
+    var numberOfDateRows: Int {
         return 0;
     }
     
