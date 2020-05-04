@@ -38,7 +38,7 @@ class Subject<T> {
         return sync {
             let subscription = Subscription(listener: listener) { [weak self] (subscription) in
                 self?.sync({
-                    self?.listeners.removeAll(where: { $0 == subscription })
+                    self?.listeners.removeAll(where: { $0 === subscription })
                 })
             }
             listeners.append(subscription)
@@ -53,6 +53,7 @@ class Subject<T> {
 }
 
 class Subscription<T> {
+    
     private var cancelBlock: ((Subscription<T>) -> ())?
     private var listener: SubjectListener<T>?
     
