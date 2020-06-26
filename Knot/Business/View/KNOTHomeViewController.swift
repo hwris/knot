@@ -14,6 +14,8 @@ class KNOTHomeViewController: UIViewController {
     fileprivate var snapshotAddButton: UIView?
     private weak var _tabBarController: UITabBarController!
     
+    var viewModel: KNOTViewModel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,6 +57,15 @@ class KNOTHomeViewController: UIViewController {
         
         buttons.forEach { $0.isSelected = sender == $0 }
         _tabBarController.selectedIndex = buttons.firstIndex(of: sender)!
+        
+        setViewModelForSelectedItemViewController();
+    }
+    
+    private func setViewModelForSelectedItemViewController() {
+        let selectedItemViewController = self.selectedItemViewController
+        if selectedItemViewController is KNOTPlanViewController {
+            (selectedItemViewController as! KNOTPlanViewController).viewModel = viewModel.planViewModel
+        }
     }
 }
 

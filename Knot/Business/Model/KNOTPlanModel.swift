@@ -6,9 +6,16 @@
 //  Copyright © 2020 SUYANG. All rights reserved.
 //
 
-import Foundation
+import BoltsSwift
 
-protocol KNOTPlanModel {
-    var plansSubject: Subject<[KNOTDocument<KNOTPlanEntity>]> { get }
-    func loadItems(completion: @escaping (Error?) -> ()) throws
+protocol KNOTPlanUpdateModel {
+    func updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void>
+}
+
+protocol KNOTPlanModel: KNOTPlanUpdateModel {
+    var plansSubject: Subject<[KNOTPlanEntity]> { get }
+    func loadPlans() throws -> Task<Void>
+    func deletePlan(_ plan: KNOTPlanEntity) throws -> Task<Void>
+    func emptyPlanDetailModel(at index: Int) -> KNOTPlanDetailModel
+    func planDetailModel(at index: Int) -> KNOTPlanDetailModel
 }

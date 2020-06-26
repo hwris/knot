@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import BoltsSwift
 
-class KNOTPlanViewController: KNOTHomeItemTableViewController {
+class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel> {
+    fileprivate let detailSegueId = "detail"
+    
     private var itemsSubscription: Subscription<[KNOTPlanItemViewModel]>?
     
-    var viewModel: KNOTPlanViewModel! {
+    override var viewModel: KNOTPlanViewModel! {
         didSet {
             itemsSubscription?.cancel()
             itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (_, _) in
@@ -20,8 +23,9 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController {
             
             //todo: error handle
             do {
-                try viewModel.loadItems(at: Date()) { (error) in
-                    assert(error == nil)
+                let tast = try viewModel.loadItems(at: Date())
+                tast.continueOnErrorWith {
+                    print($0)
                 }
             } catch let e  {
                 print(e)
@@ -46,6 +50,24 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController {
         let itemCell = cell as! KNOTPlanItemCell
         itemCell.viewModel = (viewModel.itemsSubject.value)![indexPath.row]
     }
+    
+    override func emptyCellDidInsert(at indexPath: IndexPath) {
+        performSegue(withIdentifier: detailSegueId, sender: viewModel.emptyPlanDetailViewModel(at: indexPath.row))
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == detailSegueId {
+            let detailViewModel = sender as! KNOTPlanDetailViewModel
+            let detailVC = segue.destination as! KNOTPlanDetailViewController
+            detailVC.viewModel = detailViewModel
+        }
+    }
+}
+
+extension KNOTPlanViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: detailSegueId, sender: viewModel.planDetailViewModel(at: indexPath.row))
+    }
 }
 
 class KNOTPlanItemCell: UITableViewCell {
@@ -55,21 +77,10 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBOutlet weak var alarmBackgroundView: UIImageView!
     @IBOutlet weak var alarmImageView: UIImageView!
     
-    private var itemSubscription: Subscription<KNOTPlanItemViewModel.Item>?
-    
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
-            itemSubscription?.cancel()
-            itemSubscription = viewModel.itemSubject.listen({ [weak self] (newValue, _) in
-                self?.itemDidUpdated(newValue)
-            })
-            viewModel.loadContent()
+            itemDidUpdated(viewModel.item)
         }
-    }
-    
-    deinit {
-        itemSubscription?.cancel()
-        itemSubscription = nil
     }
     
     private func itemDidUpdated(_ item: KNOTPlanItemViewModel.Item?) {

@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import BoltsSwift
 
 class KNOTPlanViewModel {
     private let model: KNOTPlanModel
-    private var plansSubscription: Subscription<[KNOTDocument<KNOTPlanEntity>]>?
+    private var plansSubscription: Subscription<[KNOTPlanEntity]>?
     
     private var selectedDate = Date()
     let itemsSubject = Subject<[KNOTPlanItemViewModel]>()
@@ -27,93 +28,47 @@ class KNOTPlanViewModel {
         plansSubscription = nil
     }
     
-    private func publishPlans(_ plans: [KNOTDocument<KNOTPlanEntity>]?) {
+    private func publishPlans(_ plans: [KNOTPlanEntity]?) {
         let items = plans?.filter({
             let calendar = Calendar.current
             let creationDateComponents = calendar.dateComponents([ .day ], from: $0.creationDate)
             let selectedDateComponents = calendar.dateComponents([ .day ], from: self.selectedDate)
             return creationDateComponents.day == selectedDateComponents.day
-        }).sorted(by: { $0.contentPriority < $1.contentPriority }).map({ KNOTPlanItemViewModel(model: $0) })
+        }).sorted(by: { $0.priority < $1.priority }).map({ KNOTPlanItemViewModel(model: $0) })
         
         itemsSubject.publish(items)
     }
     
-    func loadItems(at date: Date, completion: @escaping (Error?) -> ()) throws {
+    func loadItems(at date: Date) throws -> Task<Void> {
         guard let plans = model.plansSubject.value else {
             selectedDate = date
-            try model.loadItems(completion: completion)
-            return
+            return try model.loadPlans()
         }
         
         publishPlans(plans)
+        return Task(())
+    }
+    
+    func emptyPlanDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
+        return KNOTPlanDetailViewModel(model: model.emptyPlanDetailModel(at: index))
+    }
+    
+    func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
+        return KNOTPlanDetailViewModel(model: model.planDetailModel(at: index))
     }
 }
 
 class KNOTPlanItemViewModel {
-    private let model: KNOTDocument<KNOTPlanEntity>
-    private var contentSubscription: Subscription<KNOTPlanEntity>?
+    private let model: KNOTPlanEntity
     
-    let itemSubject = Subject<Item>()
+    private(set) var item: Item
     
-    init(model: KNOTDocument<KNOTPlanEntity>) {
+    init(model: KNOTPlanEntity) {
         self.model = model
-        contentSubscription = model.contentSubject.listen({ [weak self]  (new, old) in
-            self?.publishContent(new)
-        })
+        item = Item(contentText: model.content, flagColor: model.flagColor, alarm: model.remindTime != nil)
     }
-    
-    deinit {
-        contentSubscription?.cancel()
-        contentSubscription = nil
-    }
-    
-    private func publishContent(_ plan: KNOTPlanEntity?) {
-        let item = plan.map({ Item(contentText: $0.content, flagColor: $0.flagColor, alarm: plan?.remindTime != nil) })
-        itemSubject.publish(item)
-    }
-    
-    func loadContent() {
-        guard let plan = model.contentSubject.value else {
-            try? model.loadContent { assert($0) }
-            return;
-        }
-        
-        publishContent(plan)
-    }
-    
+
     struct Item {
-        enum FlagColor: UInt32 {
-            case blue = 0x5276FF
-            case red = 0xF95943
-            case yellow = 0xFFD00E
-            
-            static func flagBkColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
-                switch rawValue {
-                case FlagColor.red.rawValue:
-                    return (UIColor(0xFEE6E3), UIColor(0x262949))
-                case FlagColor.blue.rawValue:
-                    return (UIColor(0x5276FF), UIColor(0x262949))
-                case FlagColor.yellow.rawValue:
-                    return (UIColor(0xFFD00E), UIColor(0x262949))
-                default:
-                    return (UIColor(rawValue, 0.5), UIColor(0x262949))
-                }
-            }
-            
-            static func alarmColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
-                switch rawValue {
-                case FlagColor.red.rawValue:
-                    return (UIColor(0xFB9F93), UIColor(0x262949))
-                case FlagColor.blue.rawValue:
-                    return (UIColor(0x95A7EB), UIColor(0x262949))
-                case FlagColor.yellow.rawValue:
-                    return (UIColor(0xFFE374), UIColor(0x262949))
-                default:
-                    return (UIColor(rawValue, 0.8), UIColor(0x262949))
-                }
-            }
-        }
-        
         let contentText: String
         let flagColors: (UIColor, UIColor)
         let flagBkColors: (UIColor, UIColor)
@@ -122,8 +77,40 @@ class KNOTPlanItemViewModel {
         init(contentText: String, flagColor: UInt32, alarm: Bool) {
             self.contentText = contentText
             flagColors = (UIColor(flagColor), UIColor(flagColor))
-            flagBkColors = FlagColor.flagBkColors(byRawValue: flagColor)
-            alarmColors = alarm ? FlagColor.alarmColors(byRawValue: flagColor) : nil
+            flagBkColors = KNOTPlanItemFlagColor.flagBkColors(byRawValue: flagColor)
+            alarmColors = alarm ? KNOTPlanItemFlagColor.alarmColors(byRawValue: flagColor) : nil
+        }
+    }
+}
+
+enum KNOTPlanItemFlagColor: UInt32 {
+    case blue = 0x5276FF
+    case red = 0xF95943
+    case yellow = 0xFFD00E
+    
+    static func flagBkColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
+        switch rawValue {
+        case KNOTPlanItemFlagColor.red.rawValue:
+            return (UIColor(0xFEE6E3), UIColor(0x262949))
+        case KNOTPlanItemFlagColor.blue.rawValue:
+            return (UIColor(0x5276FF), UIColor(0x262949))
+        case KNOTPlanItemFlagColor.yellow.rawValue:
+            return (UIColor(0xFFD00E), UIColor(0x262949))
+        default:
+            return (UIColor(rawValue, 0.5), UIColor(0x262949))
+        }
+    }
+    
+    static func alarmColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
+        switch rawValue {
+        case KNOTPlanItemFlagColor.red.rawValue:
+            return (UIColor(0xFB9F93), UIColor(0x262949))
+        case KNOTPlanItemFlagColor.blue.rawValue:
+            return (UIColor(0x95A7EB), UIColor(0x262949))
+        case KNOTPlanItemFlagColor.yellow.rawValue:
+            return (UIColor(0xFFE374), UIColor(0x262949))
+        default:
+            return (UIColor(rawValue, 0.8), UIColor(0x262949))
         }
     }
 }

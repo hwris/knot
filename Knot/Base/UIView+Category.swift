@@ -168,3 +168,21 @@ class KNOTButton: UIButton {
         }
     }
 }
+
+extension UITextView {
+    @IBInspectable
+    var darkTextColor: UIColor? {
+        get {
+            return textColor?.resolvedColor(with: .dark)
+        }
+        
+        set {
+            guard let dark = newValue else {
+                return
+            }
+            
+            let lightColor = textColor ?? dark
+            textColor = UIColor(dark, lightColor)
+        }
+    }
+}

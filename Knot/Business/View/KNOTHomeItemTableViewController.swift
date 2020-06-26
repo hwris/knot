@@ -8,7 +8,7 @@
 
 import UIKit
 
-class KNOTHomeItemTableViewController: UIViewController, UITableViewDataSource {
+class KNOTHomeItemTableViewController<T>: UIViewController, UITableViewDataSource {
     let dataCellId = "cell"
     let emptyCellId = "empty"
     
@@ -16,11 +16,17 @@ class KNOTHomeItemTableViewController: UIViewController, UITableViewDataSource {
     fileprivate var emptyIndexPath: IndexPath?
     fileprivate var isTrackingOutInAddButton = false
     
+    var viewModel: T!
+    
     var numberOfDateRows: Int {
         return 0;
     }
     
     func dataCell(_ cell: UITableViewCell, didDequeuedAtRow indexPath: IndexPath) {
+        
+    }
+    
+    func emptyCellDidInsert(at indexPath: IndexPath) {
         
     }
     
@@ -34,7 +40,6 @@ class KNOTHomeItemTableViewController: UIViewController, UITableViewDataSource {
         guard let _emptyIndexPath = emptyIndexPath else {
             let cell = tableView.dequeueReusableCell(withIdentifier: dataCellId, for: indexPath)
             dataCell(cell, didDequeuedAtRow: indexPath)
-            cell.textLabel?.text = "\(indexPath.row)"
             return cell
         }
         
@@ -44,7 +49,6 @@ class KNOTHomeItemTableViewController: UIViewController, UITableViewDataSource {
         if !isEmptyCell {
             let realRow = indexPath.row > _emptyIndexPath.row ? indexPath.row - 1 : indexPath.row
             let realIndexPath = IndexPath(row: realRow, section: indexPath.section)
-            cell.textLabel?.text = "\(realRow)"
             dataCell(cell, didDequeuedAtRow: realIndexPath)
         }
         
@@ -52,7 +56,7 @@ class KNOTHomeItemTableViewController: UIViewController, UITableViewDataSource {
     }
 }
 
-extension KNOTPlanViewController: KNOTHomeItemViewController {
+extension KNOTHomeItemTableViewController: KNOTHomeItemViewController {
     func homeViewController(_ homeViewController: KNOTHomeViewController, addButton button: UIButton, continueTracking touch: UITouch) {
         if !button.bounds.contains(touch.location(in: button)), !isTrackingOutInAddButton {
             isTrackingOutInAddButton = true
@@ -113,6 +117,7 @@ extension KNOTPlanViewController: KNOTHomeItemViewController {
             isTrackingOutInAddButton = false
             emptyIndexPath = nil
             tableView.deleteRows(at: [ _emptyIndexPath ], with: .bottom)
+            return;
         }
         
         if !isTrackingOutInAddButton, let _emptyIndexPath = emptyIndexPath {
@@ -120,5 +125,7 @@ extension KNOTPlanViewController: KNOTHomeItemViewController {
         }
         
         isTrackingOutInAddButton = false
+        
+        emptyCellDidInsert(at: emptyIndexPath!)
     }
 }

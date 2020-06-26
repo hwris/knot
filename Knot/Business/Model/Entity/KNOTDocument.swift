@@ -7,60 +7,77 @@
 //
 
 import UIKit
+import BoltsSwift
 
 class KNOTDocument<T: Codable> {
-    fileprivate let fileURL: URL
-    let creationDate: Date
-    let contentPriority: Int64
-    let contentSubject: Subject<T>
-    private var doc: KNOTDocumentInternal<T>?
+    let fileURL: URL
+    private var doc: KNOTDocumentInternal<T>!
+    fileprivate(set) var content: T?
    
-    init(fileURL: URL, creationDate: Date, contentPriority: Int64, content: T? = nil) {
+    init(fileURL: URL) {
         self.fileURL = fileURL
-        self.creationDate = creationDate
-        self.contentPriority = contentPriority
-        contentSubject = Subject(value: content)
-    }
-    
-    func loadContent(completion: ((Bool) -> ())?) throws {
-        let doc = KNOTDocumentInternal(docInfo: self)
-        doc.open(completionHandler: completion)
-    }
-    
-    func beginEditing() throws {
         doc = KNOTDocumentInternal(docInfo: self)
-        doc?.open(completionHandler: nil)
     }
     
-    func save(content: T) throws {
-        contentSubject.publish(content)
-        doc?.updateChangeCount(.done)
+    deinit {
+        doc.close()
     }
     
-    func endEditing() throws {
-        doc?.close(completionHandler: nil)
-        doc = nil
+    func loadContent() -> Task<Bool> {
+        let tcs = TaskCompletionSource<Bool>()
+        doc.open() { tcs.set(result: $0) }
+        return tcs.task
+    }
+    
+    func save(content: T) -> Task<Bool> {
+        let tcs = TaskCompletionSource<Bool>()
+        if !doc.isOpening {
+            loadContent().continueWith { (t) -> Bool in
+                tcs.set(result: t.result!)
+                return t.result!
+            }
+        } else {
+            tcs.set(result: true)
+        }
+        
+        return tcs.task.continueOnSuccessWith { (t) -> Bool in
+            self.content = content
+            self.doc.updateChangeCount(.done)
+            return true
+        }
     }
 }
      
 private class KNOTDocumentInternal<T: Codable>: UIDocument {
     private weak var docInfo: KNOTDocument<T>?
+    private(set) var isOpening = false
     
     init(docInfo: KNOTDocument<T>) {
         self.docInfo = docInfo
         super.init(fileURL: docInfo.fileURL)
     }
     
+    override func open(completionHandler: ((Bool) -> Void)? = nil) {
+        super.open {
+            self.isOpening = $0
+            completionHandler?($0)
+        }
+    }
+    
+    override func close(completionHandler: ((Bool) -> Void)? = nil) {
+        isOpening = false
+        super.close()
+    }
+    
     override func load(fromContents contents: Any, ofType typeName: String?) throws {
         guard let data = contents as? Data else {
             throw NSError(domain: "KNOTDocumentLoadErrorDomain", code: 0, userInfo: [ NSLocalizedDescriptionKey : "Data is invalid" ])
         }
-        let content = try JSONDecoder().decode(T.self, from: data)
-        docInfo?.contentSubject.publish(content)
+        docInfo?.content = try JSONDecoder().decode(T.self, from: data)
     }
     
     override func contents(forType typeName: String) throws -> Any {
-        guard let content = docInfo?.contentSubject.value else {
+        guard let content = docInfo?.content else {
             throw NSError(domain: "KNOTDocumentWriteErrorDomain", code: 0, userInfo: [ NSLocalizedDescriptionKey : "No content can be saved" ])
         }
         return try JSONEncoder().encode(content)
