@@ -8,7 +8,30 @@
 
 import Foundation
 
-class KNOTProjectEntity: Codable, Equatable {
+protocol JSONable: Codable {
+}
+
+extension JSONable {
+    func toJsonData() throws -> Data {
+        return try JSONEncoder().encode(self)
+    }
+    
+    var description: String {
+        if let data = try? toJsonData(),
+            let desc = String(data: data, encoding: .utf8)  {
+            return desc
+        }
+        
+        return "\(self)"
+    }
+    
+    static func fromJSONData(_ data: Data) throws -> Self {
+        return try JSONDecoder().decode(self, from: data)
+    }
+}
+
+
+class KNOTProjectEntity: JSONable, Equatable {
     var id: Int64 { Int64(creationDate.timeIntervalSince1970 * 1000) }
     var creationDate: Date
     var priority: Int64
@@ -26,7 +49,7 @@ class KNOTProjectEntity: Codable, Equatable {
     }
 }
 
-class KNOTPlanEntity: Codable, Equatable {
+class KNOTPlanEntity: JSONable, Equatable {
     var id: Int64 { Int64(creationDate.timeIntervalSince1970 * 1000) }
     var creationDate: Date
     var priority: Int64

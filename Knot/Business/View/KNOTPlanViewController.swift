@@ -21,14 +21,14 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
                 self?.tableView.reloadData()
             })
             
-            //todo: error handle
             do {
                 let tast = try viewModel.loadItems(at: Date())
                 tast.continueOnErrorWith {
                     print($0)
                 }
             } catch let e  {
-                print(e)
+                //todo: error handle
+                assert(false, "\(e)")
             }
         }
     }
@@ -52,7 +52,12 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     }
     
     override func emptyCellDidInsert(at indexPath: IndexPath) {
-        performSegue(withIdentifier: detailSegueId, sender: viewModel.emptyPlanDetailViewModel(at: indexPath.row))
+        do {
+            try performSegue(withIdentifier: detailSegueId, sender: viewModel.insertPlan(at: indexPath.row))
+        } catch let e {
+            //todo: error handle
+            assert(false, "\(e)")
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -66,7 +71,9 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
 
 extension KNOTPlanViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: detailSegueId, sender: viewModel.planDetailViewModel(at: indexPath.row))
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: self.detailSegueId, sender: self.viewModel.planDetailViewModel(at: indexPath.row))
+        }
     }
 }
 
@@ -90,6 +97,7 @@ class KNOTPlanItemCell: UITableViewCell {
         flagBackgroundView.backgroundColor = item?.flagBkColors.0
         flagBackgroundView.darkBackgroundColor = item?.flagBkColors.1
         alarmBackgroundView.isHidden = item?.alarmColors == nil
+        alarmImageView.isHidden = alarmBackgroundView.isHidden
         alarmImageView.tintColor = item?.alarmColors?.0
         alarmImageView.darkTintColor = item?.alarmColors?.1
     }

@@ -16,6 +16,6 @@ protocol KNOTPlanModel: KNOTPlanUpdateModel {
     var plansSubject: Subject<[KNOTPlanEntity]> { get }
     func loadPlans() throws -> Task<Void>
     func deletePlan(_ plan: KNOTPlanEntity) throws -> Task<Void>
-    func emptyPlanDetailModel(at index: Int) -> KNOTPlanDetailModel
+    func insertPlan(at index: Int) throws -> KNOTPlanDetailModel
     func planDetailModel(at index: Int) -> KNOTPlanDetailModel
 }

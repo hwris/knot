@@ -10,8 +10,8 @@ import Foundation
 import BoltsSwift
 
 private let SearchPredicate = "%K LIKE '*/TodoList/*'"
-private let PlanFileType = ".plan"
-private let ProjectFileType = ".project"
+private let PlanFileType = "plan"
+private let ProjectFileType = "project"
 
 protocol KNOTModel {
     var planModel: KNOTPlanModel { get }
@@ -85,22 +85,75 @@ class KNOTModelImpl: KNOTModel {
         }
         
         let planTasks = metadatas.filter({ $0.pathExtension == PlanFileType })
-            .map({ KNOTDocument<KNOTPlanEntity>(fileURL: $0) })
-            .map({ doc in doc.loadContent().continueOnSuccessWith { _ in doc.content } })
+            .map({ self.fileCoordinate(readingItemAt: $0, options: .withoutChanges) {
+                return try KNOTPlanEntity.fromJSONData(Data(contentsOf: $0))
+                }})
         let projectTasks = metadatas.filter({ $0.pathExtension == ProjectFileType })
-            .map({ KNOTDocument<KNOTProjectEntity>(fileURL: $0) })
-            .map({ doc in doc.loadContent().continueOnSuccessWith { _ in doc.content } })
+            .map({ self.fileCoordinate(readingItemAt: $0, options: .withoutChanges) {
+                return try KNOTProjectEntity.fromJSONData(Data(contentsOf: $0))
+                }})
         
         Task.whenAllResult(planTasks).continueWith { [weak self] (t) -> Any? in
-            print("load plans: ", t.error ?? "")
+            debugPrint("load plans: ", t.error ?? "", t.result ?? "")
             self?.plansSubject.publish(t.result?.compactMap { $0 })
             return t
         }
         
         Task.whenAllResult(projectTasks).continueWith { [weak self] (t) -> Any? in
-            print("load projects: ", t.error ?? "")
+            debugPrint("load projects: ", t.error ?? "", t.result ?? "")
             self?.projectsSubject.publish(t.result?.compactMap { $0 })
             return t
+        }
+    }
+}
+
+extension KNOTModelImpl {
+    fileprivate func fileCoordinate<T>(readingItemAt url: URL,
+                                       options: NSFileCoordinator.ReadingOptions = [],
+                                       byAccessor reader: @escaping (URL) throws -> T) -> Task<T> {
+        return fileCoordinate { (fileCoordinator, error, tcs) in
+            fileCoordinator.coordinate(readingItemAt: url, options: options, error: error) {
+                do {
+                    tcs.set(result: try reader($0))
+                } catch let e {
+                    tcs.set(error: e)
+                }
+            }
+        }
+    }
+    
+    fileprivate func fileCoordinate<T>(writingItemAt url: URL,
+                                       options: NSFileCoordinator.WritingOptions = [],
+                                       byAccessor writer: @escaping (URL) throws -> T) -> Task<T> {
+        return fileCoordinate { (fileCoordinator, error, tcs) in
+            fileCoordinator.coordinate(writingItemAt: url, options: options, error: error) {
+                do {
+                    tcs.set(result: try writer($0))
+                } catch let e {
+                    tcs.set(error: e)
+                }
+            }
+        }
+    }
+    
+    fileprivate func fileCoordinate<T>(byAccessor accessor: @escaping (NSFileCoordinator, NSErrorPointer, TaskCompletionSource<T>) throws -> Void) -> Task<T> {
+        let task = Task<Task<T>>(Executor.queue(DispatchQueue.global()), closure: {
+            let fileCoordinator = NSFileCoordinator()
+            var error: NSError?
+            let tcs = TaskCompletionSource<T>()
+            try accessor(fileCoordinator, &error, tcs)
+            if let e = error {
+                tcs.set(error: e)
+            }
+            return tcs.task
+        })
+        
+        return task.continueWith(Executor.mainThread) { (t) -> T in
+            let result = t.result!
+            if let e = result.error {
+                throw e
+            }
+            return result.result!
         }
     }
 }
@@ -118,71 +171,62 @@ extension KNOTModelImpl: KNOTPlanModel {
         plans.removeAll { $0 == plan }
         plansSubject.publish(plans)
         
-        let fileURL = plan.fileURL(for: container)
-        let task = Task(Executor.queue(DispatchQueue.global()), closure: {}).continueWith { _ -> Task<Void> in
-            let fileCoordinator = NSFileCoordinator()
-            
-            let tcs = TaskCompletionSource<Void>()
-            var error: NSError?
-            fileCoordinator.coordinate(writingItemAt: fileURL, options: [ .forDeleting ], error: &error) {
-                do {
-                    try FileManager.default.removeItem(at: $0)
-                    tcs.set(result: ())
-                } catch let e {
-                    tcs.set(error: e)
-                }
-            }
-            
-            if error != nil {
-                tcs.set(error: error!)
-            }
-            
-            return tcs.task
+        return fileCoordinate(writingItemAt: plan.fileURL(for: container), options: .forMerging) {
+            try FileManager.default.removeItem(at: $0)
         }
-        
-        return task.result!
     }
     
-    func emptyPlanDetailModel(at index: Int) -> KNOTPlanDetailModel {
-        let planEntity = KNOTPlanEntity(creationDate: Date(), priority: Int64(index), content: "", flagColor: 0)
-        return KNOTPlanDetailModelImpl(plan: planEntity, updateModel: self)
+    func insertPlan(at index: Int) throws -> KNOTPlanDetailModel {
+        let container = try containerURL()
+        let plan = KNOTPlanEntity(creationDate: Date(), priority: Int64(index), content: "", flagColor: 0x5276FF)
+        let index = Int(plan.priority)
+        var plans = plansSubject.value ?? []
+        plans.insert(plan, at: index)
+        
+        var updateTasks = [Task<Void>]()
+        if index + 1 < plans.endIndex {
+            let changedRange = index+1..<plans.endIndex
+            changedRange.forEach { plans[$0].priority = Int64($0) }
+            updateTasks = try plans[changedRange].map({ try _updatePlan($0) })
+        }
+        
+        let insertTask = fileCoordinate(writingItemAt: plan.fileURL(for: container)) {
+            let data = try plan.toJsonData()
+            try data.write(to: $0)
+        }
+        
+        plansSubject.publish(plans)
+        
+        updateTasks.append(insertTask)
+        Task.whenAll(updateTasks).continueWith { (t) -> Void in
+            if let error = t.error {
+                assert(false, "\(error)")
+            }
+        }
+        
+        return KNOTPlanDetailModelImpl(plan: plan, updateModel: self)
+    }
+    
+    func updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void> {
+        let plans = plansSubject.value ?? []
+        plansSubject.publish(plans)
+        return try _updatePlan(plan)
+    }
+    
+    func _updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void> {
+        return self.fileCoordinate(writingItemAt: plan.fileURL(for: try containerURL()), options: .forMerging) {
+            try plan.toJsonData().write(to: $0)
+        }
     }
     
     func planDetailModel(at index: Int) -> KNOTPlanDetailModel {
         return KNOTPlanDetailModelImpl(plan: plansSubject.value![index], updateModel: self)
     }
-    
-    func updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void> {
-        let container = try containerURL()
-        let index = Int(plan.priority)
-        
-        var plans = plansSubject.value ?? []
-        
-        if (plans.contains(plan)) {
-            let doc = KNOTDocument<KNOTPlanEntity>(fileURL: plan.fileURL(for: container))
-            return doc.save(content: plan).continueWith { (t) -> Void in
-                if (t.result != true) {
-                    throw "Update failed!"
-                }
-            }
-        } else {
-            plans.insert(plan, at: index)
-            let changedRange = index..<plans.endIndex
-            for i in changedRange {
-                plans[i].priority = Int64(i)
-            }
-            plansSubject.publish(plans)
-            
-            let tasks = plans[changedRange].map({ (KNOTDocument<KNOTPlanEntity>(fileURL: $0.fileURL(for: container)), $0) })
-                .map({ $0.0.save(content: $0.1) })
-            return Task.whenAll(tasks)
-        }
-    }
 }
 
 extension KNOTPlanEntity {
     func fileURL(for container: URL) -> URL {
-        return URL(fileURLWithPath: "\(Int64(creationDate.timeIntervalSince1970 * 1000))" + PlanFileType, relativeTo: container)
+        return URL(fileURLWithPath: "\(Int64(creationDate.timeIntervalSince1970 * 1000))", relativeTo: container).appendingPathExtension(PlanFileType)
     }
 }
 

@@ -15,6 +15,8 @@ class KNOTTextViewTableViewCell: UITableViewCell {
             contentTextView.delegate = self
         }
     }
+    
+    weak var delegate: KNOTTextViewTableViewCellDelegate?
 }
 
 extension KNOTTextViewTableViewCell: UITextViewDelegate {
@@ -28,6 +30,8 @@ extension KNOTTextViewTableViewCell: UITextViewDelegate {
             tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
+        
+        delegate?.textViewTableViewCellTextDidChanged(self)
     }
     
     var tableView: UITableView? {
@@ -38,4 +42,8 @@ extension KNOTTextViewTableViewCell: UITextViewDelegate {
         
         return tableView as? UITableView
     }
+}
+
+protocol KNOTTextViewTableViewCellDelegate: AnyObject {
+    func textViewTableViewCellTextDidChanged(_ cell: KNOTTextViewTableViewCell)
 }

@@ -125,7 +125,9 @@ extension KNOTHomeItemTableViewController: KNOTHomeItemViewController {
         }
         
         isTrackingOutInAddButton = false
-        
-        emptyCellDidInsert(at: emptyIndexPath!)
+        if let _emptyIndexPath = emptyIndexPath {
+            emptyIndexPath = nil
+            emptyCellDidInsert(at: _emptyIndexPath)
+        }
     }
 }

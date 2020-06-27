@@ -49,8 +49,8 @@ class KNOTPlanViewModel {
         return Task(())
     }
     
-    func emptyPlanDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
-        return KNOTPlanDetailViewModel(model: model.emptyPlanDetailModel(at: index))
+    func insertPlan(at index: Int) throws -> KNOTPlanDetailViewModel {
+        return try KNOTPlanDetailViewModel(model: model.insertPlan(at: index))
     }
     
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
@@ -93,9 +93,9 @@ enum KNOTPlanItemFlagColor: UInt32 {
         case KNOTPlanItemFlagColor.red.rawValue:
             return (UIColor(0xFEE6E3), UIColor(0x262949))
         case KNOTPlanItemFlagColor.blue.rawValue:
-            return (UIColor(0x5276FF), UIColor(0x262949))
+            return (UIColor(0xE5EBFF), UIColor(0x262949))
         case KNOTPlanItemFlagColor.yellow.rawValue:
-            return (UIColor(0xFFD00E), UIColor(0x262949))
+            return (UIColor(0xFFF6CF), UIColor(0x262949))
         default:
             return (UIColor(rawValue, 0.5), UIColor(0x262949))
         }

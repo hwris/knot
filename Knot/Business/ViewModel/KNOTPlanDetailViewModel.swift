@@ -23,8 +23,16 @@ class KNOTPlanDetailViewModel {
     
     let flagColorS = [ KNOTPlanItemFlagColor.blue, .red, .yellow ]
     
-    var selectedFlagColorIndex: Int? {
-        return flagColorS.firstIndex(of: KNOTPlanItemFlagColor(rawValue: model.plan.flagColor) ?? .blue)
+    var selectedFlagColorIndex: Int {
+        return flagColorS.firstIndex(of: KNOTPlanItemFlagColor(rawValue: model.plan.flagColor) ?? .blue)!
+    }
+    
+    func updateContent(_ content: String) {
+        model.plan.content = content
+    }
+    
+    func selectedFlagColor(at index: Int) {
+        model.plan.flagColor = flagColorS[index].rawValue
     }
     
     func updatePlan() throws -> Task<Void> {
@@ -45,5 +53,13 @@ class KNOTPlanDetailItemViewModel {
     
     var isDoneButtonSelected: Bool {
         return model.isDone
+    }
+    
+    func updateContent(_ content: String) {
+        model.content = content
+    }
+    
+    func updateIsDone(_ isDone: Bool) {
+        model.isDone = isDone
     }
 }

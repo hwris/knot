@@ -25,11 +25,3 @@ class KNOTViewModel {
         return _planViewModel
     }
 }
-
-class KNOTItemViewModel<T: Codable> {
-    let model: KNOTDocument<T>
-    
-    init(model: KNOTDocument<T>) {
-        self.model = model
-    }
-}
