@@ -17,5 +17,5 @@ protocol KNOTPlanModel: KNOTPlanUpdateModel {
     func loadPlans() throws -> Task<Void>
     func deletePlan(_ plan: KNOTPlanEntity) throws -> Task<Void>
     func insertPlan(at index: Int) throws -> KNOTPlanDetailModel
-    func planDetailModel(at index: Int) -> KNOTPlanDetailModel
+    func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel
 }

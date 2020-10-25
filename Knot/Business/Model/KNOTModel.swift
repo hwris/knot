@@ -219,8 +219,8 @@ extension KNOTModelImpl: KNOTPlanModel {
         }
     }
     
-    func planDetailModel(at index: Int) -> KNOTPlanDetailModel {
-        return KNOTPlanDetailModelImpl(plan: plansSubject.value![index], updateModel: self)
+    func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
+        return KNOTPlanDetailModelImpl(plan: plan, updateModel: self)
     }
 }
 

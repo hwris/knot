@@ -37,7 +37,9 @@ class KNOTPlanDetailViewModel {
     
     func insertItem(at index: Int) {
         let item = KNOTPlanItemEntity(content: "")
+        if model.plan.items == nil { model.plan.items = [] }
         model.plan.items?.insert(item, at: index)
+        
         let itemVM = KNOTPlanDetailItemViewModel(model: item)
         items.insert(itemVM, at: index)
     }

@@ -54,12 +54,13 @@ class KNOTPlanViewModel {
     }
     
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
-        return KNOTPlanDetailViewModel(model: model.planDetailModel(at: index))
+        let plan = itemsSubject.value![index].model
+        return KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
     }
 }
 
 class KNOTPlanItemViewModel {
-    private let model: KNOTPlanEntity
+    fileprivate let model: KNOTPlanEntity
     
     private(set) var item: Item
     
