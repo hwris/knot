@@ -10,11 +10,11 @@ import BoltsSwift
 
 class KNOTPlanDetailViewModel {
     private let model: KNOTPlanDetailModel
-    private(set) var items: [KNOTPlanDetailItemViewModel]?
+    private(set) var items: [KNOTPlanDetailItemViewModel]
     
     init(model: KNOTPlanDetailModel) {
         self.model = model
-        items = model.plan.items?.map({ KNOTPlanDetailItemViewModel(model: $0) })
+        items = model.plan.items?.map({ KNOTPlanDetailItemViewModel(model: $0) }) ?? []
     }
     
     var content: String {
@@ -33,6 +33,13 @@ class KNOTPlanDetailViewModel {
     
     func selectedFlagColor(at index: Int) {
         model.plan.flagColor = flagColorS[index].rawValue
+    }
+    
+    func insertItem(at index: Int) {
+        let item = KNOTPlanItemEntity(content: "")
+        model.plan.items?.insert(item, at: index)
+        let itemVM = KNOTPlanDetailItemViewModel(model: item)
+        items.insert(itemVM, at: index)
     }
     
     func updatePlan() throws -> Task<Void> {

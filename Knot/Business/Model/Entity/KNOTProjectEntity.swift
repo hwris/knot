@@ -75,4 +75,9 @@ class KNOTPlanEntity: JSONable, Equatable {
 class KNOTPlanItemEntity: Codable {
     var content: String
     var isDone = false
+    
+    init(content: String, isDone: Bool = false) {
+        self.content = content
+        self.isDone = isDone
+    }
 }

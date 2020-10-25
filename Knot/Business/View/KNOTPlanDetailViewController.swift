@@ -79,6 +79,9 @@ class KNOTPlanDetailViewController: UIViewController {
     }
     
     @IBAction func listButtonCliked(_ sender: UIButton) {
+        let index = viewModel.items.count
+        viewModel.insertItem(at: index)
+        itemsTableView.insertRows(at: [IndexPath(row: index + 1, section: 0)], with: .none)
     }
     
     @IBAction func bkViewTapped(_ sender: UITapGestureRecognizer) {
@@ -89,7 +92,7 @@ class KNOTPlanDetailViewController: UIViewController {
 
 extension KNOTPlanDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.items?.count ?? 0 + 1
+        return viewModel.items.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -103,7 +106,7 @@ extension KNOTPlanDetailViewController: UITableViewDataSource {
                 textView.becomeFirstResponder()
             }
         } else {
-            (cell as! KNOTPlanDetaiListCell).viewModel = viewModel.items![indexPath.row - 1]
+            (cell as! KNOTPlanDetaiListCell).viewModel = viewModel.items[indexPath.row - 1]
         }
         cell.delegate = self
         return cell
