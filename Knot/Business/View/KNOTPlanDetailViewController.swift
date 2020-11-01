@@ -133,6 +133,7 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
         didSet {
             contentTextView.text = viewModel.content
             isDoneButtong.isSelected = viewModel.isDoneButtonSelected
+            contentTextView.alpha = isDoneButtong.isSelected ? 0.5 : 1.0
         }
     }
     
@@ -143,6 +144,7 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
     
     @IBAction func doneButtonCliked(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
+        contentTextView.alpha = sender.isSelected ? 0.5 : 1.0
         viewModel.updateIsDone(sender.isSelected)
     }
 }

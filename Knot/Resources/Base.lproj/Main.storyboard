@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -94,6 +94,7 @@
                                 <state key="selected" image="ic_delete"/>
                             </button>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="1PL-2u-aFd" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-60" id="6n2-IJ-h3l"/>
@@ -107,7 +108,6 @@
                             <constraint firstItem="1PL-2u-aFd" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ugx-Aq-LmO"/>
                             <constraint firstItem="wEo-41-0sM" firstAttribute="trailing" secondItem="1PL-2u-aFd" secondAttribute="trailing" constant="-25" id="zmG-rZ-1r3"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">
                                 <color key="value" red="0.027450980392156862" green="0.050980392156862744" blue="0.12549019607843137" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -320,6 +320,7 @@
                                 </connections>
                             </tableView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="Ep8-IY-wws"/>
                         <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="7FY-de-HMo" firstAttribute="top" secondItem="Ep8-IY-wws" secondAttribute="top" constant="12" id="0q3-Rk-CEZ"/>
@@ -330,7 +331,6 @@
                             <constraint firstItem="4Sp-JP-hyA" firstAttribute="leading" secondItem="Ep8-IY-wws" secondAttribute="leading" id="LsV-iM-LXK"/>
                             <constraint firstItem="4Sp-JP-hyA" firstAttribute="trailing" secondItem="Ep8-IY-wws" secondAttribute="trailing" id="dWL-K4-dLD"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Ep8-IY-wws"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">
                                 <color key="value" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -385,13 +385,13 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="JVR-AE-Whj"/>
                         <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="JVR-AE-Whj" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qQ0-Q7-CT9" secondAttribute="trailing" symbolic="YES" id="943-gr-LjC"/>
                             <constraint firstItem="qQ0-Q7-CT9" firstAttribute="leading" secondItem="JVR-AE-Whj" secondAttribute="leading" constant="20" id="j88-TC-Ncd"/>
                             <constraint firstItem="qQ0-Q7-CT9" firstAttribute="top" secondItem="JVR-AE-Whj" secondAttribute="top" constant="12" id="qgi-uf-gNr"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="JVR-AE-Whj"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">
                                 <color key="value" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -466,6 +466,9 @@
                                                     <rect key="frame" x="20" y="13.666666666666664" width="18" height="22"/>
                                                     <state key="normal" image="ic_select_off_blue"/>
                                                     <state key="selected" image="ic_select_on_blue"/>
+                                                    <connections>
+                                                        <action selector="doneButtonCliked:" destination="9YB-Qj-HA3" eventType="touchUpInside" id="Q7T-i7-r9b"/>
+                                                    </connections>
                                                 </button>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="n0D-7O-AnU">
                                                     <rect key="frame" x="53" y="7" width="273" height="35.333333333333336"/>
@@ -567,6 +570,7 @@
                                         </constraints>
                                     </stackView>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="FSc-Rd-mJd"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Naf-mk-CLR" firstAttribute="top" secondItem="fBQ-jn-ZvH" secondAttribute="top" id="2NG-IN-PSq"/>
@@ -574,7 +578,6 @@
                                     <constraint firstItem="FSc-Rd-mJd" firstAttribute="bottom" secondItem="Naf-mk-CLR" secondAttribute="bottom" id="bTp-Ao-kOC"/>
                                     <constraint firstItem="Naf-mk-CLR" firstAttribute="leading" secondItem="fBQ-jn-ZvH" secondAttribute="leading" id="eZG-1p-PKr"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="FSc-Rd-mJd"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">
                                         <color key="value" red="0.14901960780000001" green="0.16078431369999999" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -592,6 +595,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="sX4-bB-cEB"/>
                         <color key="backgroundColor" red="0.32941176470588235" green="0.34509803921568627" blue="0.396078431372549" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
@@ -604,7 +608,6 @@
                             <constraint firstItem="sX4-bB-cEB" firstAttribute="trailing" secondItem="Tvf-Gr-zOb" secondAttribute="trailing" id="uNS-uC-Qae"/>
                             <constraint firstAttribute="bottom" secondItem="fBQ-jn-ZvH" secondAttribute="bottom" id="vpa-BJ-nyG"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="sX4-bB-cEB"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="l58-av-EiB" appends="YES" id="H5u-RJ-cYK"/>
                         </connections>
