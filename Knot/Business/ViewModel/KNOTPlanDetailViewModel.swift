@@ -44,6 +44,20 @@ class KNOTPlanDetailViewModel {
         items.insert(itemVM, at: index)
     }
     
+    func moveItem(at srcIndex: Int, to dstIndex: Int) {
+        if srcIndex == dstIndex {
+            return
+        }
+        
+        let tempPlanItem = model.plan.items![srcIndex]
+        model.plan.items![srcIndex] = model.plan.items![dstIndex]
+        model.plan.items![dstIndex] = tempPlanItem
+        
+        let tempPlanItemVM = items[srcIndex]
+        items[srcIndex] = items[dstIndex]
+        items[dstIndex] = tempPlanItemVM
+    }
+    
     func updatePlan() throws -> Task<Void> {
         return try model.updatePlan()
     }

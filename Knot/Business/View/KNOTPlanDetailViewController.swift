@@ -9,8 +9,6 @@
 import UIKit
 
 class KNOTPlanDetailViewController: UIViewController {
-    fileprivate let titleRowIndex = 0
-    
     var viewModel: KNOTPlanDetailViewModel!
     
     @IBOutlet weak var keyboardButton: UIButton!
@@ -97,32 +95,31 @@ extension KNOTPlanDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let isTitle = indexPath.row == titleRowIndex
-        let cellId = isTitle ? "titleCell" : "cell"
+        let cellId = indexPath.isPlanTitleRow ? "titleCell" : "cell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! KNOTTextViewTableViewCell
-        if (isTitle) {
+        if (indexPath.isPlanTitleRow) {
             let textView = cell.contentTextView!
             textView.text = viewModel.content
             if textView.text.isEmpty {
                 textView.becomeFirstResponder()
             }
         } else {
-            (cell as! KNOTPlanDetaiListCell).viewModel = viewModel.items[indexPath.row - 1]
+            (cell as! KNOTPlanDetaiListCell).viewModel = viewModel.items[indexPath.planItemRowIndex]
         }
         cell.delegate = self
         return cell
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.row != titleRowIndex
+        return !indexPath.isPlanTitleRow
     }
     
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.row != titleRowIndex
+        return !indexPath.isPlanTitleRow
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        print(sourceIndexPath, destinationIndexPath)
+        viewModel.moveItem(at: sourceIndexPath.planItemRowIndex, to: destinationIndexPath.planItemRowIndex)
     }
 }
 
@@ -135,6 +132,10 @@ extension KNOTPlanDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
     }
+    
+    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        return proposedDestinationIndexPath.isPlanTitleRow ? sourceIndexPath : proposedDestinationIndexPath
+    }
 }
 
 extension KNOTPlanDetailViewController: KNOTTextViewTableViewCellDelegate {
@@ -143,7 +144,7 @@ extension KNOTPlanDetailViewController: KNOTTextViewTableViewCellDelegate {
             return
         }
         
-        if indexPath.row == titleRowIndex {
+        if indexPath.isPlanTitleRow {
             viewModel.updateContent(cell.contentTextView.text)
         }
     }
@@ -169,6 +170,16 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
         sender.isSelected = !sender.isSelected
         contentTextView.alpha = sender.isSelected ? 0.5 : 1.0
         viewModel.updateIsDone(sender.isSelected)
+    }
+}
+
+fileprivate extension IndexPath {
+    var isPlanTitleRow: Bool {
+        return row == 0
+    }
+    
+    var planItemRowIndex: Int {
+        return row - 1
     }
 }
 
