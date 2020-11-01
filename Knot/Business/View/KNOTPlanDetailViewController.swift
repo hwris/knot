@@ -23,6 +23,7 @@ class KNOTPlanDetailViewController: UIViewController {
         super.viewDidLoad()
         keyboardButton.isHidden = true
         flagColorButtonCliked(flagButtons[viewModel.selectedFlagColorIndex])
+        itemsTableView.setEditing(true, animated: false)
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardDidChangeFrame(_:)),
@@ -111,6 +112,29 @@ extension KNOTPlanDetailViewController: UITableViewDataSource {
         cell.delegate = self
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.row != titleRowIndex
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.row != titleRowIndex
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        print(sourceIndexPath, destinationIndexPath)
+    }
+}
+
+extension KNOTPlanDetailViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
 }
 
 extension KNOTPlanDetailViewController: KNOTTextViewTableViewCellDelegate {
@@ -127,13 +151,12 @@ extension KNOTPlanDetailViewController: KNOTTextViewTableViewCellDelegate {
 
 class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
     @IBOutlet weak var isDoneButtong: UIButton!
-    @IBOutlet weak var moveButton: UIButton!
     
     var viewModel: KNOTPlanDetailItemViewModel! {
         didSet {
             contentTextView.text = viewModel.content
             isDoneButtong.isSelected = viewModel.isDoneButtonSelected
-            contentTextView.alpha = isDoneButtong.isSelected ? 0.5 : 1.0
+            contentTextView.alpha = viewModel.isDoneButtonSelected ? 0.5 : 1.0
         }
     }
     
