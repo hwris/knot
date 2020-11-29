@@ -73,9 +73,54 @@ extension UIView {
             layer.borderWidth = newValue
         }
     }
+    
+    @IBInspectable
+    var shadowColor: UIColor? {
+        get {
+            return layer.shadowColor.map({ UIColor(cgColor: $0) })
+        }
+        
+        set {
+            layer.shadowColor = newValue?.cgColor
+        }
+    }
+    
+    @IBInspectable
+    var darkShadowColor: UIColor? {
+        get {
+            return shadowColor?.resolvedColor(with: .dark)
+        }
+        
+        set {
+            guard let dark = newValue else {
+                return
+            }
+            
+            let lightColor = shadowColor ?? dark
+            shadowColor = UIColor(dark, lightColor)
+        }
+    }
 }
 
 extension UILabel {
+    @IBInspectable
+    var darkTextColor: UIColor? {
+        get {
+            return textColor?.resolvedColor(with: .dark)
+        }
+        
+        set {
+            guard let dark = newValue else {
+                return
+            }
+            
+            let lightColor = textColor ?? dark
+            textColor = UIColor(dark, lightColor)
+        }
+    }
+}
+
+extension UITextView {
     @IBInspectable
     var darkTextColor: UIColor? {
         get {
@@ -169,20 +214,53 @@ class KNOTButton: UIButton {
     }
 }
 
-extension UITextView {
-    @IBInspectable
-    var darkTextColor: UIColor? {
-        get {
-            return textColor?.resolvedColor(with: .dark)
+extension UIView {
+    func setRoundCorners(frome point: CGPoint) {
+        setRoundCorners(point == .zero ? nil : UIRectCorner(rawValue: UInt(point.x)), cornerRadii: point.y)
+    }
+    
+    func setRoundCorners(_ roundCorners: UIRectCorner?, cornerRadii: CGFloat) {
+        guard let corners = roundCorners else {
+            layer.mask = nil
+            return
         }
         
-        set {
-            guard let dark = newValue else {
-                return
-            }
-            
-            let lightColor = textColor ?? dark
-            textColor = UIColor(dark, lightColor)
+        let path = UIBezierPath(roundedRect: bounds,
+                                byRoundingCorners: corners,
+                                cornerRadii: CGSize(width: cornerRadii, height: cornerRadii))
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = bounds
+        maskLayer.path = path.cgPath
+        layer.mask = maskLayer
+    }
+}
+
+class KNOTRoundCornersView : UIView {
+    @IBInspectable
+    private var roundingCorners: CGPoint = .zero {
+        didSet {
+            setNeedsLayout()
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setRoundCorners(frome: roundingCorners)
+    }
+}
+
+class KNOTRoundCornersTableView: UITableView {
+    @IBInspectable
+    private var roundingCorners: CGPoint = .zero {
+        didSet {
+            if oldValue != .zero && oldValue != roundingCorners {
+                setNeedsLayout()
+            }
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setRoundCorners(frome: roundingCorners)
     }
 }
