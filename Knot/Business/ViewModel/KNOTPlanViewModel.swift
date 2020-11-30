@@ -62,25 +62,43 @@ class KNOTPlanViewModel {
 class KNOTPlanItemViewModel {
     fileprivate let model: KNOTPlanEntity
     
-    private(set) var item: Item
+    let content: String
+    let items: [KNOTPlanItemItemViewModel]
+    let colors: ItemColors
     
     init(model: KNOTPlanEntity) {
+        content = model.content
+        items = model.items?.map({ KNOTPlanItemItemViewModel(model: $0) }) ?? []
+        colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
         self.model = model
-        item = Item(contentText: model.content, flagColor: model.flagColor, alarm: model.remindTime != nil)
     }
 
-    struct Item {
-        let contentText: String
+    struct ItemColors {
         let flagColors: (UIColor, UIColor)
         let flagBkColors: (UIColor, UIColor)
         let alarmColors: (UIColor, UIColor)?
         
-        init(contentText: String, flagColor: UInt32, alarm: Bool) {
-            self.contentText = contentText
+        init(flagColor: UInt32, alarm: Bool) {
             flagColors = (UIColor(flagColor), UIColor(flagColor))
             flagBkColors = KNOTPlanItemFlagColor.flagBkColors(byRawValue: flagColor)
             alarmColors = alarm ? KNOTPlanItemFlagColor.alarmColors(byRawValue: flagColor) : nil
         }
+    }
+}
+
+class KNOTPlanItemItemViewModel {
+    let model: KNOTPlanItemEntity
+    
+    init(model: KNOTPlanItemEntity) {
+        self.model = model
+    }
+    
+    var content: String {
+        return model.content
+    }
+    
+    var isDoneButtonSelected: Bool {
+        return model.isDone
     }
 }
 

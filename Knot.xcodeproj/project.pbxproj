@@ -98,6 +98,7 @@
 				2CE792092430D49F00975D99 /* UIColor+Hex.swift */,
 				2C2AA57B243823FE0056B84F /* UIView+Category.swift */,
 				2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */,
+				2CFEA83324A5D77500853629 /* KNOTTextViewTableViewCell.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -109,7 +110,6 @@
 				2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */,
 				2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */,
 				2C8BE050247A0D780059423F /* KNOTPlanDetailViewController.swift */,
-				2CFEA83224A5D74100853629 /* Utils */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -184,14 +184,6 @@
 				2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */,
 			);
 			path = Entity;
-			sourceTree = "<group>";
-		};
-		2CFEA83224A5D74100853629 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				2CFEA83324A5D77500853629 /* KNOTTextViewTableViewCell.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		7F92E7ACAD89D79CAD2F7112 /* Pods */ = {
@@ -444,7 +436,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -499,7 +491,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

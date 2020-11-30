@@ -8,6 +8,24 @@
 
 import UIKit
 
+extension UITableViewCell {
+    var tableView: UITableView? {
+        var tableView = superview
+        while tableView != nil && !(tableView is UITableView) {
+            tableView = tableView?.superview
+        }
+        
+        return tableView as? UITableView
+    }
+    
+    func updateTableView() {
+        UIView.setAnimationsEnabled(false)
+        tableView?.beginUpdates()
+        tableView?.endUpdates()
+        UIView.setAnimationsEnabled(true)
+    }
+}
+
 class KNOTTextViewTableViewCell: UITableViewCell {
     @IBOutlet weak var contentTextView: UITextView! {
         didSet {
@@ -25,22 +43,10 @@ extension KNOTTextViewTableViewCell: UITextViewDelegate {
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
         
         if size.height != newSize.height {
-            UIView.setAnimationsEnabled(false)
-            tableView?.beginUpdates()
-            tableView?.endUpdates()
-            UIView.setAnimationsEnabled(true)
+            updateTableView()
         }
         
         delegate?.textViewTableViewCellTextDidChanged(self)
-    }
-    
-    var tableView: UITableView? {
-        var tableView = superview
-        while tableView != nil && !(tableView is UITableView) {
-            tableView = tableView?.superview
-        }
-        
-        return tableView as? UITableView
     }
 }
 

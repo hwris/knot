@@ -63,21 +63,7 @@ class KNOTPlanDetailViewModel {
     }
 }
 
-class KNOTPlanDetailItemViewModel {
-    private let model: KNOTPlanItemEntity
-    
-    init(model: KNOTPlanItemEntity) {
-        self.model = model
-    }
-    
-    var content: String {
-        return model.content
-    }
-    
-    var isDoneButtonSelected: Bool {
-        return model.isDone
-    }
-    
+class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
     func updateContent(_ content: String) {
         model.content = content
     }
