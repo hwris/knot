@@ -66,6 +66,8 @@ class KNOTPlanItemViewModel {
     let items: [KNOTPlanItemItemViewModel]
     let colors: ItemColors
     
+    var cachedContent: Any?
+    
     init(model: KNOTPlanEntity) {
         content = model.content
         items = model.items?.map({ KNOTPlanItemItemViewModel(model: $0) }) ?? []

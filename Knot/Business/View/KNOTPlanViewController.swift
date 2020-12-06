@@ -84,7 +84,6 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBOutlet weak var flagBackgroundView: UIView!
     @IBOutlet weak var alarmBackgroundView: UIImageView!
     @IBOutlet weak var alarmImageView: UIImageView!
-    private var itemsView: UIView?
     
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
@@ -92,7 +91,6 @@ class KNOTPlanItemCell: UITableViewCell {
                 return
             }
             
-            contentLabel.text = viewModel.content
             flagView.backgroundColor = viewModel.colors.flagColors.0
             flagView.darkBackgroundColor = viewModel.colors.flagColors.1
             flagBackgroundView.backgroundColor = viewModel.colors.flagBkColors.0
@@ -102,69 +100,52 @@ class KNOTPlanItemCell: UITableViewCell {
             alarmImageView.tintColor = viewModel.colors.alarmColors?.0
             alarmImageView.darkTintColor = viewModel.colors.alarmColors?.1
             
-//            updateItemsView()
+            updateContentView()
         }
     }
     
-    private func updateItemsView() {
-        itemsView?.removeFromSuperview()
-        itemsView = nil
+    private func updateContentView() {
+        contentLabel.text = nil
+        contentLabel.attributedText = nil
         
         if viewModel.items.isEmpty {
+            contentLabel.text = viewModel.content
             return
         }
         
-        let view = contentLabel.superview!
-        let itemsStackView = UIStackView()
-        itemsStackView.axis = .vertical
-        itemsStackView.alignment = .fill
-        itemsStackView.distribution = .fill
-        itemsStackView.spacing = 30.0
-        itemsStackView.translatesAutoresizingMaskIntoConstraints = false
+        if let attText = viewModel.cachedContent as? NSAttributedString {
+            contentLabel.attributedText = attText
+            return
+        }
         
+        let attText = NSMutableAttributedString(string: viewModel.content + "\n")
+        attText.addAttributes([.font : UIFont.systemFont(ofSize: 18, weight: .medium),
+                               .foregroundColor : UIColor(UInt32(0xFFFFFF), 0.87, UInt32(0x070D20), 1.0)],
+                              range: NSRange(location: 0, length: viewModel.content.count))
         for item in viewModel.items {
-            let isDoneImage = UIImageView(image: UIImage(named: item.isDoneButtonSelected ? "ic_select_on_blue" : "ic_select_off_blue"))
-            isDoneImage.contentMode = .center;
-            isDoneImage.setContentHuggingPriority(.required, for: .horizontal)
-            isDoneImage.setContentCompressionResistancePriority(.required, for: .horizontal)
-            isDoneImage.setContentHuggingPriority(.required, for: .vertical)
-            isDoneImage.setContentCompressionResistancePriority(.required, for: .vertical)
-            isDoneImage.translatesAutoresizingMaskIntoConstraints = false
-            isDoneImage.snp.makeConstraints {
-                $0.size.equalTo(CGSize(width: 18, height: 18))
-            }
-            
-            let itemContenLabel = UILabel()
-            itemContenLabel.text = item.content
-            itemContenLabel.font = UIFont.systemFont(ofSize: 16)
-            itemContenLabel.textColor = UIColor(UInt32(0xFFFFFF), UInt32(0x070D20))
-            itemContenLabel.alpha = item.isDoneButtonSelected ? 0.5 : 1.0
-            itemContenLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            itemContenLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-            itemContenLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-            itemContenLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-            itemContenLabel.numberOfLines = 0
-            itemContenLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            let itemStackView = UIStackView(arrangedSubviews: [ isDoneImage, itemContenLabel ])
-            itemStackView.axis = .horizontal
-            itemStackView.alignment = .center
-            itemStackView.distribution = .fill
-            itemStackView.spacing = 15.0
-            itemStackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            itemsStackView.addArrangedSubview(itemStackView)
+            let isDoneImage = NSTextAttachment()
+            isDoneImage.image = UIImage(named: item.isDoneButtonSelected ? "ic_select_on_blue" : "ic_select_off_blue")
+            isDoneImage.bounds = CGRect(x: 0, y: -4, width: 18, height: 18)
+            let isDoneImageAttText = NSAttributedString(attachment: isDoneImage)
+            let itemContenAttText = NSAttributedString(string: "  " + item.content + (item === viewModel.items.last ? "" : "\n"),
+                                                       attributes: [.font : UIFont.systemFont(ofSize: 16),
+                                                                    .foregroundColor : UIColor(UInt32(0xFFFFFF),
+                                                                                               item.isDoneButtonSelected ? 0.5 : 0.87,
+                                                                                               UInt32(0x070D20),
+                                                                                               item.isDoneButtonSelected ? 0.5 : 1.0)])
+            attText.append(isDoneImageAttText)
+            attText.append(itemContenAttText)
         }
         
-        contentLabel.superview?.addSubview(itemsStackView)
-        itemsStackView.snp.makeConstraints {
-            $0.leading.equalTo(self.contentLabel.snp.leading)
-            $0.trailing.equalTo(self.contentLabel.snp.trailing)
-            $0.top.equalTo(self.contentLabel.snp.bottom).offset(30.0)
-            $0.bottom.equalTo(-30.0)
-        }
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.headIndent = 26
+        paragraphStyle.paragraphSpacingBefore = 30
+        attText.addAttribute(.paragraphStyle,
+                             value: paragraphStyle,
+                             range: NSRange(location: viewModel.content.count, length: attText.string.count - viewModel.content.count))
         
-        itemsView = itemsStackView
+        contentLabel.attributedText = attText
+        viewModel.cachedContent = attText
     }
     
     @IBAction func moreButtonClicked(_ sender: UIButton) {
