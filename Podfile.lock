@@ -1,9 +1,11 @@
 PODS:
   - Bolts-Swift (1.5.0)
+  - CVCalendar (1.7.0)
   - SnapKit (5.0.1)
 
 DEPENDENCIES:
   - Bolts-Swift
+  - "CVCalendar (from `git@github.com:hwris/CVCalendar.git`, commit `ae7da79caa22a23059c7d215178e6fa2aa976949`)"
   - SnapKit (~> 5.0.0)
 
 SPEC REPOS:
@@ -11,10 +13,21 @@ SPEC REPOS:
     - Bolts-Swift
     - SnapKit
 
+EXTERNAL SOURCES:
+  CVCalendar:
+    :commit: ae7da79caa22a23059c7d215178e6fa2aa976949
+    :git: "git@github.com:hwris/CVCalendar.git"
+
+CHECKOUT OPTIONS:
+  CVCalendar:
+    :commit: ae7da79caa22a23059c7d215178e6fa2aa976949
+    :git: "git@github.com:hwris/CVCalendar.git"
+
 SPEC CHECKSUMS:
   Bolts-Swift: afbbaf8c8186e7f769be4afa656949c14087ba44
+  CVCalendar: 1174c1b43c1a258970e14c1e8b19ef4106c5900b
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: 5dafe8df7f67a63e9fdabf6ae216b627c57beb36
+PODFILE CHECKSUM: c79eea3ee8cee9f27663da8ae854ad98a4122355
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

@@ -9,6 +9,7 @@
 import UIKit
 import BoltsSwift
 import SnapKit
+import CVCalendar
 
 class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel> {
     fileprivate let detailSegueId = "detail"
@@ -22,15 +23,7 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
                 self?.tableView.reloadData()
             })
             
-            do {
-                let tast = try viewModel.loadItems(at: Date())
-                tast.continueOnErrorWith {
-                    print($0)
-                }
-            } catch let e  {
-                //todo: error handle
-                assert(false, "\(e)")
-            }
+            loadItems(at: Date())
         }
     }
     
@@ -66,6 +59,26 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
             let detailViewModel = sender as! KNOTPlanDetailViewModel
             let detailVC = segue.destination as! KNOTPlanDetailViewController
             detailVC.viewModel = detailViewModel
+        }
+    }
+    
+    @IBAction func calendarViewDidClicked(_ sender: KNOTCalendarView) {
+        guard let date = sender.calendarView.presentedDate.convertedDate() else {
+            return
+        }
+        
+        loadItems(at: date)
+    }
+    
+    private func loadItems(at date: Date) {
+        do {
+            let tast = try viewModel.loadItems(at: date)
+            tast.continueOnErrorWith {
+                print($0)
+            }
+        } catch let e  {
+            //todo: error handle
+            assert(false, "\(e)")
         }
     }
 }
@@ -153,4 +166,42 @@ class KNOTPlanItemCell: UITableViewCell {
 }
 
 class KNOTPlanEmptyItemCell: UITableViewCell {
+}
+
+class KNOTCalendarView: UIControl, CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var calendarView: CVCalendarView!
+    @IBOutlet weak var menuView: CVCalendarMenuView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        updateDataLable(with: calendarView.presentedDate)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        calendarView.commitCalendarViewUpdate()
+        menuView.commitMenuViewUpdate()
+    }
+    
+    func presentationMode() -> CalendarMode {
+        return .weekView
+    }
+    
+    func firstWeekday() -> Weekday {
+        return .sunday
+    }
+    
+    func weekdaySymbolType() -> WeekdaySymbolType {
+        return .veryShort
+    }
+    
+    func presentedDateUpdated(_ date: CVDate) {
+        updateDataLable(with: date)
+        sendActions(for: .touchUpInside)
+    }
+    
+    private func updateDataLable(with date: CVDate) {
+        dateLabel.text = "\(date.year).\(date.month)"
+    }
 }

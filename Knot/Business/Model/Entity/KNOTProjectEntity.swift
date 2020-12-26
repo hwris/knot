@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol JSONable: Codable {
+protocol JSONable: Codable, CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 extension JSONable {
@@ -23,6 +23,10 @@ extension JSONable {
         }
         
         return "\(self)"
+    }
+    
+    var debugDescription: String {
+        return description
     }
     
     static func fromJSONData(_ data: Data) throws -> Self {

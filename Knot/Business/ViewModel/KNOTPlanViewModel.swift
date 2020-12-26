@@ -31,9 +31,9 @@ class KNOTPlanViewModel {
     private func publishPlans(_ plans: [KNOTPlanEntity]?) {
         let items = plans?.filter({
             let calendar = Calendar.current
-            let creationDateComponents = calendar.dateComponents([ .day ], from: $0.creationDate)
-            let selectedDateComponents = calendar.dateComponents([ .day ], from: self.selectedDate)
-            return creationDateComponents.day == selectedDateComponents.day
+            let creationDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.creationDate)
+            let selectedDateComponents = calendar.dateComponents([ .year, .month, .day ], from: self.selectedDate)
+            return creationDateComponents == selectedDateComponents
         }).sorted(by: { $0.priority < $1.priority }).map({ KNOTPlanItemViewModel(model: $0) })
         
         itemsSubject.publish(items)
@@ -45,6 +45,11 @@ class KNOTPlanViewModel {
             return try model.loadPlans()
         }
         
+        guard selectedDate != date else {
+            return Task(())
+        }
+        
+        selectedDate = date
         publishPlans(plans)
         return Task(())
     }

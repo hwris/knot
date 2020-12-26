@@ -94,7 +94,7 @@ class KNOTModelImpl: KNOTModel {
                 }})
         
         Task.whenAllResult(planTasks).continueWith { [weak self] (t) -> Any? in
-            debugPrint("load plans: ", t.error ?? "", t.result ?? "")
+            debugPrint("load plans:", t.error ?? "", t.result ?? "")
             self?.plansSubject.publish(t.result?.compactMap { $0 })
             return t
         }
