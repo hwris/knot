@@ -110,6 +110,7 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBOutlet weak var flagBackgroundView: UIView!
     @IBOutlet weak var alarmBackgroundView: UIImageView!
     @IBOutlet weak var alarmImageView: UIImageView!
+    private var doneView: UIView!
     
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
@@ -175,6 +176,60 @@ class KNOTPlanItemCell: UITableViewCell {
     }
     
     @IBAction func moreButtonClicked(_ sender: UIButton) {
+    }
+    
+    private var startPoint: CGPoint!
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tableView?.panGestureRecognizer.isEnabled = false
+        let doneView = UILabel(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        doneView.backgroundColor = flagView.backgroundColor
+        doneView.cornerRadius = 20
+        doneView.clipsToBounds = true
+        doneView.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        doneView.textColor = .white
+        doneView.text = "√"
+        doneView.textAlignment = .center
+        
+        contentView.addSubview(doneView)
+        doneView.center.y = contentView.center.y
+        
+        doneView.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
+        startPoint = touches.first!.location(in: contentView)
+        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        
+        self.doneView = doneView
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let offset = touches.first!.location(in: contentView).x - startPoint.x
+        var scale = offset * 0.01
+        scale = scale <= 0.001 ? 0.001 : scale >= 1 ? 1 : scale
+        doneView.transform = CGAffineTransform(scaleX: scale, y: scale)
+        flagBackgroundView.transform = CGAffineTransform(translationX: offset, y: 0)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tableView?.panGestureRecognizer.isEnabled = true
+        let shouldDone = doneView.transform.a >= 1.0
+        UIView.animate(withDuration: 0.2) {
+            self.flagBackgroundView.transform =
+                shouldDone ? CGAffineTransform(translationX: self.doneView.frame.maxX + 20, y: 0) : .identity
+            self.doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0.001, y: 0.001)
+        } completion: { _ in
+            if shouldDone {
+//                viewModel.doDone
+            } else {
+                self.doneView.removeFromSuperview()
+                self.doneView = nil
+            }
+        }
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tableView?.panGestureRecognizer.isEnabled = true
+        doneView.removeFromSuperview()
+        doneView = nil
+        flagBackgroundView.transform = .identity
     }
 }
 
