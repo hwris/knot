@@ -15,8 +15,8 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     fileprivate let detailSegueId = "detail"
     
     @IBOutlet weak var calendarView: KNOTCalendarView!
-    @IBOutlet weak var contentView: UIStackView!
-    @IBOutlet weak var contentViewTop: NSLayoutConstraint!
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var calendarViewBottom: NSLayoutConstraint!
     
     private var itemsSubscription: Subscription<[KNOTPlanItemViewModel]>?
     
@@ -91,10 +91,16 @@ extension KNOTPlanViewController: UITableViewDelegate {
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let newConstant = scrollView.contentOffset.y < 0 ? self.calendarView.frame.height : 0
+        if newConstant == calendarViewBottom.constant {
+            return
+        }
+        
         UIView.animate(withDuration: 0.2) {
-            self.contentViewTop.constant = scrollView.contentOffset.y < 0 ? 0 : -self.calendarView.frame.height
+            self.calendarViewBottom.constant = newConstant
             self.view.layoutIfNeeded()
         }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 }
 
