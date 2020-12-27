@@ -181,7 +181,7 @@ class KNOTPlanItemCell: UITableViewCell {
     private var startPoint: CGPoint!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         tableView?.panGestureRecognizer.isEnabled = false
-        let doneView = UILabel(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let doneView = UILabel(frame: CGRect(x: 20, y: 0, width: 40, height: 40))
         doneView.backgroundColor = flagView.backgroundColor
         doneView.cornerRadius = 20
         doneView.clipsToBounds = true
@@ -193,7 +193,7 @@ class KNOTPlanItemCell: UITableViewCell {
         contentView.addSubview(doneView)
         doneView.center.y = contentView.center.y
         
-        doneView.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
+        doneView.transform = CGAffineTransform(scaleX: 0, y: 0)
         startPoint = touches.first!.location(in: contentView)
         UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         
@@ -203,7 +203,7 @@ class KNOTPlanItemCell: UITableViewCell {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let offset = touches.first!.location(in: contentView).x - startPoint.x
         var scale = offset * 0.01
-        scale = scale <= 0.001 ? 0.001 : scale >= 1 ? 1 : scale
+        scale = scale <= 0 ? 0 : scale >= 1 ? 1 : scale
         doneView.transform = CGAffineTransform(scaleX: scale, y: scale)
         flagBackgroundView.transform = CGAffineTransform(translationX: offset, y: 0)
     }
@@ -213,8 +213,8 @@ class KNOTPlanItemCell: UITableViewCell {
         let shouldDone = doneView.transform.a >= 1.0
         UIView.animate(withDuration: 0.2) {
             self.flagBackgroundView.transform =
-                shouldDone ? CGAffineTransform(translationX: self.doneView.frame.maxX + 20, y: 0) : .identity
-            self.doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0.001, y: 0.001)
+                shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
+            self.doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
         } completion: { _ in
             if shouldDone {
 //                viewModel.doDone
