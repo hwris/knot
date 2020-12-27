@@ -101,10 +101,7 @@ extension KNOTHomeItemTableViewController: KNOTHomeItemViewController {
                     tableView.moveRow(at: emptyIndexPath!, to: _emptyIndexPath)
                 }
                 
-                if #available(iOS 10.0, *) {
-                    let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                    impactFeedback.impactOccurred()
-                }
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             }
         }
     }

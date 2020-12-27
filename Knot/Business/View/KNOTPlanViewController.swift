@@ -14,6 +14,10 @@ import CVCalendar
 class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel> {
     fileprivate let detailSegueId = "detail"
     
+    @IBOutlet weak var calendarView: KNOTCalendarView!
+    @IBOutlet weak var contentView: UIStackView!
+    @IBOutlet weak var contentViewTop: NSLayoutConstraint!
+    
     private var itemsSubscription: Subscription<[KNOTPlanItemViewModel]>?
     
     override var viewModel: KNOTPlanViewModel! {
@@ -30,10 +34,6 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     deinit {
         itemsSubscription?.cancel()
         itemsSubscription = nil
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
     }
     
     override var numberOfDateRows: Int {
@@ -87,6 +87,13 @@ extension KNOTPlanViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DispatchQueue.main.async {
             self.performSegue(withIdentifier: self.detailSegueId, sender: self.viewModel.planDetailViewModel(at: indexPath.row))
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            self.contentViewTop.constant = scrollView.contentOffset.y < 0 ? 0 : -self.calendarView.frame.height
+            self.view.layoutIfNeeded()
         }
     }
 }
@@ -182,6 +189,12 @@ class KNOTCalendarView: UIControl, CVCalendarViewDelegate, CVCalendarMenuViewDel
         super.layoutSubviews()
         calendarView.commitCalendarViewUpdate()
         menuView.commitMenuViewUpdate()
+    }
+    
+    @IBAction func switchCalendarModel(_ sender: UIButton) {
+        let isToMonthView = calendarView.calendarMode == .weekView
+        calendarView.changeMode(isToMonthView ? .monthView : .weekView)
+        sender.isSelected = isToMonthView
     }
     
     func presentationMode() -> CalendarMode {
