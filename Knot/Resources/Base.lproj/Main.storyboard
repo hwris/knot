@@ -157,7 +157,7 @@
                                 <rect key="frame" x="20" y="44" width="374" height="709"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jy4-I5-J85" customClass="KNOTCalendarView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="-176" width="374" height="176"/>
+                                        <rect key="frame" x="0.0" y="-158" width="374" height="158"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCd-tr-zDc">
                                                 <rect key="frame" x="0.0" y="12" width="374" height="36"/>
@@ -186,10 +186,10 @@
                                                     <outlet property="calendarDelegate" destination="jy4-I5-J85" id="rzK-iG-WY6"/>
                                                 </connections>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKr-31-xK1">
-                                                <rect key="frame" x="0.0" y="140" width="374" height="36"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKr-31-xK1">
+                                                <rect key="frame" x="0.0" y="140" width="374" height="18"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="36" id="5O7-6j-kQG"/>
+                                                    <constraint firstAttribute="height" constant="18" id="5O7-6j-kQG"/>
                                                 </constraints>
                                                 <state key="normal" image="ic_arrow_down"/>
                                                 <state key="selected" image="ic_arrow_up"/>
@@ -225,7 +225,7 @@
                                         </connections>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7FY-de-HMo">
-                                        <rect key="frame" x="0.0" y="0.0" width="374" height="36"/>
+                                        <rect key="frame" x="0.0" y="12" width="374" height="36"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
                                         <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -236,7 +236,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Sp-JP-hyA">
-                                        <rect key="frame" x="0.0" y="51" width="374" height="658"/>
+                                        <rect key="frame" x="0.0" y="68" width="374" height="641"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="j6I-SD-986" customClass="KNOTPlanItemCell" customModule="Knot" customModuleProvider="target">
@@ -400,13 +400,13 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="4Sp-JP-hyA" firstAttribute="leading" secondItem="D6C-h1-RWL" secondAttribute="leading" id="ILS-cV-wfx"/>
-                                    <constraint firstItem="7FY-de-HMo" firstAttribute="top" secondItem="jy4-I5-J85" secondAttribute="bottom" id="J64-cN-t6P"/>
+                                    <constraint firstItem="7FY-de-HMo" firstAttribute="top" secondItem="jy4-I5-J85" secondAttribute="bottom" constant="12" id="J64-cN-t6P"/>
                                     <constraint firstAttribute="trailing" secondItem="4Sp-JP-hyA" secondAttribute="trailing" id="LJr-lJ-W4K"/>
                                     <constraint firstItem="7FY-de-HMo" firstAttribute="leading" secondItem="D6C-h1-RWL" secondAttribute="leading" id="YRJ-4R-zC6"/>
                                     <constraint firstAttribute="trailing" secondItem="7FY-de-HMo" secondAttribute="trailing" id="du0-nP-l1a"/>
-                                    <constraint firstItem="jy4-I5-J85" firstAttribute="bottom" secondItem="D6C-h1-RWL" secondAttribute="top" id="jTw-vg-KRR"/>
+                                    <constraint firstItem="jy4-I5-J85" firstAttribute="top" secondItem="D6C-h1-RWL" secondAttribute="top" constant="-158" id="jTw-vg-KRR"/>
                                     <constraint firstAttribute="bottom" secondItem="4Sp-JP-hyA" secondAttribute="bottom" id="kCz-VJ-1O1"/>
-                                    <constraint firstItem="4Sp-JP-hyA" firstAttribute="top" secondItem="7FY-de-HMo" secondAttribute="bottom" constant="15" id="lN0-g9-PCt"/>
+                                    <constraint firstItem="4Sp-JP-hyA" firstAttribute="top" secondItem="7FY-de-HMo" secondAttribute="bottom" constant="20" id="lN0-g9-PCt"/>
                                     <constraint firstItem="jy4-I5-J85" firstAttribute="leading" secondItem="D6C-h1-RWL" secondAttribute="leading" id="mjQ-hh-9te"/>
                                     <constraint firstAttribute="trailing" secondItem="jy4-I5-J85" secondAttribute="trailing" id="oIl-5a-xxh"/>
                                 </constraints>
@@ -429,7 +429,7 @@
                     <tabBarItem key="tabBarItem" title="Plan" id="Kjx-Jq-EwB"/>
                     <connections>
                         <outlet property="calendarView" destination="jy4-I5-J85" id="k1C-72-AdS"/>
-                        <outlet property="calendarViewBottom" destination="jTw-vg-KRR" id="tGR-Oj-DNY"/>
+                        <outlet property="calendarViewTop" destination="jTw-vg-KRR" id="Oit-lV-9tF"/>
                         <outlet property="contentView" destination="D6C-h1-RWL" id="yHn-aI-VZZ"/>
                         <outlet property="tableView" destination="4Sp-JP-hyA" id="0ZC-SY-yC2"/>
                         <segue destination="owD-Bc-jJt" kind="presentation" identifier="detail" id="MdA-yL-8Mx"/>
