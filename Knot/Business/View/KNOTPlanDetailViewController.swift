@@ -20,7 +20,7 @@ class KNOTPlanDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         keyboardButton.isHidden = true
-        flagColorButtonCliked(flagButtons[viewModel.selectedFlagColorIndex])
+        flagColorButtonCliked(flagButtons.filter({ $0.tag == viewModel.selectedFlagColorIndex }).first!)
         itemsTableView.setEditing(true, animated: false)
         
         NotificationCenter.default.addObserver(self,
@@ -72,8 +72,8 @@ class KNOTPlanDetailViewController: UIViewController {
         sender.isSelected = true
         flagButtons.forEach { $0.isSelected = $0 == sender }
         
-        if let index = flagButtons.firstIndex(of: sender), index != viewModel.selectedFlagColorIndex {
-            viewModel.selectedFlagColor(at: index)
+        if sender.tag != viewModel.selectedFlagColorIndex {
+            viewModel.selectedFlagColor(at: sender.tag)
         }
     }
     

@@ -83,8 +83,9 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     }
 }
 
-extension KNOTPlanViewController: UITableViewDelegate {
+extension KNOTPlanViewController: KNOTSwipeTableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        (tableView as! KNOTSwipeTableView).didSelectedRowAt(indexPath)
         DispatchQueue.main.async {
             self.performSegue(withIdentifier: self.detailSegueId, sender: self.viewModel.planDetailViewModel(at: indexPath.row))
         }
@@ -102,6 +103,18 @@ extension KNOTPlanViewController: UITableViewDelegate {
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
+    
+    func tableView(_ tableView: UITableView, rowPanGSRecognized gs: UIPanGestureRecognizer, at indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? KNOTPlanItemCell {
+            cell.rowPanGSRecognized(gs)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, rowPanGSNotBegin gs: UIPanGestureRecognizer, at indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? KNOTPlanItemCell {
+            cell.rowPanGSNotBegin(gs)
+        }
+    }
 }
 
 class KNOTPlanItemCell: UITableViewCell {
@@ -110,7 +123,6 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBOutlet weak var flagBackgroundView: UIView!
     @IBOutlet weak var alarmBackgroundView: UIImageView!
     @IBOutlet weak var alarmImageView: UIImageView!
-    private var doneView: UIView!
     
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
@@ -131,16 +143,16 @@ class KNOTPlanItemCell: UITableViewCell {
         }
     }
     
-    private func updateContentView() {
+    private func updateContentView(withStrikethrough useStrikethrough: Bool = false) {
         contentLabel.text = nil
         contentLabel.attributedText = nil
         
-        if viewModel.items.isEmpty {
+        if useStrikethrough == false, viewModel.items.isEmpty {
             contentLabel.text = viewModel.content
             return
         }
         
-        if let attText = viewModel.cachedContent as? NSAttributedString {
+        if useStrikethrough == false, let attText = viewModel.cachedContent as? NSAttributedString {
             contentLabel.attributedText = attText
             return
         }
@@ -167,9 +179,9 @@ class KNOTPlanItemCell: UITableViewCell {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.headIndent = 26
         paragraphStyle.paragraphSpacingBefore = 30
-        attText.addAttribute(.paragraphStyle,
-                             value: paragraphStyle,
-                             range: NSRange(location: viewModel.content.count, length: attText.string.count - viewModel.content.count))
+        let range = NSRange(location: viewModel.content.count, length: attText.string.count - viewModel.content.count)
+        let attributes = [ NSAttributedString.Key.paragraphStyle : paragraphStyle as Any]
+        attText.addAttributes(attributes, range: range)
         
         contentLabel.attributedText = attText
         viewModel.cachedContent = attText
@@ -178,58 +190,71 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBAction func moreButtonClicked(_ sender: UIButton) {
     }
     
-    private var startPoint: CGPoint!
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tableView?.panGestureRecognizer.isEnabled = false
-        let doneView = UILabel(frame: CGRect(x: 20, y: 0, width: 40, height: 40))
-        doneView.backgroundColor = flagView.backgroundColor
-        doneView.cornerRadius = 20
-        doneView.clipsToBounds = true
-        doneView.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        doneView.textColor = .white
-        doneView.text = "√"
-        doneView.textAlignment = .center
-        
-        contentView.addSubview(doneView)
-        doneView.center.y = contentView.center.y
-        
-        doneView.transform = CGAffineTransform(scaleX: 0, y: 0)
-        startPoint = touches.first!.location(in: contentView)
-        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-        
-        self.doneView = doneView
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let offset = touches.first!.location(in: contentView).x - startPoint.x
-        var scale = offset * 0.01
-        scale = scale <= 0 ? 0 : scale >= 1 ? 1 : scale
-        doneView.transform = CGAffineTransform(scaleX: scale, y: scale)
-        flagBackgroundView.transform = CGAffineTransform(translationX: offset, y: 0)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tableView?.panGestureRecognizer.isEnabled = true
-        let shouldDone = doneView.transform.a >= 1.0
-        UIView.animate(withDuration: 0.2) {
-            self.flagBackgroundView.transform =
-                shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
-            self.doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
-        } completion: { _ in
-            if shouldDone {
-//                viewModel.doDone
-            } else {
-                self.doneView.removeFromSuperview()
-                self.doneView = nil
+    private var doneView: UIView!
+    private var startOffsetX = CGFloat.zero
+    private var startScale = CGFloat.zero
+    fileprivate func rowPanGSRecognized(_ gs: UIPanGestureRecognizer) {
+        switch gs.state {
+        case .began:
+            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+            
+            startOffsetX = flagBackgroundView.transform.tx
+            startScale = doneView?.transform.a ?? 0
+            
+            if doneView != nil {
+                return
             }
+            
+            let button = UIButton(type: .custom)
+            button.backgroundColor = flagView.backgroundColor
+            button.cornerRadius = 20
+            button.clipsToBounds = true
+            button.setBackgroundImage(UIImage(named: viewModel.colors.flagImageName), for: .normal)
+            
+            contentView.insertSubview(button, at: 0)
+            button.frame = CGRect(x: 20, y: 0, width: 40, height: 40)
+            button.center.y = contentView.center.y
+            button.transform = CGAffineTransform(scaleX: 0, y: 0)
+            
+            doneView = button
+        case .changed:
+            let offsetX = gs.translation(in: contentView).x
+            flagBackgroundView.transform = CGAffineTransform(translationX: max(0, startOffsetX + offsetX), y: 0)
+            
+            let scale = min(max(startScale + offsetX * 0.01, 0), 1.0)
+            doneView.transform = CGAffineTransform(scaleX: scale, y: scale)
+        case .ended:
+            let shouldDone = doneView.transform.a >= 0.5
+            UIView.animate(withDuration: 0.2) {
+                self.doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
+                self.flagBackgroundView.transform =
+                    shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
+                self.updateContentView(withStrikethrough: shouldDone)
+            } completion: { _ in
+                if shouldDone {
+                    //                viewModel.doDone
+                } else {
+                    self.doneView.removeFromSuperview()
+                    self.doneView = nil
+                }
+            }
+        case .cancelled, .failed:
+            doneView.removeFromSuperview()
+            doneView = nil
+            flagBackgroundView.transform = .identity
+        default:
+            break
         }
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tableView?.panGestureRecognizer.isEnabled = true
-        doneView.removeFromSuperview()
-        doneView = nil
-        flagBackgroundView.transform = .identity
+    fileprivate func rowPanGSNotBegin(_ gs: UIPanGestureRecognizer) {
+        UIView.animate(withDuration: 0.2) {
+            self.flagBackgroundView?.transform = .identity
+            self.doneView?.transform = CGAffineTransform(scaleX: 0, y: 0)
+        } completion: { _ in
+            self.doneView?.removeFromSuperview()
+            self.doneView = nil
+        }
     }
 }
 

@@ -83,11 +83,13 @@ class KNOTPlanItemViewModel {
     struct ItemColors {
         let flagColors: (UIColor, UIColor)
         let flagBkColors: (UIColor, UIColor)
+        let flagImageName: String
         let alarmColors: (UIColor, UIColor)?
         
         init(flagColor: UInt32, alarm: Bool) {
             flagColors = (UIColor(flagColor), UIColor(flagColor))
             flagBkColors = KNOTPlanItemFlagColor.flagBkColors(byRawValue: flagColor)
+            flagImageName = KNOTPlanItemFlagColor.flagImageName(byRawValue: flagColor)
             alarmColors = alarm ? KNOTPlanItemFlagColor.alarmColors(byRawValue: flagColor) : nil
         }
     }
@@ -137,6 +139,19 @@ enum KNOTPlanItemFlagColor: UInt32 {
             return (UIColor(0xFFE374), UIColor(0x262949))
         default:
             return (UIColor(rawValue, 0.8), UIColor(0x262949))
+        }
+    }
+    
+    static func flagImageName(byRawValue rawValue: UInt32) -> String {
+        switch rawValue {
+        case KNOTPlanItemFlagColor.red.rawValue:
+            return "ic_select_on_red"
+        case KNOTPlanItemFlagColor.blue.rawValue:
+            return "ic_select_on_blue"
+        case KNOTPlanItemFlagColor.yellow.rawValue:
+            return "ic_select_on_yellow"
+        default:
+            return "ic_select_on_blue"
         }
     }
 }
