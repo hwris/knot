@@ -194,10 +194,12 @@ class KNOTPlanItemCell: UITableViewCell {
     private var startOffsetX = CGFloat.zero
     private var startScale = CGFloat.zero
     fileprivate func rowPanGSRecognized(_ gs: UIPanGestureRecognizer) {
+        if doneView == nil, gs.translation(in: contentView).x <= 0.01 {
+            return
+        }
+        
         switch gs.state {
         case .began:
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-            
             startOffsetX = flagBackgroundView.transform.tx
             startScale = doneView?.transform.a ?? 0
             
@@ -217,16 +219,26 @@ class KNOTPlanItemCell: UITableViewCell {
             button.transform = CGAffineTransform(scaleX: 0, y: 0)
             
             doneView = button
+            
+            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         case .changed:
+            guard let doneView = self.doneView else {
+                return
+            }
+            
             let offsetX = gs.translation(in: contentView).x
             flagBackgroundView.transform = CGAffineTransform(translationX: max(0, startOffsetX + offsetX), y: 0)
             
             let scale = min(max(startScale + offsetX * 0.01, 0), 1.0)
             doneView.transform = CGAffineTransform(scaleX: scale, y: scale)
         case .ended:
+            guard let doneView = self.doneView else {
+                return
+            }
+            
             let shouldDone = doneView.transform.a >= 0.5
             UIView.animate(withDuration: 0.2) {
-                self.doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
+                doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
                 self.flagBackgroundView.transform =
                     shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
                 self.updateContentView(withStrikethrough: shouldDone)
@@ -234,13 +246,17 @@ class KNOTPlanItemCell: UITableViewCell {
                 if shouldDone {
                     //                viewModel.doDone
                 } else {
-                    self.doneView.removeFromSuperview()
+                    doneView.removeFromSuperview()
                     self.doneView = nil
                 }
             }
         case .cancelled, .failed:
+            guard let doneView = self.doneView else {
+                return
+            }
+            
             doneView.removeFromSuperview()
-            doneView = nil
+            self.doneView = nil
             flagBackgroundView.transform = .identity
         default:
             break
