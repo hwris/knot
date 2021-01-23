@@ -26,8 +26,8 @@ class KNOTModelImpl: KNOTModel {
     }()
     private var loadCompletions = [TaskCompletionSource<Void>]()
     
-    let plansSubject = Subject<[KNOTPlanEntity]>()
-    let projectsSubject = Subject<[KNOTProjectEntity]>()
+    let plansSubject = Subject<CollectionSubscription<[KNOTPlanEntity]>>()
+    let projectsSubject = Subject<CollectionSubscription<[KNOTProjectEntity]>>()
     
     var planModel: KNOTPlanModel { self }
     
@@ -40,6 +40,20 @@ class KNOTModelImpl: KNOTModel {
                                                selector: #selector(contentsDidUpdated(notification:)),
                                                name: .NSMetadataQueryDidUpdate,
                                                object: metadataQuery)
+    }
+    
+    private func containerURL() throws -> URL {
+        guard let url = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+            throw "No login to iCloud"
+        }
+        
+        let containerURL = URL(fileURLWithPath: "Documents/TodoList", relativeTo: url)
+        
+        if FileManager.default.fileExists(atPath: containerURL.absoluteURL.path) == false {
+            try FileManager.default.createDirectory(at: containerURL, withIntermediateDirectories: true, attributes: nil)
+        }
+        
+        return containerURL
     }
     
     private func loadItems() throws -> Task<Void> {
@@ -57,20 +71,6 @@ class KNOTModelImpl: KNOTModel {
         let tcs = TaskCompletionSource<Void>()
         loadCompletions.append(tcs)
         return tcs.task
-    }
-    
-    private func containerURL() throws -> URL {
-        guard let url = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
-            throw "No login to iCloud"
-        }
-        
-        let containerURL = URL(fileURLWithPath: "Documents/TodoList", relativeTo: url)
-        
-        if FileManager.default.fileExists(atPath: containerURL.absoluteURL.path) == false {
-            try FileManager.default.createDirectory(at: containerURL, withIntermediateDirectories: true, attributes: nil)
-        }
-        
-        return containerURL
     }
     
     @objc private func contentsDidUpdated(notification: Notification) {
@@ -95,13 +95,13 @@ class KNOTModelImpl: KNOTModel {
         
         Task.whenAllResult(planTasks).continueWith { [weak self] (t) -> Any? in
             debugPrint("load plans:", t.error ?? "", t.result ?? "")
-            self?.plansSubject.publish(t.result?.compactMap { $0 })
+            self?.plansSubject.publish((t.result?.compactMap { $0 }, .reset))
             return t
         }
         
         Task.whenAllResult(projectTasks).continueWith { [weak self] (t) -> Any? in
             debugPrint("load projects: ", t.error ?? "", t.result ?? "")
-            self?.projectsSubject.publish(t.result?.compactMap { $0 })
+            self?.projectsSubject.publish((t.result?.compactMap { $0 }, .reset))
             return t
         }
     }
@@ -159,7 +159,6 @@ extension KNOTModelImpl {
 }
 
 extension KNOTModelImpl: KNOTPlanModel {
-    
     func loadPlans() throws -> Task<Void> {
         return try loadItems()
     }
@@ -167,9 +166,9 @@ extension KNOTModelImpl: KNOTPlanModel {
     func deletePlan(_ plan: KNOTPlanEntity) throws -> Task<Void> {
         let container = try containerURL()
         
-        var plans = plansSubject.value ?? []
-        plans.removeAll { $0 == plan }
-        plansSubject.publish(plans)
+        var plans = plansSubject.value?.0
+        plans?.removeAll { $0 == plan }
+        plansSubject.publish((plans, .remove))
         
         return fileCoordinate(writingItemAt: plan.fileURL(for: container), options: .forMerging) {
             try FileManager.default.removeItem(at: $0)
@@ -180,7 +179,7 @@ extension KNOTModelImpl: KNOTPlanModel {
         let container = try containerURL()
         let plan = KNOTPlanEntity(creationDate: Date(), priority: Int64(index), content: "", flagColor: 0x5276FF)
         let index = Int(plan.priority)
-        var plans = plansSubject.value ?? []
+        var plans = plansSubject.value?.0 ?? []
         plans.insert(plan, at: index)
         
         var updateTasks = [Task<Void>]()
@@ -195,7 +194,7 @@ extension KNOTModelImpl: KNOTPlanModel {
             try data.write(to: $0)
         }
         
-        plansSubject.publish(plans)
+        plansSubject.publish((plans, .insert))
         
         updateTasks.append(insertTask)
         Task.whenAll(updateTasks).continueWith { (t) -> Void in
@@ -204,23 +203,23 @@ extension KNOTModelImpl: KNOTPlanModel {
             }
         }
         
-        return KNOTPlanDetailModelImpl(plan: plan, updateModel: self)
+        return KNOTPlanDetailModelImpl(plan: plan)
     }
     
     func updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void> {
-        let plans = plansSubject.value ?? []
-        plansSubject.publish(plans)
+        let plans = plansSubject.value?.0
+        plansSubject.publish((plans, .update))
         return try _updatePlan(plan)
+    }
+    
+    func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
+        return KNOTPlanDetailModelImpl(plan: plan)
     }
     
     func _updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void> {
         return self.fileCoordinate(writingItemAt: plan.fileURL(for: try containerURL()), options: .forMerging) {
             try plan.toJsonData().write(to: $0)
         }
-    }
-    
-    func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
-        return KNOTPlanDetailModelImpl(plan: plan, updateModel: self)
     }
 }
 
@@ -232,15 +231,9 @@ extension KNOTPlanEntity {
 
 private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
     let plan: KNOTPlanEntity
-    private weak var updateModel: (AnyObject & KNOTPlanUpdateModel)?
     
-    init(plan: KNOTPlanEntity, updateModel: AnyObject & KNOTPlanUpdateModel) {
+    init(plan: KNOTPlanEntity) {
         self.plan = plan
-        self.updateModel = updateModel
-    }
-    
-    func updatePlan() throws -> Task<Void> {
-        return try updateModel!.updatePlan(plan)
     }
 }
 

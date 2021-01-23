@@ -10,5 +10,4 @@ import BoltsSwift
 
 protocol KNOTPlanDetailModel {
     var plan: KNOTPlanEntity { get }
-    func updatePlan() throws -> Task<Void>
 }

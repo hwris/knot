@@ -11,7 +11,7 @@ import BoltsSwift
 
 class KNOTPlanViewModel {
     private let model: KNOTPlanModel
-    private var plansSubscription: Subscription<[KNOTPlanEntity]>?
+    private var plansSubscription: Subscription<CollectionSubscription<[KNOTPlanEntity]>>?
     
     private var selectedDate = Date()
     let itemsSubject = Subject<[KNOTPlanItemViewModel]>()
@@ -19,7 +19,11 @@ class KNOTPlanViewModel {
     init(model: KNOTPlanModel) {
         self.model = model
         plansSubscription = model.plansSubject.listen({ [weak self] (newValue, _) in
-            self?.publishPlans(newValue)
+            guard let (plans, action) = newValue, action == .reset else {
+                return
+            }
+            
+            self?.publishPlans(plans)
         })
     }
     
@@ -50,12 +54,21 @@ class KNOTPlanViewModel {
         }
         
         selectedDate = date
-        publishPlans(plans)
+        publishPlans(plans.0)
         return Task(())
     }
     
     func insertPlan(at index: Int) throws -> KNOTPlanDetailViewModel {
         return try KNOTPlanDetailViewModel(model: model.insertPlan(at: index))
+    }
+    
+    func updatePlan(at index: Int) throws -> Task<Void> {
+        let plan = itemsSubject.value![index].model
+        return try model.updatePlan(plan)
+    }
+    
+    func makeDonePlan(at index: Int) {
+        let plan = itemsSubject.value![index].model
     }
     
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {

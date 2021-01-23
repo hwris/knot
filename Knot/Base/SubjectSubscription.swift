@@ -76,3 +76,6 @@ class Subscription<T> {
         cancel()
     }
 }
+
+enum CollectionChangeKind { case reset, remove, update, insert }
+typealias CollectionSubscription<T> = (T?, CollectionChangeKind)

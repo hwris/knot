@@ -43,15 +43,34 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     override func dataCell(_ cell: UITableViewCell, didDequeuedAtRow indexPath: IndexPath) {
         let itemCell = cell as! KNOTPlanItemCell
         itemCell.viewModel = (viewModel.itemsSubject.value)![indexPath.row]
+        itemCell.doneButtonClicked = doneButtonClickedInCell(_:)
     }
     
     override func emptyCellDidInsert(at indexPath: IndexPath) {
         do {
-            try performSegue(withIdentifier: detailSegueId, sender: viewModel.insertPlan(at: indexPath.row))
+            let detailViewModel = try viewModel.insertPlan(at: indexPath.row)
+            showDetailViewController(detailViewModel, at: indexPath)
         } catch let e {
             //todo: error handle
             assert(false, "\(e)")
         }
+    }
+    
+    private func showDetailViewController(_ detailViewModel: KNOTPlanDetailViewModel, at indexPath: IndexPath) {
+        detailViewModel.reloadPlan = { [weak self] (_) in
+            do {
+                let t = try self?.viewModel.updatePlan(at: indexPath.row)
+                t?.continueOnErrorWith(continuation: { (e) in
+                    //todo: error handle
+                    assert(false, "\(e)")
+                })
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            } catch let e {
+                //todo: error handle
+                assert(false, "\(e)")
+            }
+        }
+        performSegue(withIdentifier: detailSegueId, sender: detailViewModel)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -81,13 +100,18 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
             assert(false, "\(e)")
         }
     }
+    
+    @objc
+    private func doneButtonClickedInCell(_ cell: KNOTPlanItemCell) {
+        
+    }
 }
 
 extension KNOTPlanViewController: KNOTSwipeTableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tableView as! KNOTSwipeTableView).didSelectedRowAt(indexPath)
         DispatchQueue.main.async {
-            self.performSegue(withIdentifier: self.detailSegueId, sender: self.viewModel.planDetailViewModel(at: indexPath.row))
+            self.showDetailViewController(self.viewModel.planDetailViewModel(at: indexPath.row), at: indexPath)
         }
     }
     
@@ -123,7 +147,7 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBOutlet weak var flagBackgroundView: UIView!
     @IBOutlet weak var alarmBackgroundView: UIImageView!
     @IBOutlet weak var alarmImageView: UIImageView!
-    
+    fileprivate var doneButtonClicked: ((KNOTPlanItemCell) -> ())?
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
             if oldValue === viewModel {
@@ -212,6 +236,7 @@ class KNOTPlanItemCell: UITableViewCell {
             button.cornerRadius = 20
             button.clipsToBounds = true
             button.setBackgroundImage(UIImage(named: viewModel.colors.flagImageName), for: .normal)
+            button.addTarget(self, action: #selector(doneButtonTouched(_:)), for: .touchUpInside)
             
             contentView.insertSubview(button, at: 0)
             button.frame = CGRect(x: 20, y: 0, width: 40, height: 40)
@@ -243,9 +268,7 @@ class KNOTPlanItemCell: UITableViewCell {
                     shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
                 self.updateContentView(withStrikethrough: shouldDone)
             } completion: { _ in
-                if shouldDone {
-                    //                viewModel.doDone
-                } else {
+                if !shouldDone {
                     doneView.removeFromSuperview()
                     self.doneView = nil
                 }
@@ -271,6 +294,11 @@ class KNOTPlanItemCell: UITableViewCell {
             self.doneView?.removeFromSuperview()
             self.doneView = nil
         }
+    }
+    
+    @objc
+    private func doneButtonTouched(_ sender: UIButton) {
+        doneButtonClicked?(self)
     }
 }
 

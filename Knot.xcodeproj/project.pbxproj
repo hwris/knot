@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA57B243823FE0056B84F /* UIView+Category.swift */; };
 		2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */; };
+		2C55A89125BC5482000EF1C0 /* KNOTEntityBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89025BC5482000EF1C0 /* KNOTEntityBase.swift */; };
+		2C55A89B25BC5EA0000EF1C0 /* KnotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */; };
 		2C6EBD3625A166BE008A274C /* UITableView+Swipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */; };
 		2C7F261B244A8D1600F13299 /* SubjectSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */; };
 		2C7F261D244C4BA500F13299 /* KNOTViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F261C244C4BA500F13299 /* KNOTViewModel.swift */; };
@@ -34,11 +36,25 @@
 		A695E3252604235DC6167E02 /* Pods_Knot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2C55A89D25BC5EA0000EF1C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CEBFD2124270526008807E1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CEBFD2824270526008807E1;
+			remoteInfo = Knot;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Knot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2369AA372A2665998D89910D /* Pods-Knot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Knot.release.xcconfig"; path = "Target Support Files/Pods-Knot/Pods-Knot.release.xcconfig"; sourceTree = "<group>"; };
 		2C2AA57B243823FE0056B84F /* UIView+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Category.swift"; sourceTree = "<group>"; };
 		2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanViewController.swift; sourceTree = "<group>"; };
+		2C55A89025BC5482000EF1C0 /* KNOTEntityBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTEntityBase.swift; sourceTree = "<group>"; };
+		2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KnotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotTests.swift; sourceTree = "<group>"; };
+		2C55A89C25BC5EA0000EF1C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Swipe.swift"; sourceTree = "<group>"; };
 		2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectSubscription.swift; sourceTree = "<group>"; };
 		2C7F261C244C4BA500F13299 /* KNOTViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTViewModel.swift; sourceTree = "<group>"; };
@@ -71,6 +87,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2C55A89525BC5EA0000EF1C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CEBFD2624270526008807E1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -82,6 +105,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C55A89925BC5EA0000EF1C0 /* KnotTests */ = {
+			isa = PBXGroup;
+			children = (
+				2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */,
+				2C55A89C25BC5EA0000EF1C0 /* Info.plist */,
+			);
+			path = KnotTests;
+			sourceTree = "<group>";
+		};
 		2CE791FD2430806700975D99 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				2CEBFD2B24270526008807E1 /* Knot */,
+				2C55A89925BC5EA0000EF1C0 /* KnotTests */,
 				2CEBFD2A24270526008807E1 /* Products */,
 				7F92E7ACAD89D79CAD2F7112 /* Pods */,
 				85304EA5D9AECC720BF4F54C /* Frameworks */,
@@ -131,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				2CEBFD2924270526008807E1 /* Knot.app */,
+				2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,6 +218,7 @@
 		2CEBFD6824273F0F008807E1 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
+				2C55A89025BC5482000EF1C0 /* KNOTEntityBase.swift */,
 				2CEBFD69242742F8008807E1 /* KNOTProjectEntity.swift */,
 			);
 			path = Entity;
@@ -209,6 +244,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2C55A89725BC5EA0000EF1C0 /* KnotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C55A89F25BC5EA0000EF1C0 /* Build configuration list for PBXNativeTarget "KnotTests" */;
+			buildPhases = (
+				2C55A89425BC5EA0000EF1C0 /* Sources */,
+				2C55A89525BC5EA0000EF1C0 /* Frameworks */,
+				2C55A89625BC5EA0000EF1C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C55A89E25BC5EA0000EF1C0 /* PBXTargetDependency */,
+			);
+			name = KnotTests;
+			productName = KnotTests;
+			productReference = 2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2CEBFD2824270526008807E1 /* Knot */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CEBFD3D24270529008807E1 /* Build configuration list for PBXNativeTarget "Knot" */;
@@ -235,10 +288,14 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = KNOT;
-				LastSwiftUpdateCheck = 1130;
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = SUYANG;
 				TargetAttributes = {
+					2C55A89725BC5EA0000EF1C0 = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = 2CEBFD2824270526008807E1;
+					};
 					2CEBFD2824270526008807E1 = {
 						CreatedOnToolsVersion = 11.3.1;
 						LastSwiftMigration = 1140;
@@ -260,11 +317,19 @@
 			projectRoot = "";
 			targets = (
 				2CEBFD2824270526008807E1 /* Knot */,
+				2C55A89725BC5EA0000EF1C0 /* KnotTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2C55A89625BC5EA0000EF1C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CEBFD2724270526008807E1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -322,6 +387,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2C55A89425BC5EA0000EF1C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C55A89B25BC5EA0000EF1C0 /* KnotTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CEBFD2524270526008807E1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -333,6 +406,7 @@
 				2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */,
 				2CFEA83424A5D77500853629 /* KNOTTextViewTableViewCell.swift in Sources */,
 				2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */,
+				2C55A89125BC5482000EF1C0 /* KNOTEntityBase.swift in Sources */,
 				2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */,
 				2C7F261B244A8D1600F13299 /* SubjectSubscription.swift in Sources */,
 				2CEBFD6A242742F8008807E1 /* KNOTProjectEntity.swift in Sources */,
@@ -349,6 +423,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2C55A89E25BC5EA0000EF1C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CEBFD2824270526008807E1 /* Knot */;
+			targetProxy = 2C55A89D25BC5EA0000EF1C0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2CEBFD4E24271B89008807E1 /* InfoPlist.strings */ = {
@@ -389,6 +471,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2C55A8A025BC5EA0000EF1C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ZCCBFMN3L4;
+				INFOPLIST_FILE = KnotTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyang.KnotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Knot.app/Knot";
+			};
+			name = Debug;
+		};
+		2C55A8A125BC5EA0000EF1C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ZCCBFMN3L4;
+				INFOPLIST_FILE = KnotTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyang.KnotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Knot.app/Knot";
+			};
+			name = Release;
+		};
 		2CEBFD3B24270529008807E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -551,6 +677,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2C55A89F25BC5EA0000EF1C0 /* Build configuration list for PBXNativeTarget "KnotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C55A8A025BC5EA0000EF1C0 /* Debug */,
+				2C55A8A125BC5EA0000EF1C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2CEBFD2424270526008807E1 /* Build configuration list for PBXProject "Knot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

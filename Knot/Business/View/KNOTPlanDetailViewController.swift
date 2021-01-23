@@ -84,8 +84,7 @@ class KNOTPlanDetailViewController: UIViewController {
     }
     
     @IBAction func bkViewTapped(_ sender: UITapGestureRecognizer) {
-        let _ = try? viewModel.updatePlan()
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: viewModel.updatePlan)
     }
 }
 
