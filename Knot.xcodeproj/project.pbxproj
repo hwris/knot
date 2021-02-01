@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA57B243823FE0056B84F /* UIView+Category.swift */; };
 		2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */; };
+		2C4439D025C69D080054A5EE /* JSONable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4439CF25C69D080054A5EE /* JSONable.swift */; };
+		2C4439D325C6AAA10054A5EE /* Pods_Knot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */; };
 		2C55A89125BC5482000EF1C0 /* KNOTEntityBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89025BC5482000EF1C0 /* KNOTEntityBase.swift */; };
 		2C55A89B25BC5EA0000EF1C0 /* KnotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */; };
 		2C6EBD3625A166BE008A274C /* UITableView+Swipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */; };
@@ -33,7 +35,6 @@
 		2CEBFD6C242750F1008807E1 /* KNOTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEBFD6B242750F1008807E1 /* KNOTModel.swift */; };
 		2CF757DF248B3A2A00DC0276 /* KNOTPlanDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF757DE248B3A2A00DC0276 /* KNOTPlanDetailModel.swift */; };
 		2CFEA83424A5D77500853629 /* KNOTTextViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEA83324A5D77500853629 /* KNOTTextViewTableViewCell.swift */; };
-		A695E3252604235DC6167E02 /* Pods_Knot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		2369AA372A2665998D89910D /* Pods-Knot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Knot.release.xcconfig"; path = "Target Support Files/Pods-Knot/Pods-Knot.release.xcconfig"; sourceTree = "<group>"; };
 		2C2AA57B243823FE0056B84F /* UIView+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Category.swift"; sourceTree = "<group>"; };
 		2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanViewController.swift; sourceTree = "<group>"; };
+		2C4439CF25C69D080054A5EE /* JSONable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONable.swift; sourceTree = "<group>"; };
 		2C55A89025BC5482000EF1C0 /* KNOTEntityBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTEntityBase.swift; sourceTree = "<group>"; };
 		2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KnotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotTests.swift; sourceTree = "<group>"; };
@@ -98,7 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A695E3252604235DC6167E02 /* Pods_Knot.framework in Frameworks */,
+				2C4439D325C6AAA10054A5EE /* Pods_Knot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +136,7 @@
 				2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */,
 				2CFEA83324A5D77500853629 /* KNOTTextViewTableViewCell.swift */,
 				2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */,
+				2C4439CF25C69D080054A5EE /* JSONable.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */,
 				2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */,
 				2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */,
+				2C4439D025C69D080054A5EE /* JSONable.swift in Sources */,
 				2CFEA83424A5D77500853629 /* KNOTTextViewTableViewCell.swift in Sources */,
 				2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */,
 				2C55A89125BC5482000EF1C0 /* KNOTEntityBase.swift in Sources */,

@@ -31,7 +31,7 @@ class KNOTPlanEntity: KNOTEntityBase, JSONable {
     var remindTimeInterval: TimeInterval?
     var remindTime: Date?
     var projectId: String?
-    var isDone = false
+    @JSONDefault.False var isDone: Bool = false
     
     init(creationDate: Date, priority: Int64, content: String, flagColor: UInt32) {
         self.creationDate = creationDate

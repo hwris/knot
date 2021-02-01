@@ -100,7 +100,7 @@ class KNOTModelImpl: KNOTModel {
         }
         
         Task.whenAllResult(projectTasks).continueWith { [weak self] (t) -> Any? in
-            debugPrint("load projects: ", t.error ?? "", t.result ?? "")
+            debugPrint("load projects:", t.error ?? "", t.result ?? "")
             self?.projectsSubject.publish((t.result?.compactMap { $0 }, .reset))
             return t
         }
