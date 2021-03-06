@@ -28,7 +28,12 @@ class KNOTEntityBase: Equatable {
     }
     
     var ckRecord: CKRecord {
-        return _ckRecord ?? CKRecord(recordType: type(of:self).recordType, recordID: ckRecordID)
+        get {
+            return _ckRecord ?? CKRecord(recordType: type(of:self).recordType, recordID: ckRecordID)
+        }
+        set {
+            _ckRecord = newValue
+        }
     }
     
     class var recordType: CKRecord.RecordType {
@@ -61,12 +66,18 @@ class KNOTProjectEntity: KNOTEntityBase {
     }
     
     override var ckRecord: CKRecord {
-        let record = super.ckRecord
-        record["priority"] = priority
-        record["name"] = name
-        record["flagColor"] = flagColor
+        get {
+            let record = super.ckRecord
+            record["priority"] = priority
+            record["name"] = name
+            record["flagColor"] = flagColor
 
-        return record
+            return record
+        }
+        
+        set {
+            super.ckRecord = newValue
+        }
     }
     
     override class var recordType: CKRecord.RecordType {
@@ -107,18 +118,24 @@ class KNOTPlanEntity: KNOTEntityBase {
     }
     
     override var ckRecord: CKRecord {
-        let record = super.ckRecord
-        record["remindDate"] = remindDate
-        record["priority"] = priority
-        record["content"] = content
-        record["flagColor"] = flagColor
-        record["isDone"] = isDone
-        record["remindTime"] = remindTime
-        record["remindTimeInterval"] = remindTimeInterval
-        record["items"] = items?.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
-        record["project"] = project.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
+        get {
+            let record = super.ckRecord
+            record["remindDate"] = remindDate
+            record["priority"] = priority
+            record["content"] = content
+            record["flagColor"] = flagColor
+            record["isDone"] = isDone
+            record["remindTime"] = remindTime
+            record["remindTimeInterval"] = remindTimeInterval
+            record["items"] = items?.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
+            record["project"] = project.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
+            
+            return record
+        }
         
-        return record
+        set {
+            super.ckRecord = newValue
+        }
     }
     
     override class var recordType: CKRecord.RecordType {
@@ -143,10 +160,16 @@ class KNOTPlanItemEntity: KNOTEntityBase {
     }
     
     override var ckRecord: CKRecord {
-        let record = super.ckRecord
-        record["content"] = content
-        record["isDone"] = isDone
-        return record
+        get {
+            let record = super.ckRecord
+            record["content"] = content
+            record["isDone"] = isDone
+            return record
+        }
+        
+        set {
+            super.ckRecord = newValue
+        }
     }
     
     override class var recordType: CKRecord.RecordType {

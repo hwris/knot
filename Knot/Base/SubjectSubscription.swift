@@ -78,4 +78,6 @@ class Subscription<T> {
 }
 
 enum CollectionChangeKind { case reset, remove, update, insert }
-typealias CollectionSubscription<T> = (T?, CollectionChangeKind)
+typealias CollectionSubscription<T, S> = (T?, CollectionChangeKind, S?)
+typealias ArraySubscription<Element> = CollectionSubscription<[Element], [Int]>
+typealias ArrayIndexPathSubscription<Element> = CollectionSubscription<[Element], [IndexPath]>

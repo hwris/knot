@@ -11,15 +11,14 @@ import BoltsSwift
 
 class KNOTPlanViewModel {
     private let model: KNOTPlanModel
-    private var plansSubscription: Subscription<CollectionSubscription<[KNOTPlanEntity]>>?
-    
+    private var plansSubscription: Subscription<ArraySubscription<KNOTPlanEntity>>?
     private var selectedDate = Date()
-    var itemsSubject = Subject<CollectionSubscription<[KNOTPlanItemViewModel]>>()
+    let itemsSubject = Subject<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>()
     
     init(model: KNOTPlanModel) {
         self.model = model
         plansSubscription = model.plansSubject.listen({ [weak self] (newValue, _) in
-            guard let (plans, action) = newValue, action == .reset else {
+            guard let (plans, action, _) = newValue, action == .reset else {
                 return
             }
             
@@ -36,11 +35,28 @@ class KNOTPlanViewModel {
         let calendar = Calendar.current
         let selectedDateComponents = calendar.dateComponents([ .year, .month, .day ], from: self.selectedDate)
         let items = plans?.filter({
+            if $0.isDone { return false}
             let creationDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.remindDate)
             return creationDateComponents == selectedDateComponents
-        }).sorted(by: { $0.priority > $1.priority }).map({ KNOTPlanItemViewModel(model: $0) })
+        }).sorted(by: { $0.priority > $1.priority }).map({ planItemViewModel(model: $0) })
         
-        itemsSubject.publish((items, .reset))
+        itemsSubject.publish((items, .reset, nil))
+    }
+    
+    private func planItemViewModel(model: KNOTPlanEntity) -> KNOTPlanItemViewModel {
+        let vm = KNOTPlanItemViewModel(model: model)
+        vm.planDidDone = { [unowned self] (planItemViewModel) in
+            guard var planItemViewModels = self.itemsSubject.value?.0,
+                  let index = (planItemViewModels.firstIndex { $0 === planItemViewModel }) else {
+                return Task(())
+            }
+            
+            return self.model.updatePlan(planItemViewModel.model).continueOnSuccessWith(.mainThread) {
+                planItemViewModels.remove(at: index)
+                self.itemsSubject.publish((planItemViewModels, .remove, [IndexPath(row: index, section: 0)]))
+            }
+        }
+        return vm
     }
     
     func loadItems(at date: Date) -> Task<Void> {
@@ -63,11 +79,11 @@ class KNOTPlanViewModel {
         var lowPriority = Double.leastNormalMagnitude
         if let planViewModels = itemsSubject.value?.0 {
             if index < planViewModels.endIndex {
-                highPriority = planViewModels[index].model.priority
+                lowPriority = planViewModels[index].model.priority
             }
             
             if index - 1 >= planViewModels.startIndex {
-                lowPriority = planViewModels[index - 1].model.priority
+                highPriority = planViewModels[index - 1].model.priority
             }
         }
         let plan = KNOTPlanEntity(remindDate: selectedDate,
@@ -76,36 +92,54 @@ class KNOTPlanViewModel {
                                   flagColor: KNOTPlanItemFlagColor.blue.rawValue)
         let detailModel = model.planDetailModel(with: plan)
         let detailViewModel = KNOTPlanDetailViewModel(model: detailModel)
+        detailViewModel.didUpdatePlan = { [weak self] _ in
+            return (self?.updatePlan(at: index, insert: plan) ?? Task(()))
+        }
         return detailViewModel
     }
     
-    func updatePlan(at index: Int, insert detailViewModel: KNOTPlanDetailViewModel? = nil) -> Task<Void> {
+    func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
+        let plan = itemsSubject.value!.0![index].model
+        let detailViewModel = KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
+        detailViewModel.didUpdatePlan = { [weak self] _ in
+            return (self?.updatePlan(at: index, insert: nil) ?? Task(()))
+        }
+        return detailViewModel
+    }
+    
+    private func updatePlan(at index: Int, insert _plan: KNOTPlanEntity? = nil) -> Task<Void> {
         var planViewModels = itemsSubject.value?.0 ?? []
         var itemViewModel: KNOTPlanItemViewModel!
-        if let plan = detailViewModel?.model.plan {
-            itemViewModel = KNOTPlanItemViewModel(model: plan)
+        if let plan = _plan {
+            itemViewModel = planItemViewModel(model: plan)
             planViewModels.insert(itemViewModel, at: index)
-            itemsSubject.publish((planViewModels, .insert))
+            itemsSubject.publish((planViewModels, .insert, [IndexPath(row: index, section: 0)]))
         } else {
             itemViewModel = planViewModels[index]
             itemViewModel.refresh()
-            itemsSubject.publish((planViewModels, .update))
+            itemsSubject.publish((planViewModels, .update, [IndexPath(row: index, section: 0)]))
         }
         return model.updatePlan(itemViewModel.model)
-    }
-    
-//    func makeDonePlan(at index: Int) {
-//        let plan = itemsSubject.value!.0![index].model
-//    }
-    
-    func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
-        let plan = itemsSubject.value!.0![index].model
-        return KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
     }
 }
 
 class KNOTPlanItemViewModel {
+    struct ItemColors {
+        let flagColors: (UIColor, UIColor)
+        let flagBkColors: (UIColor, UIColor)
+        let flagImageName: String
+        let alarmColors: (UIColor, UIColor)?
+        
+        init(flagColor: UInt32, alarm: Bool) {
+            flagColors = (UIColor(flagColor), UIColor(flagColor))
+            flagBkColors = KNOTPlanItemFlagColor.flagBkColors(byRawValue: flagColor)
+            flagImageName = KNOTPlanItemFlagColor.flagImageName(byRawValue: flagColor)
+            alarmColors = alarm ? KNOTPlanItemFlagColor.alarmColors(byRawValue: flagColor) : nil
+        }
+    }
+    
     fileprivate let model: KNOTPlanEntity
+    fileprivate var planDidDone: ((KNOTPlanItemViewModel) -> Task<Void>)?
     
     private(set) var content: String
     private(set) var items: [KNOTPlanItemItemViewModel]
@@ -125,19 +159,10 @@ class KNOTPlanItemViewModel {
         colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
         cachedContent = nil
     }
-
-    struct ItemColors {
-        let flagColors: (UIColor, UIColor)
-        let flagBkColors: (UIColor, UIColor)
-        let flagImageName: String
-        let alarmColors: (UIColor, UIColor)?
-        
-        init(flagColor: UInt32, alarm: Bool) {
-            flagColors = (UIColor(flagColor), UIColor(flagColor))
-            flagBkColors = KNOTPlanItemFlagColor.flagBkColors(byRawValue: flagColor)
-            flagImageName = KNOTPlanItemFlagColor.flagImageName(byRawValue: flagColor)
-            alarmColors = alarm ? KNOTPlanItemFlagColor.alarmColors(byRawValue: flagColor) : nil
-        }
+    
+    func makePlanDone() -> Task<Void> {
+        model.isDone = true
+        return planDidDone?(self) ?? Task(())
     }
 }
 

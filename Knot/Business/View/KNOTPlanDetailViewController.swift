@@ -11,6 +11,7 @@ import UIKit
 class KNOTPlanDetailViewController: UIViewController {
     var viewModel: KNOTPlanDetailViewModel!
     
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var keyboardButton: UIButton!
     @IBOutlet weak var itemsTableView: UITableView!
     @IBOutlet var flagButtons: [UIButton]!
@@ -84,7 +85,20 @@ class KNOTPlanDetailViewController: UIViewController {
     }
     
     @IBAction func bkViewTapped(_ sender: UITapGestureRecognizer) {
-        dismiss(animated: true, completion: viewModel.updatePlan)
+        if sender.location(in: view).y >= contentView.frame.minY {
+            return
+        }
+        
+        sender.isEnabled = false
+        viewModel.updatePlan().continueWith(.mainThread) {
+            if let error = $0.error {
+                sender.isEnabled = true
+                assert(false, error.localizedDescription)
+                // Todo: handle error
+                return
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 }
 

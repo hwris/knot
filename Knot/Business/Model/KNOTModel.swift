@@ -17,8 +17,8 @@ class KNOTModelImpl: KNOTModel {
     private var ckContainer: CKContainer { CKContainer.default() }
     private var database: CKDatabase { ckContainer.privateCloudDatabase }
     
-    let plansSubject = Subject<CollectionSubscription<[KNOTPlanEntity]>>()
-    let projectsSubject = Subject<CollectionSubscription<[KNOTProjectEntity]>>()
+    let plansSubject = Subject<ArraySubscription<KNOTPlanEntity>>()
+    let projectsSubject = Subject<ArraySubscription<KNOTProjectEntity>>()
     
     var planModel: KNOTPlanModel { self }
     
@@ -105,17 +105,17 @@ extension KNOTModelImpl: KNOTPlanModel {
             if $0.error != nil {
                 throw $0.error!
             }
-            self.plansSubject.publish((plans, .reset))
+            self.plansSubject.publish((plans, .reset, nil))
         }
     }
     
     func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
         var plans = plansSubject.value?.0 ?? []
-        if plans.contains(plan) == false {
-            plans.append(plan)
-            plansSubject.publish((plans, .insert))
+        if let index = plans.firstIndex(of: plan) {
+            plansSubject.publish((plans, .update, [index]))
         } else {
-            plansSubject.publish((plans, .update))
+            plans.append(plan)
+            plansSubject.publish((plans, .insert, [plans.endIndex - 1]))
         }
         
         let tcs = TaskCompletionSource<Void>()
@@ -126,6 +126,8 @@ extension KNOTModelImpl: KNOTPlanModel {
             if let e = error {
                 tcs.set(error: e)
             } else {
+                plan.ckRecord = records!.first(where: { $0.recordID == plan.ckRecordID })!
+                plan.items?.forEach({ (item) in item.ckRecord = records!.first(where: { $0.recordID == item.ckRecordID })! })
                 tcs.set(result: ())
             }
         }
@@ -135,9 +137,11 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-        var plans = plansSubject.value?.0
-        plans?.removeAll { $0 == plan }
-        plansSubject.publish((plans, .remove))
+        if var plans = plansSubject.value?.0 {
+            let index = plans.firstIndex(of: plan)
+            plans.removeAll { $0 == plan }
+            plansSubject.publish((plans, .remove, index.map { [$0] }))
+        }
         
         return accessDatabase { database.delete(withRecordID: plan.ckRecordID, completionHandler: $0) }
     }

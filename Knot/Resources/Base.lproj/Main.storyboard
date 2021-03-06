@@ -745,6 +745,7 @@
                     </view>
                     <connections>
                         <outlet property="actionViewBottom" destination="Xdq-hP-tP3" id="OGZ-UR-68u"/>
+                        <outlet property="contentView" destination="DbJ-Mx-Vme" id="jIA-mP-hT2"/>
                         <outlet property="itemsTableView" destination="Tvf-Gr-zOb" id="O3A-ri-BdS"/>
                         <outlet property="keyboardButton" destination="pqs-tx-i48" id="E52-Ml-Uxr"/>
                         <outlet property="listButton" destination="Xw2-mT-caK" id="YrO-Q3-AgV"/>

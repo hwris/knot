@@ -18,16 +18,24 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var calendarViewTop: NSLayoutConstraint!
     
-    private var itemsSubscription: Subscription<CollectionSubscription<[KNOTPlanItemViewModel]>>?
+    private var itemsSubscription: Subscription<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>?
     
     override var viewModel: KNOTPlanViewModel! {
         didSet {
             itemsSubscription?.cancel()
-            itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (a, _) in
-                guard let (_, action) = a, action == .reset else {
+            itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (arg0, _) in
+                guard let (_, action, indexPaths) = arg0 else {
                     return
                 }
-                self?.tableView.reloadData()
+                
+                switch action {
+                case .reset:
+                    self?.tableView.reloadData()
+                case .remove:
+                    self?.tableView.deleteRows(at: indexPaths ?? [], with: .automatic)
+                case .update, .insert:
+                    self?.tableView.reloadRows(at: indexPaths ?? [], with: .automatic)
+                }
             })
             
             loadItems(at: Date())
@@ -46,25 +54,11 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     override func dataCell(_ cell: UITableViewCell, didDequeuedAtRow indexPath: IndexPath) {
         let itemCell = cell as! KNOTPlanItemCell
         itemCell.viewModel = (viewModel.itemsSubject.value?.0)![indexPath.row]
-        itemCell.doneButtonClicked = doneButtonClickedInCell(_:)
     }
     
     override func emptyCellDidInsert(at indexPath: IndexPath) {
         let detailViewModel = viewModel.insertPlan(at: indexPath.row)
-        showDetailViewController(at: indexPath, insert: detailViewModel)
-    }
-    
-    private func showDetailViewController(at indexPath: IndexPath, insert detailViewModel: KNOTPlanDetailViewModel? = nil ) {
-        let detaiVM = detailViewModel ?? self.viewModel.planDetailViewModel(at: indexPath.row)
-        detaiVM.reloadPlan = { [weak self, detailViewModel] (_) in
-            let t = self?.viewModel.updatePlan(at: indexPath.row, insert: detailViewModel)
-            t?.continueOnErrorWith(continuation: { (e) in
-                //todo: error handle
-                assert(false, "\(e)")
-            })
-            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-        }
-        performSegue(withIdentifier: detailSegueId, sender: detaiVM)
+        performSegue(withIdentifier: detailSegueId, sender: detailViewModel)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -90,18 +84,14 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
             print($0)
         }
     }
-    
-    @objc
-    private func doneButtonClickedInCell(_ cell: KNOTPlanItemCell) {
-        
-    }
 }
 
 extension KNOTPlanViewController: KNOTSwipeTableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tableView as! KNOTSwipeTableView).didSelectedRowAt(indexPath)
+        let detailViewModel = self.viewModel.planDetailViewModel(at: indexPath.row)
         DispatchQueue.main.async {
-            self.showDetailViewController(at: indexPath)
+            self.performSegue(withIdentifier: self.detailSegueId, sender: detailViewModel)
         }
     }
     
@@ -137,7 +127,10 @@ class KNOTPlanItemCell: UITableViewCell {
     @IBOutlet weak var flagBackgroundView: UIView!
     @IBOutlet weak var alarmBackgroundView: UIImageView!
     @IBOutlet weak var alarmImageView: UIImageView!
-    fileprivate var doneButtonClicked: ((KNOTPlanItemCell) -> ())?
+    private var doneView: UIView!
+    private var startOffsetX = CGFloat.zero
+    private var startScale = CGFloat.zero
+    
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
             flagView.backgroundColor = viewModel.colors.flagColors.0
@@ -150,6 +143,7 @@ class KNOTPlanItemCell: UITableViewCell {
             alarmImageView.darkTintColor = viewModel.colors.alarmColors?.1
             
             updateContentView()
+            resetDoneView()
         }
     }
     
@@ -197,12 +191,16 @@ class KNOTPlanItemCell: UITableViewCell {
         viewModel.cachedContent = attText
     }
     
-    @IBAction func moreButtonClicked(_ sender: UIButton) {
+    private func resetDoneView() {
+        guard let doneView = self.doneView else {
+            return
+        }
+        
+        flagBackgroundView?.transform = .identity
+        doneView.removeFromSuperview()
+        self.doneView = nil
     }
     
-    private var doneView: UIView!
-    private var startOffsetX = CGFloat.zero
-    private var startScale = CGFloat.zero
     fileprivate func rowPanGSRecognized(_ gs: UIPanGestureRecognizer) {
         if doneView == nil, gs.translation(in: contentView).x <= 0.01 {
             return
@@ -284,7 +282,18 @@ class KNOTPlanItemCell: UITableViewCell {
     
     @objc
     private func doneButtonTouched(_ sender: UIButton) {
-        doneButtonClicked?(self)
+        sender.isEnabled = false
+        viewModel.makePlanDone().continueWith(.mainThread) {
+            if let error = $0.error {
+                sender.isEnabled = true
+                assert(false, error.localizedDescription)
+                // Todo: handle error
+                return
+            }
+        }
+    }
+    
+    @IBAction func moreButtonClicked(_ sender: UIButton) {
     }
 }
 

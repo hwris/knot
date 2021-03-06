@@ -9,9 +9,9 @@
 import BoltsSwift
 
 class KNOTPlanDetailViewModel {
-    let model: KNOTPlanDetailModel
+    private let model: KNOTPlanDetailModel
     private(set) var items: [KNOTPlanDetailItemViewModel]
-    var reloadPlan: ((KNOTPlanDetailViewModel) -> ())?
+    var didUpdatePlan: ((KNOTPlanDetailViewModel) -> Task<Void>)?
     
     init(model: KNOTPlanDetailModel) {
         self.model = model
@@ -59,9 +59,14 @@ class KNOTPlanDetailViewModel {
         items[dstIndex] = tempPlanItemVM
     }
     
-    func updatePlan() {
-        reloadPlan?(self)
-        reloadPlan = nil
+    func updatePlan() -> Task<Void> {
+        guard let didUpdatePlan = self.didUpdatePlan else {
+            return Task(())
+        }
+        
+        let t = didUpdatePlan(self)
+        self.didUpdatePlan = nil
+        return t
     }
 }
 

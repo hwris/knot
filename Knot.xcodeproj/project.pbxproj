@@ -63,6 +63,7 @@
 		2C8BE050247A0D780059423F /* KNOTPlanDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanDetailViewController.swift; sourceTree = "<group>"; };
 		2C8BE052247BA88D0059423F /* KNOTPlanDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanDetailViewModel.swift; sourceTree = "<group>"; };
 		2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeItemTableViewController.swift; sourceTree = "<group>"; };
+		2CB5F43625F310BC00081DF9 /* Todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.txt; sourceTree = SOURCE_ROOT; };
 		2CE792022430C33900975D99 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
 		2CE792052430C94900975D99 /* KNOTHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeViewController.swift; sourceTree = "<group>"; };
 		2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Dynamic.swift"; sourceTree = "<group>"; };
@@ -109,6 +110,7 @@
 		2C55A89925BC5EA0000EF1C0 /* KnotTests */ = {
 			isa = PBXGroup;
 			children = (
+				2CB5F43625F310BC00081DF9 /* Todo.txt */,
 				2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */,
 				2C55A89C25BC5EA0000EF1C0 /* Info.plist */,
 			);
