@@ -9,7 +9,7 @@
 import BoltsSwift
 
 class KNOTPlanDetailViewModel {
-    private let model: KNOTPlanDetailModel
+    let model: KNOTPlanDetailModel
     private(set) var items: [KNOTPlanDetailItemViewModel]
     var reloadPlan: ((KNOTPlanDetailViewModel) -> ())?
     
@@ -61,6 +61,7 @@ class KNOTPlanDetailViewModel {
     
     func updatePlan() {
         reloadPlan?(self)
+        reloadPlan = nil
     }
 }
 

@@ -10,9 +10,8 @@ import BoltsSwift
 
 protocol KNOTPlanModel {
     var plansSubject: Subject<CollectionSubscription<[KNOTPlanEntity]>> { get }
-    func loadPlans() throws -> Task<Void>
-    func updatePlan(_ plan: KNOTPlanEntity) throws -> Task<Void>
-    func deletePlan(_ plan: KNOTPlanEntity) throws -> Task<Void>
-    func insertPlan(at index: Int) throws -> KNOTPlanDetailModel
+    func loadPlans() -> Task<Void>
+    func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void>
+    func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void>
     func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel
 }

@@ -14,7 +14,7 @@ class KNOTPlanViewModel {
     private var plansSubscription: Subscription<CollectionSubscription<[KNOTPlanEntity]>>?
     
     private var selectedDate = Date()
-    let itemsSubject = Subject<[KNOTPlanItemViewModel]>()
+    var itemsSubject = Subject<CollectionSubscription<[KNOTPlanItemViewModel]>>()
     
     init(model: KNOTPlanModel) {
         self.model = model
@@ -33,20 +33,20 @@ class KNOTPlanViewModel {
     }
     
     private func publishPlans(_ plans: [KNOTPlanEntity]?) {
+        let calendar = Calendar.current
+        let selectedDateComponents = calendar.dateComponents([ .year, .month, .day ], from: self.selectedDate)
         let items = plans?.filter({
-            let calendar = Calendar.current
-            let creationDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.creationDate)
-            let selectedDateComponents = calendar.dateComponents([ .year, .month, .day ], from: self.selectedDate)
+            let creationDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.remindDate)
             return creationDateComponents == selectedDateComponents
-        }).sorted(by: { $0.priority < $1.priority }).map({ KNOTPlanItemViewModel(model: $0) })
+        }).sorted(by: { $0.priority > $1.priority }).map({ KNOTPlanItemViewModel(model: $0) })
         
-        itemsSubject.publish(items)
+        itemsSubject.publish((items, .reset))
     }
     
-    func loadItems(at date: Date) throws -> Task<Void> {
+    func loadItems(at date: Date) -> Task<Void> {
         guard let plans = model.plansSubject.value else {
             selectedDate = date
-            return try model.loadPlans()
+            return model.loadPlans()
         }
         
         guard selectedDate != date else {
@@ -58,21 +58,48 @@ class KNOTPlanViewModel {
         return Task(())
     }
     
-    func insertPlan(at index: Int) throws -> KNOTPlanDetailViewModel {
-        return try KNOTPlanDetailViewModel(model: model.insertPlan(at: index))
+    func insertPlan(at index: Int) -> KNOTPlanDetailViewModel {
+        var highPriority = Double.greatestFiniteMagnitude
+        var lowPriority = Double.leastNormalMagnitude
+        if let planViewModels = itemsSubject.value?.0 {
+            if index < planViewModels.endIndex {
+                highPriority = planViewModels[index].model.priority
+            }
+            
+            if index - 1 >= planViewModels.startIndex {
+                lowPriority = planViewModels[index - 1].model.priority
+            }
+        }
+        let plan = KNOTPlanEntity(remindDate: selectedDate,
+                                  priority: (highPriority + lowPriority) * 0.5,
+                                  content: "",
+                                  flagColor: KNOTPlanItemFlagColor.blue.rawValue)
+        let detailModel = model.planDetailModel(with: plan)
+        let detailViewModel = KNOTPlanDetailViewModel(model: detailModel)
+        return detailViewModel
     }
     
-    func updatePlan(at index: Int) throws -> Task<Void> {
-        let plan = itemsSubject.value![index].model
-        return try model.updatePlan(plan)
+    func updatePlan(at index: Int, insert detailViewModel: KNOTPlanDetailViewModel? = nil) -> Task<Void> {
+        var planViewModels = itemsSubject.value?.0 ?? []
+        var itemViewModel: KNOTPlanItemViewModel!
+        if let plan = detailViewModel?.model.plan {
+            itemViewModel = KNOTPlanItemViewModel(model: plan)
+            planViewModels.insert(itemViewModel, at: index)
+            itemsSubject.publish((planViewModels, .insert))
+        } else {
+            itemViewModel = planViewModels[index]
+            itemViewModel.refresh()
+            itemsSubject.publish((planViewModels, .update))
+        }
+        return model.updatePlan(itemViewModel.model)
     }
     
-    func makeDonePlan(at index: Int) {
-        let plan = itemsSubject.value![index].model
-    }
+//    func makeDonePlan(at index: Int) {
+//        let plan = itemsSubject.value!.0![index].model
+//    }
     
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
-        let plan = itemsSubject.value![index].model
+        let plan = itemsSubject.value!.0![index].model
         return KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
     }
 }
@@ -80,10 +107,9 @@ class KNOTPlanViewModel {
 class KNOTPlanItemViewModel {
     fileprivate let model: KNOTPlanEntity
     
-    let content: String
-    let items: [KNOTPlanItemItemViewModel]
-    let colors: ItemColors
-    
+    private(set) var content: String
+    private(set) var items: [KNOTPlanItemItemViewModel]
+    private(set) var colors: ItemColors
     var cachedContent: Any?
     
     init(model: KNOTPlanEntity) {
@@ -91,6 +117,13 @@ class KNOTPlanItemViewModel {
         items = model.items?.map({ KNOTPlanItemItemViewModel(model: $0) }) ?? []
         colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
         self.model = model
+    }
+    
+    fileprivate func refresh() {
+        content = model.content
+        items = model.items?.map({ KNOTPlanItemItemViewModel(model: $0) }) ?? []
+        colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
+        cachedContent = nil
     }
 
     struct ItemColors {

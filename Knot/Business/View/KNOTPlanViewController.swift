@@ -18,12 +18,15 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var calendarViewTop: NSLayoutConstraint!
     
-    private var itemsSubscription: Subscription<[KNOTPlanItemViewModel]>?
+    private var itemsSubscription: Subscription<CollectionSubscription<[KNOTPlanItemViewModel]>>?
     
     override var viewModel: KNOTPlanViewModel! {
         didSet {
             itemsSubscription?.cancel()
-            itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (_, _) in
+            itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (a, _) in
+                guard let (_, action) = a, action == .reset else {
+                    return
+                }
                 self?.tableView.reloadData()
             })
             
@@ -37,40 +40,31 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     }
     
     override var numberOfDateRows: Int {
-        return viewModel?.itemsSubject.value?.count ?? 0;
+        return viewModel?.itemsSubject.value?.0?.count ?? 0;
     }
     
     override func dataCell(_ cell: UITableViewCell, didDequeuedAtRow indexPath: IndexPath) {
         let itemCell = cell as! KNOTPlanItemCell
-        itemCell.viewModel = (viewModel.itemsSubject.value)![indexPath.row]
+        itemCell.viewModel = (viewModel.itemsSubject.value?.0)![indexPath.row]
         itemCell.doneButtonClicked = doneButtonClickedInCell(_:)
     }
     
     override func emptyCellDidInsert(at indexPath: IndexPath) {
-        do {
-            let detailViewModel = try viewModel.insertPlan(at: indexPath.row)
-            showDetailViewController(detailViewModel, at: indexPath)
-        } catch let e {
-            //todo: error handle
-            assert(false, "\(e)")
-        }
+        let detailViewModel = viewModel.insertPlan(at: indexPath.row)
+        showDetailViewController(at: indexPath, insert: detailViewModel)
     }
     
-    private func showDetailViewController(_ detailViewModel: KNOTPlanDetailViewModel, at indexPath: IndexPath) {
-        detailViewModel.reloadPlan = { [weak self] (_) in
-            do {
-                let t = try self?.viewModel.updatePlan(at: indexPath.row)
-                t?.continueOnErrorWith(continuation: { (e) in
-                    //todo: error handle
-                    assert(false, "\(e)")
-                })
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-            } catch let e {
+    private func showDetailViewController(at indexPath: IndexPath, insert detailViewModel: KNOTPlanDetailViewModel? = nil ) {
+        let detaiVM = detailViewModel ?? self.viewModel.planDetailViewModel(at: indexPath.row)
+        detaiVM.reloadPlan = { [weak self, detailViewModel] (_) in
+            let t = self?.viewModel.updatePlan(at: indexPath.row, insert: detailViewModel)
+            t?.continueOnErrorWith(continuation: { (e) in
                 //todo: error handle
                 assert(false, "\(e)")
-            }
+            })
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
-        performSegue(withIdentifier: detailSegueId, sender: detailViewModel)
+        performSegue(withIdentifier: detailSegueId, sender: detaiVM)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -90,14 +84,10 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     }
     
     private func loadItems(at date: Date) {
-        do {
-            let tast = try viewModel.loadItems(at: date)
-            tast.continueOnErrorWith {
-                print($0)
-            }
-        } catch let e  {
+        let tast = viewModel.loadItems(at: date)
+        tast.continueOnErrorWith {
             //todo: error handle
-            assert(false, "\(e)")
+            print($0)
         }
     }
     
@@ -111,7 +101,7 @@ extension KNOTPlanViewController: KNOTSwipeTableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tableView as! KNOTSwipeTableView).didSelectedRowAt(indexPath)
         DispatchQueue.main.async {
-            self.showDetailViewController(self.viewModel.planDetailViewModel(at: indexPath.row), at: indexPath)
+            self.showDetailViewController(at: indexPath)
         }
     }
     
@@ -150,10 +140,6 @@ class KNOTPlanItemCell: UITableViewCell {
     fileprivate var doneButtonClicked: ((KNOTPlanItemCell) -> ())?
     var viewModel: KNOTPlanItemViewModel! {
         didSet {
-            if oldValue === viewModel {
-                return
-            }
-            
             flagView.backgroundColor = viewModel.colors.flagColors.0
             flagView.darkBackgroundColor = viewModel.colors.flagColors.1
             flagBackgroundView.backgroundColor = viewModel.colors.flagBkColors.0
@@ -262,17 +248,17 @@ class KNOTPlanItemCell: UITableViewCell {
             }
             
             let shouldDone = doneView.transform.a >= 0.5
-            UIView.animate(withDuration: 0.2) {
+            UIView.animate(withDuration: 0.2, animations: {
                 doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
                 self.flagBackgroundView.transform =
                     shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
                 self.updateContentView(withStrikethrough: shouldDone)
-            } completion: { _ in
+            }, completion: { _ in
                 if !shouldDone {
                     doneView.removeFromSuperview()
                     self.doneView = nil
                 }
-            }
+            })
         case .cancelled, .failed:
             guard let doneView = self.doneView else {
                 return
@@ -287,13 +273,13 @@ class KNOTPlanItemCell: UITableViewCell {
     }
     
     fileprivate func rowPanGSNotBegin(_ gs: UIPanGestureRecognizer) {
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.2, animations: {
             self.flagBackgroundView?.transform = .identity
             self.doneView?.transform = CGAffineTransform(scaleX: 0, y: 0)
-        } completion: { _ in
+        }, completion: { _ in
             self.doneView?.removeFromSuperview()
             self.doneView = nil
-        }
+        })
     }
     
     @objc
