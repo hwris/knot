@@ -38,70 +38,83 @@ class KNOTModelImpl: KNOTModel {
 extension KNOTModelImpl: KNOTPlanModel {
     func loadPlans() -> Task<Void> {
         var plans = [KNOTPlanEntity]()
-        var tasks = [Task<Void>]()
         let query = CKQuery(recordType: KNOTPlanEntity.recordType, predicate: NSPredicate(value: true))
         let queryTcs = TaskCompletionSource<Void>()
-        tasks.append(queryTcs.task)
         database.perform(query, inZoneWith: nil) { (results, error) in
             guard error == nil else {
                 queryTcs.set(error: error!)
                 return
             }
             
-            guard let records = results else {
+            guard let records = results, records.isEmpty == false else {
                 queryTcs.set(result: ())
                 return
             }
             
+            var batchFetchIDs = [CKRecord.ID]()
+            var itemToPlan = [CKRecord.ID : KNOTPlanEntity]()
+            var projectToPlan = [CKRecord.ID : KNOTPlanEntity]()
             for record in records {
                 var itemRecordIDs: [CKRecord.ID]?
                 var projectRecordID: CKRecord.ID?
                 let plan = KNOTPlanEntity(from: record, itemRecordIDs: &itemRecordIDs, projectRecordID: &projectRecordID)
-                
                 plans.append(plan)
                 
-                var queryRecordIDs = [CKRecord.ID]()
-                if itemRecordIDs != nil {
+                if let ids = itemRecordIDs {
                     plan.items = []
-                    queryRecordIDs.append(contentsOf: itemRecordIDs!)
+                    batchFetchIDs.append(contentsOf: ids)
+                    ids.forEach { itemToPlan[$0] = plan }
                 }
-                if projectRecordID != nil {
-                    queryRecordIDs.append(projectRecordID!)
-                }
-                
-                if queryRecordIDs.isEmpty == false {
-                    let tcs = TaskCompletionSource<Void>()
-                    tasks.append(tcs.task)
-                    
-                    let batchFetch = CKFetchRecordsOperation(recordIDs: queryRecordIDs)
-                    batchFetch.database = self.database
-                    batchFetch.perRecordCompletionBlock = { (record, recordID, error) in
-                        if let e = error {
-                            debugPrint(e)
-                            return
-                        }
-                        
-                        if recordID == projectRecordID {
-                            plan.project = KNOTProjectEntity(from: record!)
-                        } else {
-                            let item = KNOTPlanItemEntity(from: record!)
-                            plan.items?.append(item)
-                        }
-                    }
-                    batchFetch.fetchRecordsCompletionBlock = { (records, error) in
-                        if let e = error {
-                            tcs.set(error: e)
-                        } else {
-                            tcs.set(result: ())
-                        }
-                    }
-                    batchFetch.start()
+                if let id = projectRecordID {
+                    batchFetchIDs.append(id)
+                    projectToPlan[id] = plan
                 }
             }
             
-            queryTcs.set(result: ())
+            guard batchFetchIDs.isEmpty == false else {
+                queryTcs.set(result: ())
+                return
+            }
+            
+            let batchFetchTcs = TaskCompletionSource<Void>()
+            let batchFetch = CKFetchRecordsOperation(recordIDs: batchFetchIDs)
+            batchFetch.database = self.database
+            batchFetch.perRecordCompletionBlock = { (record, recordID, error) in
+                if let e = error {
+                    debugPrint(e)
+                    return
+                }
+                
+                guard let id = recordID else {
+                    debugPrint("null recordID")
+                    return
+                }
+                
+                if let plan = itemToPlan[id] {
+                    plan.items?.append(KNOTPlanItemEntity(from: record!))
+                } else if let plan = projectToPlan[id] {
+                    plan.project = KNOTProjectEntity(from: record!)
+                }
+            }
+            batchFetch.fetchRecordsCompletionBlock = { (records, error) in
+                debugPrint("load plans", records!, error)
+                if let e = error {
+                    batchFetchTcs.set(error: e)
+                } else {
+                    batchFetchTcs.set(result: ())
+                }
+            }
+            batchFetch.start()
+            
+            batchFetchTcs.task.continueWith {
+                if let error = $0.error {
+                    queryTcs.set(error: error)
+                } else {
+                    queryTcs.set(result: ())
+                }
+            }
         }
-        return Task<Void>.whenAll(tasks).continueWith(Executor.mainThread) {
+        return queryTcs.task.continueWith(Executor.mainThread) {
             if $0.error != nil {
                 throw $0.error!
             }
