@@ -217,7 +217,60 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
 }
 
 class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewModel>  {
+    private let repeatSegueId = "repeat"
     
+    @IBOutlet weak var repeatSwitch: UISwitch!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        repeatSwitch.isOn = viewModel.isRepeatSwitchOn
+    }
+    
+    @IBAction func repeatSwitchChanged(_ sender: UISwitch) {
+        if !sender.isOn {
+            viewModel.closeRepeat()
+            return
+        }
+        
+        performSegue(withIdentifier: repeatSegueId, sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == repeatSegueId {
+            let repeatVC = segue.destination as! KNOTPlanRepeatViewController
+            repeatVC.viewModel = viewModel.repeatViewModel
+        }
+    }
+}
+
+class KNOTPlanRepeatViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+    var viewModel: KNOTPlanRepeatViewModel!
+    
+    @IBOutlet weak var repeatPickerView: UIPickerView!
+    
+    @IBAction func cancelButtonClicked(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func confirmButtonClicked(_ sender: UIButton) {
+        viewModel.confirmButtonDidClicked()
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return viewModel.numberOfComponents
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return viewModel.numberOfRows(inComponent: component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return viewModel.title(forRow: row, forComponent: component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        viewModel.didSelect(row: row, inComponent: component)
+    }
 }
 
 fileprivate extension IndexPath {

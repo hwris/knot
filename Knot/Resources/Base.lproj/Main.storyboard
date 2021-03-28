@@ -827,6 +827,9 @@
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="s5k-4P-TVM">
                                                         <rect key="frame" x="173" y="12.5" width="51" height="31"/>
                                                         <color key="onTintColor" red="0.32156862745098036" green="0.46274509803921571" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <connections>
+                                                            <action selector="repeatSwitchChanged:" destination="ywf-KX-aqH" eventType="valueChanged" id="K0e-nv-7e5"/>
+                                                        </connections>
                                                     </switch>
                                                 </subviews>
                                             </stackView>
@@ -919,15 +922,140 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="repeatSwitch" destination="s5k-4P-TVM" id="Hts-Qz-Rjr"/>
                         <outletCollection property="flagButtons" destination="34l-x0-ehs" collectionClass="NSMutableArray" id="dNl-TJ-c7a"/>
                         <outletCollection property="flagButtons" destination="mE7-86-eKY" collectionClass="NSMutableArray" id="qdU-ES-kza"/>
                         <outletCollection property="flagButtons" destination="w0Z-bU-iXc" collectionClass="NSMutableArray" id="1HB-OX-2c4"/>
+                        <segue destination="jIr-d0-hCk" kind="presentation" identifier="repeat" id="m4L-2z-img"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jFA-Ul-KWD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="w5D-ma-5Mm"/>
             </objects>
             <point key="canvasLocation" x="3239" y="-89"/>
+        </scene>
+        <!--Plan Repeat View Controller-->
+        <scene sceneID="KdY-Jf-ViB">
+            <objects>
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="jIr-d0-hCk" customClass="KNOTPlanRepeatViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bdp-S5-trW">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="802"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewK-Fs-LNz">
+                                <rect key="frame" x="40.5" y="236" width="333" height="330.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Repeat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmq-8S-Tr2">
+                                        <rect key="frame" x="24" y="21" width="58.5" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                        <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Every" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMK-Cp-TNH">
+                                        <rect key="frame" x="0.0" y="153.5" width="111" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="111" id="QaK-Uc-VsM"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
+                                        <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vB-di-UeD">
+                                        <rect key="frame" x="111" y="63" width="222" height="216"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="222" id="Ntv-hD-CHd"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="dataSource" destination="jIr-d0-hCk" id="x5n-ni-XPv"/>
+                                            <outlet property="delegate" destination="jIr-d0-hCk" id="0UR-rg-08p"/>
+                                        </connections>
+                                    </pickerView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="lxE-u8-kD3">
+                                        <rect key="frame" x="24" y="279.5" width="285" height="51"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvX-bv-9HO">
+                                                <rect key="frame" x="0.0" y="0.0" width="132" height="51"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="132" id="1nw-eA-KsU"/>
+                                                    <constraint firstAttribute="height" constant="51" id="VUo-8C-dbA"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" red="0.32156862745098036" green="0.46274509803921571" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="cancelButtonClicked:" destination="jIr-d0-hCk" eventType="touchUpInside" id="paL-Ug-ddP"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-Pp-dKx">
+                                                <rect key="frame" x="153" y="0.0" width="132" height="51"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="51" id="UVc-wR-nkG"/>
+                                                    <constraint firstAttribute="width" constant="132" id="tRs-Td-eMf"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                <state key="normal" title="Confirm">
+                                                    <color key="titleColor" red="0.32156862749999998" green="0.46274509800000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="confirmButtonClicked:" destination="jIr-d0-hCk" eventType="touchUpInside" id="ldH-sv-3Hg"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Rmq-8S-Tr2" firstAttribute="top" secondItem="ewK-Fs-LNz" secondAttribute="top" constant="21" id="81a-ko-ypz"/>
+                                    <constraint firstItem="hMK-Cp-TNH" firstAttribute="centerY" secondItem="7vB-di-UeD" secondAttribute="centerY" id="IkW-f6-z9R"/>
+                                    <constraint firstAttribute="trailing" secondItem="7vB-di-UeD" secondAttribute="trailing" id="K1H-MU-Ztq"/>
+                                    <constraint firstItem="7vB-di-UeD" firstAttribute="leading" secondItem="hMK-Cp-TNH" secondAttribute="trailing" id="MVF-Bj-eHM"/>
+                                    <constraint firstAttribute="bottom" secondItem="lxE-u8-kD3" secondAttribute="bottom" id="ROj-EJ-iZM"/>
+                                    <constraint firstItem="7vB-di-UeD" firstAttribute="top" secondItem="Rmq-8S-Tr2" secondAttribute="bottom" constant="21" id="TQ8-QL-8Ng"/>
+                                    <constraint firstItem="lxE-u8-kD3" firstAttribute="top" secondItem="7vB-di-UeD" secondAttribute="bottom" id="U8I-3A-RrH"/>
+                                    <constraint firstItem="lxE-u8-kD3" firstAttribute="centerX" secondItem="ewK-Fs-LNz" secondAttribute="centerX" id="ijk-gN-7U9"/>
+                                    <constraint firstItem="Rmq-8S-Tr2" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" constant="24" id="qFw-3Q-Kfc"/>
+                                    <constraint firstItem="hMK-Cp-TNH" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" id="yWd-ov-EjE"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">
+                                        <color key="value" red="0.14901960780000001" green="0.16078431369999999" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="32"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="wwy-Eu-mpb"/>
+                        <color key="backgroundColor" red="0.3294117647" green="0.34509803919999998" blue="0.39607843139999999" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="ewK-Fs-LNz" firstAttribute="centerX" secondItem="bdp-S5-trW" secondAttribute="centerX" id="aoL-sU-PCk"/>
+                            <constraint firstItem="ewK-Fs-LNz" firstAttribute="centerY" secondItem="bdp-S5-trW" secondAttribute="centerY" id="xRO-ap-vht"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="mnE-vC-a4W" appends="YES" id="R9i-4c-oag"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="repeatPickerView" destination="7vB-di-UeD" id="8PW-SF-BEO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iT3-Vt-mB4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="mnE-vC-a4W"/>
+            </objects>
+            <point key="canvasLocation" x="4036" y="-88"/>
         </scene>
     </scenes>
     <resources>

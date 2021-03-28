@@ -85,7 +85,13 @@ class KNOTProjectEntity: KNOTEntityBase {
     }
 }
 
-class KNOTPlanEntity: KNOTEntityBase {
+class KNOTPlanEntity: KNOTEntityBase {   
+    struct Repeat {
+        enum Type_: Int, CaseIterable { case Day, Week, Month, Year}
+        var interval: Int
+        var type: Type_
+    }
+    
     var remindDate: Date
     var priority: Double
     var content: String
@@ -93,7 +99,7 @@ class KNOTPlanEntity: KNOTEntityBase {
     var items: [KNOTPlanItemEntity]?
     var isDone = false
     var remindTime: Date?
-    var remindTimeInterval: TimeInterval?
+    var `repeat`: Repeat?
     var project: KNOTProjectEntity?
     
     init(remindDate: Date, priority: Double, content: String, flagColor: UInt32) {
@@ -111,9 +117,15 @@ class KNOTPlanEntity: KNOTEntityBase {
         flagColor = record["flagColor"] as! UInt32
         isDone = record["isDone"] as! Bool
         remindTime = record["remindTime"] as? Date
-        remindTimeInterval = record["remindTimeInterval"] as? TimeInterval
         itemRecordIDs = (record["items"] as? [CKRecord.Reference])?.map({ $0.recordID })
         projectRecordID = (record["project"] as? CKRecord.Reference)?.recordID
+        
+        if let repeatInterval = record["repeatInterval"] as? Int,
+           let repeatTypeRawValue = record["repeatType"] as? Int,
+           let repeatType = Repeat.Type_(rawValue: repeatTypeRawValue) {
+            `repeat` = Repeat(interval: repeatInterval, type: repeatType)
+        }
+        
         super.init(from: record)
     }
     
@@ -126,7 +138,8 @@ class KNOTPlanEntity: KNOTEntityBase {
             record["flagColor"] = flagColor
             record["isDone"] = isDone
             record["remindTime"] = remindTime
-            record["remindTimeInterval"] = remindTimeInterval
+            record["repeatInterval"] = `repeat`?.interval
+            record["repeatType"] = `repeat`?.type.rawValue
             record["items"] = items?.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
             record["project"] = project.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
             

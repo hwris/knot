@@ -95,4 +95,88 @@ class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
         self.model = model as! KNOTPlanMoreModel
         super.init(model: model)
     }
+    
+    var isRepeatSwitchOn: Bool {
+        return model.plan.repeat != nil
+    }
+    
+    func closeRepeat() {
+        model.plan.repeat = nil
+    }
+    
+    var repeatViewModel: KNOTPlanRepeatViewModel {
+        return KNOTPlanRepeatViewModel(model: model.plan)
+    }
 }
+
+class KNOTPlanRepeatViewModel {
+    private let model: KNOTPlanEntity
+    private var selectedIntervalIndex: Int = 0
+    private var selectedTypeIndex: Int = 0
+    
+    init(model: KNOTPlanEntity) {
+        self.model = model
+        if let repeat_ = model.repeat {
+            selectedIntervalIndex = repeat_.interval - 1
+            selectedTypeIndex = repeat_.type.rawValue
+        }
+    }
+    
+    private var numberOfIntervalRows: Int {
+        return 100
+    }
+    
+    private func intervalTitle(at index: Int) -> String {
+        return "\(index + 1)"
+    }
+    
+    private var numberOfTypeRows: Int {
+        return KNOTPlanEntity.Repeat.Type_.allCases.count
+    }
+    
+    private func typeTitle(at index: Int) -> String {
+        guard let type = KNOTPlanEntity.Repeat.Type_(rawValue: index) else {
+            return ""
+        }
+        
+        switch type {
+        case .Day:
+            return NSLocalizedString("Day(s)", comment: "")
+        case .Week:
+            return NSLocalizedString("Week(s)", comment: "")
+        case .Month:
+            return NSLocalizedString("Month(s)", comment: "")
+        case .Year:
+            return NSLocalizedString("Year(s)", comment: "")
+        }
+    }
+    
+    var numberOfComponents: Int {
+        return 2
+    }
+    
+    func numberOfRows(inComponent component: Int) -> Int {
+        return component == 0 ? numberOfIntervalRows : numberOfTypeRows
+    }
+    
+    func title(forRow row: Int, forComponent component: Int) -> String? {
+        return component == 0 ? intervalTitle(at: row) : typeTitle(at: row)
+    }
+    
+    func didSelect(row: Int, inComponent component: Int) {
+        if component == 0 {
+            selectedIntervalIndex = row
+        } else {
+            selectedTypeIndex = row
+        }
+    }
+    
+    func confirmButtonDidClicked() {
+        guard let type = KNOTPlanEntity.Repeat.Type_(rawValue: selectedTypeIndex) else {
+            return
+        }
+        let repeat_ = KNOTPlanEntity.Repeat(interval: selectedIntervalIndex + 1, type: type)
+        model.repeat = repeat_
+    }
+}
+
