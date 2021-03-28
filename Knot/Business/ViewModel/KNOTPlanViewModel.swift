@@ -92,7 +92,7 @@ class KNOTPlanViewModel {
                                   flagColor: KNOTPlanItemFlagColor.blue.rawValue)
         let detailModel = model.planDetailModel(with: plan)
         let detailViewModel = KNOTPlanDetailViewModel(model: detailModel)
-        detailViewModel.didUpdatePlan = { [weak self] _ in
+        detailViewModel.updateCompleteHandler = { [weak self] _ in
             return (self?.updatePlan(at: index, insert: plan) ?? Task(()))
         }
         return detailViewModel
@@ -101,10 +101,19 @@ class KNOTPlanViewModel {
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
         let plan = itemsSubject.value!.0![index].model
         let detailViewModel = KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
-        detailViewModel.didUpdatePlan = { [weak self] _ in
+        detailViewModel.updateCompleteHandler = { [weak self] _ in
             return (self?.updatePlan(at: index, insert: nil) ?? Task(()))
         }
         return detailViewModel
+    }
+    
+    func moreViewModel(at index: Int) -> KNOTPlanMoreViewModel {
+        let plan = itemsSubject.value!.0![index].model
+        let moreViewModel = KNOTPlanMoreViewModel(model: model.planMoreModel(with: plan))
+        moreViewModel.updateCompleteHandler = { [weak self] _ in
+            return (self?.updatePlan(at: index, insert: nil) ?? Task(()))
+        }
+        return moreViewModel
     }
     
     private func updatePlan(at index: Int, insert _plan: KNOTPlanEntity? = nil) -> Task<Void> {

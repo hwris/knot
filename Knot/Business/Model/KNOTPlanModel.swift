@@ -14,4 +14,5 @@ protocol KNOTPlanModel {
     func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void>
     func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void>
     func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel
+    func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel
 }

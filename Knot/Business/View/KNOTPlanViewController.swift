@@ -13,6 +13,7 @@ import CVCalendar
 
 class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel> {
     fileprivate let detailSegueId = "detail"
+    fileprivate let moreSegueId = "more"
     
     @IBOutlet weak var calendarView: KNOTCalendarView!
     @IBOutlet weak var contentView: UIView!
@@ -66,6 +67,14 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
             let detailViewModel = sender as! KNOTPlanDetailViewModel
             let detailVC = segue.destination as! KNOTPlanDetailViewController
             detailVC.viewModel = detailViewModel
+        } else if segue.identifier == moreSegueId {
+            var cell = sender as? UIView
+            while cell != nil, !(cell is UITableViewCell) { cell = cell?.superview }
+            if cell == nil { return }
+            let index = tableView.indexPath(for: cell as! UITableViewCell)!.row
+            let moreViewModel = viewModel.moreViewModel(at: index)
+            let moreVC = segue.destination as! KNOTPlanMoreViewController
+            moreVC.viewModel = moreViewModel
         }
     }
     
@@ -291,9 +300,6 @@ class KNOTPlanItemCell: UITableViewCell {
                 return
             }
         }
-    }
-    
-    @IBAction func moreButtonClicked(_ sender: UIButton) {
     }
 }
 

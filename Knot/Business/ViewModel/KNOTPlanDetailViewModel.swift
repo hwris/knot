@@ -8,32 +8,50 @@
 
 import BoltsSwift
 
-class KNOTPlanDetailViewModel {
+class KNOTPlanEditViewModel {
+    private let flagColorS = [ KNOTPlanItemFlagColor.blue, .red, .yellow ]
+    private let model: KNOTPlanEditModel
+    var updateCompleteHandler: ((KNOTPlanEditViewModel) -> Task<Void>)?
+    
+    init(model: KNOTPlanEditModel) {
+        self.model = model
+    }
+    
+    var selectedFlagColorIndex: Int {
+        return flagColorS.firstIndex(of: KNOTPlanItemFlagColor(rawValue: model.plan.flagColor) ?? .blue)!
+    }
+    
+    func selectedFlagColor(at index: Int) {
+        model.plan.flagColor = flagColorS[index].rawValue
+    }
+    
+    func updatePlan() -> Task<Void> {
+        guard let updateCompleteHandler = self.updateCompleteHandler else {
+            return Task(())
+        }
+        
+        let t = updateCompleteHandler(self)
+        self.updateCompleteHandler = nil
+        return t
+    }
+}
+
+class KNOTPlanDetailViewModel: KNOTPlanEditViewModel{
     private let model: KNOTPlanDetailModel
     private(set) var items: [KNOTPlanDetailItemViewModel]
-    var didUpdatePlan: ((KNOTPlanDetailViewModel) -> Task<Void>)?
     
-    init(model: KNOTPlanDetailModel) {
-        self.model = model
+    override init(model: KNOTPlanEditModel) {
+        self.model = model as! KNOTPlanDetailModel
         items = model.plan.items?.map({ KNOTPlanDetailItemViewModel(model: $0) }) ?? []
+        super.init(model: model)
     }
     
     var content: String {
         return model.plan.content
     }
     
-    let flagColorS = [ KNOTPlanItemFlagColor.blue, .red, .yellow ]
-    
-    var selectedFlagColorIndex: Int {
-        return flagColorS.firstIndex(of: KNOTPlanItemFlagColor(rawValue: model.plan.flagColor) ?? .blue)!
-    }
-    
     func updateContent(_ content: String) {
         model.plan.content = content
-    }
-    
-    func selectedFlagColor(at index: Int) {
-        model.plan.flagColor = flagColorS[index].rawValue
     }
     
     func insertItem(at index: Int) {
@@ -58,16 +76,6 @@ class KNOTPlanDetailViewModel {
         items[srcIndex] = items[dstIndex]
         items[dstIndex] = tempPlanItemVM
     }
-    
-    func updatePlan() -> Task<Void> {
-        guard let didUpdatePlan = self.didUpdatePlan else {
-            return Task(())
-        }
-        
-        let t = didUpdatePlan(self)
-        self.didUpdatePlan = nil
-        return t
-    }
 }
 
 class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
@@ -77,5 +85,14 @@ class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
     
     func updateIsDone(_ isDone: Bool) {
         model.isDone = isDone
+    }
+}
+
+class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
+    private let model: KNOTPlanMoreModel
+    
+    override init(model: KNOTPlanEditModel) {
+        self.model = model as! KNOTPlanMoreModel
+        super.init(model: model)
     }
 }

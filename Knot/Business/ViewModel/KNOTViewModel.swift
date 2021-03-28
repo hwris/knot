@@ -11,17 +11,15 @@ import Foundation
 class KNOTViewModel {
     private let model: KNOTModel
     
-    private var _planViewModel: KNOTPlanViewModel!
+    private(set) lazy var planViewModel = KNOTPlanViewModel(model: self.model.planModel)
     
     init(model: KNOTModel) {
         self.model = model
     }
-    
-    var planViewModel: KNOTPlanViewModel {
-        if _planViewModel == nil {
-            _planViewModel = KNOTPlanViewModel(model: self.model.planModel)
-        }
-        
-        return _planViewModel
+}
+
+extension KNOTViewModel {
+    static func defaultInstance() -> KNOTViewModel {
+        return KNOTViewModel(model: KNOTModelDefaultImpl())
     }
 }

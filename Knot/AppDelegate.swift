@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let homeVC = window!.rootViewController as! KNOTHomeViewController
-        homeVC.viewModel = KNOTViewModel(model: KNOTModelImpl())
+        homeVC.viewModel = KNOTViewModel.defaultInstance()
         return true
     }
 }

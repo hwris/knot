@@ -8,6 +8,12 @@
 
 import BoltsSwift
 
-protocol KNOTPlanDetailModel {
+protocol KNOTPlanEditModel {
     var plan: KNOTPlanEntity { get }
+}
+
+protocol KNOTPlanDetailModel: KNOTPlanEditModel {
+}
+
+protocol KNOTPlanMoreModel: KNOTPlanEditModel {
 }

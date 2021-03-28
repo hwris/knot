@@ -8,20 +8,80 @@
 
 import UIKit
 
-class KNOTPlanDetailViewController: UIViewController {
-    var viewModel: KNOTPlanDetailViewModel!
+class KNOTPlanEditViewController<VieModel: KNOTPlanEditViewModel>: UIViewController {
+    var viewModel: VieModel!
     
-    @IBOutlet weak var contentView: UIView!
+    @IBOutlet var flagButtons: [UIButton]!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        flagColorButtonCliked(flagButtons.filter({ $0.tag == viewModel.selectedFlagColorIndex }).first!)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if touches.randomElement()?.view != view {
+            super.touchesBegan(touches, with: event)
+            return
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if touches.randomElement()?.view != view {
+            super.touchesMoved(touches, with: event)
+            return
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if touches.randomElement()?.view != view {
+            super.touchesEnded(touches, with: event)
+            return
+        }
+        
+        view.isUserInteractionEnabled = false
+        viewModel.updatePlan().continueWith(.mainThread) {
+            if let error = $0.error {
+                self.view.isUserInteractionEnabled = false
+                assert(false, error.localizedDescription)
+                // Todo: handle error
+                return
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if touches.randomElement()?.view != view {
+            super.touchesCancelled(touches, with: event)
+            return
+        }
+        touchesEnded(touches, with: event)
+    }
+    
+    @IBAction func flagColorButtonCliked(_ sender: UIButton) {
+        if sender.isSelected {
+            return
+        }
+        
+        sender.isSelected = true
+        flagButtons.forEach { $0.isSelected = $0 == sender }
+        
+        if sender.tag != viewModel.selectedFlagColorIndex {
+            viewModel.selectedFlagColor(at: sender.tag)
+        }
+    }
+}
+
+class KNOTPlanDetailViewController: KNOTPlanEditViewController<KNOTPlanDetailViewModel> {
     @IBOutlet weak var keyboardButton: UIButton!
     @IBOutlet weak var itemsTableView: UITableView!
-    @IBOutlet var flagButtons: [UIButton]!
+    
     @IBOutlet weak var listButton: UIButton!
     @IBOutlet weak var actionViewBottom: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         keyboardButton.isHidden = true
-        flagColorButtonCliked(flagButtons.filter({ $0.tag == viewModel.selectedFlagColorIndex }).first!)
         itemsTableView.setEditing(true, animated: false)
         
         NotificationCenter.default.addObserver(self,
@@ -65,40 +125,10 @@ class KNOTPlanDetailViewController: UIViewController {
         view.endEditing(true)
     }
     
-    @IBAction func flagColorButtonCliked(_ sender: UIButton) {
-        if sender.isSelected {
-            return
-        }
-        
-        sender.isSelected = true
-        flagButtons.forEach { $0.isSelected = $0 == sender }
-        
-        if sender.tag != viewModel.selectedFlagColorIndex {
-            viewModel.selectedFlagColor(at: sender.tag)
-        }
-    }
-    
     @IBAction func listButtonCliked(_ sender: UIButton) {
         let index = viewModel.items.count
         viewModel.insertItem(at: index)
         itemsTableView.insertRows(at: [IndexPath(row: index + 1, section: 0)], with: .none)
-    }
-    
-    @IBAction func bkViewTapped(_ sender: UITapGestureRecognizer) {
-        if sender.location(in: view).y >= contentView.frame.minY {
-            return
-        }
-        
-        sender.isEnabled = false
-        viewModel.updatePlan().continueWith(.mainThread) {
-            if let error = $0.error {
-                sender.isEnabled = true
-                assert(false, error.localizedDescription)
-                // Todo: handle error
-                return
-            }
-            self.dismiss(animated: true, completion: nil)
-        }
     }
 }
 
@@ -186,6 +216,10 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
     }
 }
 
+class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewModel>  {
+    
+}
+
 fileprivate extension IndexPath {
     var isPlanTitleRow: Bool {
         return row == 0
@@ -195,5 +229,3 @@ fileprivate extension IndexPath {
         return row - 1
     }
 }
-
-
