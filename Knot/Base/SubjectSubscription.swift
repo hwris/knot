@@ -44,7 +44,7 @@ class Subject<T> {
             listeners.append(subscription)
             
             if (needNotify) {
-                listener(nil, value)
+                listener(value, nil)
             }
             
             return subscription

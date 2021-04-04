@@ -90,22 +90,23 @@ class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
 
 class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
     private let model: KNOTPlanMoreModel
+    let isRepeatSwitchOnSubject: Subject<Bool>
     
     override init(model: KNOTPlanEditModel) {
         self.model = model as! KNOTPlanMoreModel
+        isRepeatSwitchOnSubject = Subject(value: model.plan.repeat != nil)
         super.init(model: model)
-    }
-    
-    var isRepeatSwitchOn: Bool {
-        return model.plan.repeat != nil
     }
     
     func closeRepeat() {
         model.plan.repeat = nil
+        isRepeatSwitchOnSubject.publish(false)
     }
     
     var repeatViewModel: KNOTPlanRepeatViewModel {
-        return KNOTPlanRepeatViewModel(model: model.plan)
+        let vm = KNOTPlanRepeatViewModel(model: model.plan)
+        vm.isRepeatSwitchOnSubject = isRepeatSwitchOnSubject
+        return vm
     }
 }
 
@@ -115,6 +116,7 @@ class KNOTPlanRepeatViewModel {
     private let typeIndex = 2
     
     private let model: KNOTPlanEntity
+    fileprivate var isRepeatSwitchOnSubject: Subject<Bool>?
     private var selectedIntervalIndex: Int = 0
     private var selectedTypeIndex: Int = 0
     
@@ -213,6 +215,7 @@ class KNOTPlanRepeatViewModel {
         }
         let repeat_ = KNOTPlanEntity.Repeat(interval: selectedIntervalIndex + 1, type: type)
         model.repeat = repeat_
+        isRepeatSwitchOnSubject?.publish(true)
     }
 }
 

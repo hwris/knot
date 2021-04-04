@@ -218,12 +218,20 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
 
 class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewModel>  {
     private let repeatSegueId = "repeat"
+    private var isRepeatSwitchOnSubscription: Subscription<Bool>?
     
     @IBOutlet weak var repeatSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        repeatSwitch.isOn = viewModel.isRepeatSwitchOn
+        isRepeatSwitchOnSubscription = viewModel.isRepeatSwitchOnSubject.listen({ [weak self] (new, old) in
+            self?.repeatSwitch.isOn = new ?? false
+        })
+    }
+    
+    deinit {
+        isRepeatSwitchOnSubscription?.cancel()
+        isRepeatSwitchOnSubscription = nil
     }
     
     @IBAction func repeatSwitchChanged(_ sender: UISwitch) {
@@ -232,28 +240,43 @@ class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewMod
             return
         }
         
+        sender.isOn = false
         performSegue(withIdentifier: repeatSegueId, sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == repeatSegueId {
             let repeatVC = segue.destination as! KNOTPlanRepeatViewController
+            repeatVC.completion = repeatViewDidCompletion
             repeatVC.viewModel = viewModel.repeatViewModel
+            UIView.animate(withDuration: 0.3) {
+                self.view.alpha = 0
+            }
+        }
+    }
+    
+    private func repeatViewDidCompletion() {
+        UIView.animate(withDuration: 0.3) {
+            self.view.alpha = 1.0
         }
     }
 }
 
 class KNOTPlanRepeatViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     var viewModel: KNOTPlanRepeatViewModel!
+    fileprivate var completion: (() -> ())?
     
     @IBOutlet weak var repeatPickerView: UIPickerView!
     
     @IBAction func cancelButtonClicked(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
+        completion?()
     }
     
     @IBAction func confirmButtonClicked(_ sender: UIButton) {
         viewModel.confirmButtonDidClicked()
+        dismiss(animated: true, completion: nil)
+        completion?()
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
