@@ -11,6 +11,7 @@
 		2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */; };
 		2C4439D325C6AAA10054A5EE /* Pods_Knot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */; };
 		2C55A89B25BC5EA0000EF1C0 /* KnotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */; };
+		2C6009082619642D00659FE1 /* KNOTPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6009072619642D00659FE1 /* KNOTPickerView.swift */; };
 		2C63D432261052FC00DD1810 /* KNOTModelImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63D431261052FC00DD1810 /* KNOTModelImpl.swift */; };
 		2C6EBD3625A166BE008A274C /* UITableView+Swipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */; };
 		2C7574E025DB724400CBA3AA /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C7574DF25DB724400CBA3AA /* CloudKit.framework */; };
@@ -55,6 +56,7 @@
 		2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KnotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotTests.swift; sourceTree = "<group>"; };
 		2C55A89C25BC5EA0000EF1C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C6009072619642D00659FE1 /* KNOTPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPickerView.swift; sourceTree = "<group>"; };
 		2C63D431261052FC00DD1810 /* KNOTModelImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTModelImpl.swift; sourceTree = "<group>"; };
 		2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Swipe.swift"; sourceTree = "<group>"; };
 		2C7574DF25DB724400CBA3AA /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -147,6 +149,7 @@
 				2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */,
 				2CFEA83324A5D77500853629 /* KNOTTextViewTableViewCell.swift */,
 				2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */,
+				2C6009072619642D00659FE1 /* KNOTPickerView.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */,
 				2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */,
 				2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */,
+				2C6009082619642D00659FE1 /* KNOTPickerView.swift in Sources */,
 				2C63D432261052FC00DD1810 /* KNOTModelImpl.swift in Sources */,
 				2CFEA83424A5D77500853629 /* KNOTTextViewTableViewCell.swift in Sources */,
 				2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */,

@@ -271,6 +271,27 @@ class KNOTPlanRepeatViewController: UIViewController, UIPickerViewDataSource, UI
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         viewModel.didSelect(row: row, inComponent: component)
     }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var label: UILabel! = view as? UILabel
+        if label == nil  {
+            label = UILabel()
+            label.textColor = UIColor(0xffffff, 0.87, 0x070D20, 1.0)
+            label.font = UIFont.systemFont(ofSize: 30, weight: .medium)
+            label.textAlignment = .center
+        }
+      
+        label.text = self.pickerView(pickerView, titleForRow: row, forComponent: component)
+        return label
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return viewModel.width(forComponent: component)
+    }
+
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 48
+    }
 }
 
 fileprivate extension IndexPath {

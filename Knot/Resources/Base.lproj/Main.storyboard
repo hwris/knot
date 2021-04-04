@@ -956,24 +956,10 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Every" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMK-Cp-TNH">
-                                        <rect key="frame" x="0.0" y="153.5" width="111" height="36"/>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vB-di-UeD" customClass="KNOTPickerView" customModule="Knot" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="63.5" width="333" height="216"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="111" id="QaK-Uc-VsM"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
-                                        <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
-                                                <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
-                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vB-di-UeD">
-                                        <rect key="frame" x="111" y="63" width="222" height="216"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="222" id="Ntv-hD-CHd"/>
+                                            <constraint firstAttribute="width" constant="333" id="Ntv-hD-CHd"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="dataSource" destination="jIr-d0-hCk" id="x5n-ni-XPv"/>
@@ -1017,15 +1003,13 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Rmq-8S-Tr2" firstAttribute="top" secondItem="ewK-Fs-LNz" secondAttribute="top" constant="21" id="81a-ko-ypz"/>
-                                    <constraint firstItem="hMK-Cp-TNH" firstAttribute="centerY" secondItem="7vB-di-UeD" secondAttribute="centerY" id="IkW-f6-z9R"/>
                                     <constraint firstAttribute="trailing" secondItem="7vB-di-UeD" secondAttribute="trailing" id="K1H-MU-Ztq"/>
-                                    <constraint firstItem="7vB-di-UeD" firstAttribute="leading" secondItem="hMK-Cp-TNH" secondAttribute="trailing" id="MVF-Bj-eHM"/>
                                     <constraint firstAttribute="bottom" secondItem="lxE-u8-kD3" secondAttribute="bottom" id="ROj-EJ-iZM"/>
                                     <constraint firstItem="7vB-di-UeD" firstAttribute="top" secondItem="Rmq-8S-Tr2" secondAttribute="bottom" constant="21" id="TQ8-QL-8Ng"/>
                                     <constraint firstItem="lxE-u8-kD3" firstAttribute="top" secondItem="7vB-di-UeD" secondAttribute="bottom" id="U8I-3A-RrH"/>
                                     <constraint firstItem="lxE-u8-kD3" firstAttribute="centerX" secondItem="ewK-Fs-LNz" secondAttribute="centerX" id="ijk-gN-7U9"/>
+                                    <constraint firstItem="7vB-di-UeD" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" id="mJi-wg-6Jt"/>
                                     <constraint firstItem="Rmq-8S-Tr2" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" constant="24" id="qFw-3Q-Kfc"/>
-                                    <constraint firstItem="hMK-Cp-TNH" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" id="yWd-ov-EjE"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">

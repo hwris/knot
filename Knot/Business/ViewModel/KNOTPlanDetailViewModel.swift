@@ -110,6 +110,10 @@ class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
 }
 
 class KNOTPlanRepeatViewModel {
+    private let everyIndex = 0
+    private let intervalIndex = 1
+    private let typeIndex = 2
+    
     private let model: KNOTPlanEntity
     private var selectedIntervalIndex: Int = 0
     private var selectedTypeIndex: Int = 0
@@ -152,22 +156,54 @@ class KNOTPlanRepeatViewModel {
     }
     
     var numberOfComponents: Int {
-        return 2
+        return 3
     }
     
     func numberOfRows(inComponent component: Int) -> Int {
-        return component == 0 ? numberOfIntervalRows : numberOfTypeRows
+        switch component {
+        case everyIndex:
+            return 1
+        case intervalIndex:
+            return numberOfIntervalRows
+        case typeIndex:
+            return numberOfTypeRows
+        default:
+            return 0
+        }
     }
     
     func title(forRow row: Int, forComponent component: Int) -> String? {
-        return component == 0 ? intervalTitle(at: row) : typeTitle(at: row)
+        switch component {
+        case everyIndex:
+            return NSLocalizedString("Every", comment: "")
+        case intervalIndex:
+            return intervalTitle(at: row)
+        case typeIndex:
+            return typeTitle(at: row)
+        default:
+            return ""
+        }
+    }
+    
+    func width(forComponent component: Int) -> CGFloat {
+        switch component {
+        case everyIndex:
+            return 110
+        case intervalIndex:
+            return 60
+        default:
+            return 160
+        }
     }
     
     func didSelect(row: Int, inComponent component: Int) {
-        if component == 0 {
+        switch component {
+        case intervalIndex:
             selectedIntervalIndex = row
-        } else {
+        case typeIndex:
             selectedTypeIndex = row
+        default:
+            break
         }
     }
     
