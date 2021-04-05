@@ -8,7 +8,7 @@
 
 import UIKit
 
-class KNOTPlanEditViewController<VieModel: KNOTPlanEditViewModel>: UIViewController {
+class KNOTPlanEditViewController<VieModel: KNOTPlanEditViewModel>: KNOTTranslucentViewController {
     var viewModel: VieModel!
     
     @IBOutlet var flagButtons: [UIButton]!
@@ -18,44 +18,17 @@ class KNOTPlanEditViewController<VieModel: KNOTPlanEditViewModel>: UIViewControl
         flagColorButtonCliked(flagButtons.filter({ $0.tag == viewModel.selectedFlagColorIndex }).first!)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touches.randomElement()?.view != view {
-            super.touchesBegan(touches, with: event)
-            return
-        }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touches.randomElement()?.view != view {
-            super.touchesMoved(touches, with: event)
-            return
-        }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touches.randomElement()?.view != view {
-            super.touchesEnded(touches, with: event)
-            return
-        }
-        
-        view.isUserInteractionEnabled = false
+    override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
         viewModel.updatePlan().continueWith(.mainThread) {
             if let error = $0.error {
-                self.view.isUserInteractionEnabled = false
                 assert(false, error.localizedDescription)
                 // Todo: handle error
+                completion()
                 return
             }
+            completion()
             self.dismiss(animated: true, completion: nil)
         }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touches.randomElement()?.view != view {
-            super.touchesCancelled(touches, with: event)
-            return
-        }
-        touchesEnded(touches, with: event)
     }
     
     @IBAction func flagColorButtonCliked(_ sender: UIButton) {
@@ -262,7 +235,7 @@ class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewMod
     }
 }
 
-class KNOTPlanRepeatViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class KNOTPlanRepeatViewController: KNOTDialogViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     var viewModel: KNOTPlanRepeatViewModel!
     fileprivate var completion: (() -> ())?
     
@@ -275,8 +248,12 @@ class KNOTPlanRepeatViewController: UIViewController, UIPickerViewDataSource, UI
     
     @IBAction func confirmButtonClicked(_ sender: UIButton) {
         viewModel.confirmButtonDidClicked()
-        dismiss(animated: true, completion: nil)
-        completion?()
+        cancelButtonClicked(sender)
+    }
+    
+    override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
+        completion()
+        cancelButtonClicked(cancelButton)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {

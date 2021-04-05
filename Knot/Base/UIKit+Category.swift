@@ -264,3 +264,99 @@ class KNOTRoundCornersTableView: UITableView {
         setRoundCorners(frome: roundingCorners)
     }
 }
+
+class KNOTTranslucentViewController: UIViewController {
+    private var isHandling = false
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isHandling {
+            return
+        }
+        
+        if touches.randomElement()?.view != view {
+            super.touchesBegan(touches, with: event)
+            return
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isHandling {
+            return
+        }
+        
+        if touches.randomElement()?.view != view {
+            super.touchesMoved(touches, with: event)
+            return
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isHandling {
+            return
+        }
+        
+        if touches.randomElement()?.view != view {
+            super.touchesEnded(touches, with: event)
+            return
+        }
+        
+        view.isUserInteractionEnabled = false
+        handleBackgroundViewTapped { [weak self] in
+            self?.view.isUserInteractionEnabled = true
+        }
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isHandling {
+            return
+        }
+        
+        if touches.randomElement()?.view != view {
+            super.touchesCancelled(touches, with: event)
+            return
+        }
+        touchesEnded(touches, with: event)
+    }
+    
+    func handleBackgroundViewTapped(completion: @escaping () -> ()) {
+        fatalError("Should implement by subclass")
+    }
+}
+
+class KNOTDialogViewController: KNOTTranslucentViewController {
+    @IBOutlet var cancelButton: UIButton!
+    @IBOutlet var confirmButton: UIButton!
+    
+    override func viewDidLoad() {
+        cancelButton.backgroundColor = UIColor(0xffffff, 0.04, 0xffffff, 1.0)
+        cancelButton.cornerRadius = 14
+        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        cancelButton.setTitleColor(UIColor(0xffffff, 0.87, 0x5276FF, 1.0), for: .normal)
+        
+        confirmButton.backgroundColor = UIColor(0x5276FF)
+        confirmButton.cornerRadius = 14
+        confirmButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        confirmButton.setTitleColor(UIColor(0xffffff, 0.87, 0xffffFF, 1.0), for: .normal)
+        
+        setButtonStyle()
+    }
+    
+    private func setButtonStyle() {
+        if #available(iOS 12.0, *), traitCollection.userInterfaceStyle == .dark {
+            cancelButton.borderWidth = 0
+            cancelButton.borderColor = nil
+        } else {
+            cancelButton.borderWidth = 1.0
+            cancelButton.borderColor = UIColor(0xE5EBFF)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                setButtonStyle()
+            }
+        }
+    }
+}

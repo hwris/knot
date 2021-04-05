@@ -943,7 +943,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewK-Fs-LNz">
-                                <rect key="frame" x="40.5" y="236" width="333" height="330.5"/>
+                                <rect key="frame" x="40.5" y="232" width="333" height="338.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Repeat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmq-8S-Tr2">
                                         <rect key="frame" x="24" y="21" width="58.5" height="21.5"/>
@@ -957,7 +957,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vB-di-UeD" customClass="KNOTPickerView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="63.5" width="333" height="216"/>
+                                        <rect key="frame" x="0.0" y="50.5" width="333" height="216"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="333" id="Ntv-hD-CHd"/>
                                         </constraints>
@@ -966,13 +966,12 @@
                                             <outlet property="delegate" destination="jIr-d0-hCk" id="0UR-rg-08p"/>
                                         </connections>
                                     </pickerView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="lxE-u8-kD3">
-                                        <rect key="frame" x="24" y="279.5" width="285" height="51"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="lxE-u8-kD3">
+                                        <rect key="frame" x="21" y="266.5" width="291" height="51"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvX-bv-9HO">
-                                                <rect key="frame" x="0.0" y="0.0" width="132" height="51"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="135" height="51"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="132" id="1nw-eA-KsU"/>
                                                     <constraint firstAttribute="height" constant="51" id="VUo-8C-dbA"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -984,10 +983,9 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-Pp-dKx">
-                                                <rect key="frame" x="153" y="0.0" width="132" height="51"/>
+                                                <rect key="frame" x="156" y="0.0" width="135" height="51"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="51" id="UVc-wR-nkG"/>
-                                                    <constraint firstAttribute="width" constant="132" id="tRs-Td-eMf"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Confirm">
@@ -1002,12 +1000,14 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="lxE-u8-kD3" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" constant="21" id="3W5-48-86f"/>
                                     <constraint firstItem="Rmq-8S-Tr2" firstAttribute="top" secondItem="ewK-Fs-LNz" secondAttribute="top" constant="21" id="81a-ko-ypz"/>
                                     <constraint firstAttribute="trailing" secondItem="7vB-di-UeD" secondAttribute="trailing" id="K1H-MU-Ztq"/>
-                                    <constraint firstAttribute="bottom" secondItem="lxE-u8-kD3" secondAttribute="bottom" id="ROj-EJ-iZM"/>
-                                    <constraint firstItem="7vB-di-UeD" firstAttribute="top" secondItem="Rmq-8S-Tr2" secondAttribute="bottom" constant="21" id="TQ8-QL-8Ng"/>
+                                    <constraint firstAttribute="bottom" secondItem="lxE-u8-kD3" secondAttribute="bottom" constant="21" id="ROj-EJ-iZM"/>
+                                    <constraint firstItem="7vB-di-UeD" firstAttribute="top" secondItem="Rmq-8S-Tr2" secondAttribute="bottom" constant="8" symbolic="YES" id="TQ8-QL-8Ng"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Rmq-8S-Tr2" secondAttribute="trailing" constant="20" symbolic="YES" id="TWG-fW-wow"/>
                                     <constraint firstItem="lxE-u8-kD3" firstAttribute="top" secondItem="7vB-di-UeD" secondAttribute="bottom" id="U8I-3A-RrH"/>
-                                    <constraint firstItem="lxE-u8-kD3" firstAttribute="centerX" secondItem="ewK-Fs-LNz" secondAttribute="centerX" id="ijk-gN-7U9"/>
+                                    <constraint firstAttribute="trailing" secondItem="lxE-u8-kD3" secondAttribute="trailing" constant="21" id="UCb-9U-Rdl"/>
                                     <constraint firstItem="7vB-di-UeD" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" id="mJi-wg-6Jt"/>
                                     <constraint firstItem="Rmq-8S-Tr2" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" constant="24" id="qFw-3Q-Kfc"/>
                                 </constraints>
@@ -1033,6 +1033,8 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="cancelButton" destination="JvX-bv-9HO" id="Myq-uI-zpn"/>
+                        <outlet property="confirmButton" destination="jcU-Pp-dKx" id="4tQ-Zk-xhR"/>
                         <outlet property="repeatPickerView" destination="7vB-di-UeD" id="8PW-SF-BEO"/>
                     </connections>
                 </viewController>

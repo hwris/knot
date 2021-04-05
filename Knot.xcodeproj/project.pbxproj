@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA57B243823FE0056B84F /* UIView+Category.swift */; };
+		2C2AA57C243823FE0056B84F /* UIKit+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA57B243823FE0056B84F /* UIKit+Category.swift */; };
 		2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */; };
 		2C4439D325C6AAA10054A5EE /* Pods_Knot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */; };
 		2C55A89B25BC5EA0000EF1C0 /* KnotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */; };
@@ -21,7 +21,6 @@
 		2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7F2620244C507B00F13299 /* KNOTPlanViewModel.swift */; };
 		2C8BE051247A0D780059423F /* KNOTPlanDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8BE050247A0D780059423F /* KNOTPlanDetailViewController.swift */; };
 		2C8BE053247BA88D0059423F /* KNOTPlanDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8BE052247BA88D0059423F /* KNOTPlanDetailViewModel.swift */; };
-		2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */; };
 		2CE792032430C33900975D99 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792022430C33900975D99 /* UIImage+Color.swift */; };
 		2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792052430C94900975D99 /* KNOTHomeViewController.swift */; };
 		2CE792082430CFE000975D99 /* UIColor+Dynamic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */; };
@@ -51,7 +50,7 @@
 /* Begin PBXFileReference section */
 		2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Knot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2369AA372A2665998D89910D /* Pods-Knot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Knot.release.xcconfig"; path = "Target Support Files/Pods-Knot/Pods-Knot.release.xcconfig"; sourceTree = "<group>"; };
-		2C2AA57B243823FE0056B84F /* UIView+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Category.swift"; sourceTree = "<group>"; };
+		2C2AA57B243823FE0056B84F /* UIKit+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Category.swift"; sourceTree = "<group>"; };
 		2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanViewController.swift; sourceTree = "<group>"; };
 		2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KnotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotTests.swift; sourceTree = "<group>"; };
@@ -66,7 +65,6 @@
 		2C7F2620244C507B00F13299 /* KNOTPlanViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KNOTPlanViewModel.swift; sourceTree = "<group>"; };
 		2C8BE050247A0D780059423F /* KNOTPlanDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanDetailViewController.swift; sourceTree = "<group>"; };
 		2C8BE052247BA88D0059423F /* KNOTPlanDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPlanDetailViewModel.swift; sourceTree = "<group>"; };
-		2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeItemTableViewController.swift; sourceTree = "<group>"; };
 		2CB5F43625F310BC00081DF9 /* Todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.txt; sourceTree = SOURCE_ROOT; };
 		2CE792022430C33900975D99 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
 		2CE792052430C94900975D99 /* KNOTHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTHomeViewController.swift; sourceTree = "<group>"; };
@@ -145,7 +143,7 @@
 				2CE792022430C33900975D99 /* UIImage+Color.swift */,
 				2CE792072430CFE000975D99 /* UIColor+Dynamic.swift */,
 				2CE792092430D49F00975D99 /* UIColor+Hex.swift */,
-				2C2AA57B243823FE0056B84F /* UIView+Category.swift */,
+				2C2AA57B243823FE0056B84F /* UIKit+Category.swift */,
 				2C7F261A244A8D1600F13299 /* SubjectSubscription.swift */,
 				2CFEA83324A5D77500853629 /* KNOTTextViewTableViewCell.swift */,
 				2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */,
@@ -158,7 +156,6 @@
 			isa = PBXGroup;
 			children = (
 				2CE792052430C94900975D99 /* KNOTHomeViewController.swift */,
-				2CB163202438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift */,
 				2C2AA58124386E630056B84F /* KNOTPlanViewController.swift */,
 				2C8BE050247A0D780059423F /* KNOTPlanDetailViewController.swift */,
 			);
@@ -419,12 +416,11 @@
 				2C7F261D244C4BA500F13299 /* KNOTViewModel.swift in Sources */,
 				2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */,
 				2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */,
-				2C2AA57C243823FE0056B84F /* UIView+Category.swift in Sources */,
+				2C2AA57C243823FE0056B84F /* UIKit+Category.swift in Sources */,
 				2C7F2621244C507B00F13299 /* KNOTPlanViewModel.swift in Sources */,
 				2C6009082619642D00659FE1 /* KNOTPickerView.swift in Sources */,
 				2C63D432261052FC00DD1810 /* KNOTModelImpl.swift in Sources */,
 				2CFEA83424A5D77500853629 /* KNOTTextViewTableViewCell.swift in Sources */,
-				2CB163212438AE9E006BAAEA /* KNOTHomeItemTableViewController.swift in Sources */,
 				2CE792062430C94900975D99 /* KNOTHomeViewController.swift in Sources */,
 				2C7F261B244A8D1600F13299 /* SubjectSubscription.swift in Sources */,
 				2CEBFD6A242742F8008807E1 /* KNOTEntity.swift in Sources */,
