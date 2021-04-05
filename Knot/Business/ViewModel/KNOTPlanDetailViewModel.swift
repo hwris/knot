@@ -91,10 +91,12 @@ class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
 class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
     private let model: KNOTPlanMoreModel
     let isRepeatSwitchOnSubject: Subject<Bool>
+    let isReminderSwitchOnSubject: Subject<Bool>
     
     override init(model: KNOTPlanEditModel) {
         self.model = model as! KNOTPlanMoreModel
         isRepeatSwitchOnSubject = Subject(value: model.plan.repeat != nil)
+        isReminderSwitchOnSubject = Subject(value: model.plan.remindTime != nil)
         super.init(model: model)
     }
     
@@ -103,29 +105,35 @@ class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
         isRepeatSwitchOnSubject.publish(false)
     }
     
-    var repeatViewModel: KNOTPlanRepeatViewModel {
+    var repeatViewModel: KNOTPickerViewModel {
         let vm = KNOTPlanRepeatViewModel(model: model.plan)
         vm.isRepeatSwitchOnSubject = isRepeatSwitchOnSubject
         return vm
     }
+    
+    func closeReminder() {
+        model.plan.remindTime = nil
+        isReminderSwitchOnSubject.publish(false)
+    }
+    
+    var reminderViewModel: KNOTPickerViewModel {
+        let vm = KNOTPlanReminderViewModel(model: model.plan)
+        vm.isReminderSwitchOnSubject = isReminderSwitchOnSubject
+        return vm
+    }
 }
 
-class KNOTPlanRepeatViewModel {
-    private let everyIndex = 0
-    private let intervalIndex = 1
-    private let typeIndex = 2
+private class KNOTPlanRepeatViewModel: KNOTPickerViewModel {
+    private let intervalIndex = 0
+    private let typeIndex = 1
     
     private let model: KNOTPlanEntity
     fileprivate var isRepeatSwitchOnSubject: Subject<Bool>?
-    private var selectedIntervalIndex: Int = 0
-    private var selectedTypeIndex: Int = 0
+    private var selectedIntervalIndex = 0
+    private var selectedTypeIndex = 0
     
     init(model: KNOTPlanEntity) {
         self.model = model
-        if let repeat_ = model.repeat {
-            selectedIntervalIndex = repeat_.interval - 1
-            selectedTypeIndex = repeat_.type.rawValue
-        }
     }
     
     private var numberOfIntervalRows: Int {
@@ -158,13 +166,11 @@ class KNOTPlanRepeatViewModel {
     }
     
     var numberOfComponents: Int {
-        return 3
+        return 2
     }
     
     func numberOfRows(inComponent component: Int) -> Int {
         switch component {
-        case everyIndex:
-            return 1
         case intervalIndex:
             return numberOfIntervalRows
         case typeIndex:
@@ -176,8 +182,6 @@ class KNOTPlanRepeatViewModel {
     
     func title(forRow row: Int, forComponent component: Int) -> String? {
         switch component {
-        case everyIndex:
-            return NSLocalizedString("Every", comment: "")
         case intervalIndex:
             return intervalTitle(at: row)
         case typeIndex:
@@ -189,12 +193,12 @@ class KNOTPlanRepeatViewModel {
     
     func width(forComponent component: Int) -> CGFloat {
         switch component {
-        case everyIndex:
-            return 110
         case intervalIndex:
             return 60
-        default:
+        case typeIndex:
             return 160
+        default:
+            return 0
         }
     }
     
@@ -216,6 +220,77 @@ class KNOTPlanRepeatViewModel {
         let repeat_ = KNOTPlanEntity.Repeat(interval: selectedIntervalIndex + 1, type: type)
         model.repeat = repeat_
         isRepeatSwitchOnSubject?.publish(true)
+    }
+}
+
+private class KNOTPlanReminderViewModel: KNOTPickerViewModel {
+    private let timePeriodIndex = 0
+    private let hourIndex = 1
+    private let minuteIndex = 2
+    
+    private let model: KNOTPlanEntity
+    fileprivate var isReminderSwitchOnSubject: Subject<Bool>?
+    private var selectedTimePeriodIndex = 0
+    private var selectedHourIndex = 0
+    private var selectedMinuteIndex = 0
+    
+    init(model: KNOTPlanEntity) {
+        self.model = model
+    }
+    
+    var numberOfComponents: Int {
+        return 3
+    }
+    
+    func numberOfRows(inComponent component: Int) -> Int {
+        switch component {
+        case timePeriodIndex:
+            return 2
+        case hourIndex:
+            return 12
+        case minuteIndex:
+            return 60
+        default:
+            return 0
+        }
+    }
+    
+    func title(forRow row: Int, forComponent component: Int) -> String? {
+        switch component {
+        case timePeriodIndex:
+            return row == 0 ? NSLocalizedString("AM", comment: "") : NSLocalizedString("PM", comment: "")
+        case hourIndex:
+            return "\(row + 1)"
+        case minuteIndex:
+            return row <= 9 ? "0\(row)" : "\(row)"
+        default:
+            return ""
+        }
+    }
+    
+    func width(forComponent component: Int) -> CGFloat {
+        return 110
+    }
+    
+    func didSelect(row: Int, inComponent component: Int) {
+        switch component {
+        case timePeriodIndex:
+            selectedTimePeriodIndex = row
+        case hourIndex:
+            selectedHourIndex = row
+        case minuteIndex:
+            selectedMinuteIndex = row
+        default:
+            break
+        }
+    }
+    
+    func confirmButtonDidClicked() {
+        let sampleHour = selectedHourIndex + 1
+        let hour = selectedTimePeriodIndex == 0 ? sampleHour : sampleHour + 12
+        let dateComponents = DateComponents(calendar: .current, timeZone: .current, hour: hour, minute: selectedMinuteIndex)
+        model.remindTime = dateComponents.date!
+        isReminderSwitchOnSubject?.publish(true)
     }
 }
 

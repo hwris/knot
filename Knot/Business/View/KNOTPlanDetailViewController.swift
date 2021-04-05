@@ -191,20 +191,29 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
 
 class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewModel>  {
     private let repeatSegueId = "repeat"
+    private let reminderSegueId = "reminder"
+    
     private var isRepeatSwitchOnSubscription: Subscription<Bool>?
+    private var isReminderSwitchOnSubscription: Subscription<Bool>?
     
     @IBOutlet weak var repeatSwitch: UISwitch!
+    @IBOutlet weak var reminderSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         isRepeatSwitchOnSubscription = viewModel.isRepeatSwitchOnSubject.listen({ [weak self] (new, old) in
             self?.repeatSwitch.isOn = new ?? false
         })
+        isReminderSwitchOnSubscription = viewModel.isReminderSwitchOnSubject.listen({ [weak self] (new, old) in
+            self?.reminderSwitch.isOn = new ?? false
+        })
     }
     
     deinit {
         isRepeatSwitchOnSubscription?.cancel()
         isRepeatSwitchOnSubscription = nil
+        isReminderSwitchOnSubscription?.cancel()
+        isReminderSwitchOnSubscription = nil
     }
     
     @IBAction func repeatSwitchChanged(_ sender: UISwitch) {
@@ -217,80 +226,59 @@ class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewMod
         performSegue(withIdentifier: repeatSegueId, sender: nil)
     }
     
+    @IBAction func reminderSwitchChanged(_ sender: UISwitch) {
+        if !sender.isOn {
+            viewModel.closeReminder()
+            return
+        }
+        
+        sender.isOn = false
+        performSegue(withIdentifier: reminderSegueId, sender: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == repeatSegueId {
-            let repeatVC = segue.destination as! KNOTPlanRepeatViewController
-            repeatVC.completion = repeatViewDidCompletion
-            repeatVC.viewModel = viewModel.repeatViewModel
-            UIView.animate(withDuration: 0.3) {
-                self.view.alpha = 0
-            }
+            hideView()
+            let VC = segue.destination as! KNOTPlanPickerViewController
+            VC.completion = showView
+            VC.viewModel = viewModel.repeatViewModel
+        } else if segue.identifier == reminderSegueId {
+            hideView()
+            let VC = segue.destination as! KNOTPlanPickerViewController
+            VC.completion = showView
+            VC.viewModel = viewModel.reminderViewModel
         }
     }
     
-    private func repeatViewDidCompletion() {
+    private func hideView() {
+        UIView.animate(withDuration: 0.3) {
+            self.view.alpha = 0
+        }
+    }
+    
+    private func showView() {
         UIView.animate(withDuration: 0.3) {
             self.view.alpha = 1.0
         }
     }
 }
 
-class KNOTPlanRepeatViewController: KNOTDialogViewController, UIPickerViewDataSource, UIPickerViewDelegate {
-    var viewModel: KNOTPlanRepeatViewModel!
+class KNOTPlanPickerViewController: KNOTPickerViewController {
     fileprivate var completion: (() -> ())?
     
-    @IBOutlet weak var repeatPickerView: UIPickerView!
-    
-    @IBAction func cancelButtonClicked(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+    override func cancelButtonClicked(_ sender: UIButton) {
+        super.cancelButtonClicked(sender)
         completion?()
     }
     
-    @IBAction func confirmButtonClicked(_ sender: UIButton) {
-        viewModel.confirmButtonDidClicked()
-        cancelButtonClicked(sender)
+    override func confirmButtonClicked(_ sender: UIButton) {
+        super.confirmButtonClicked(sender)
+        completion?()
     }
     
     override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
-        completion()
-        cancelButtonClicked(cancelButton)
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return viewModel.numberOfComponents
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return viewModel.numberOfRows(inComponent: component)
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return viewModel.title(forRow: row, forComponent: component)
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        viewModel.didSelect(row: row, inComponent: component)
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        var label: UILabel! = view as? UILabel
-        if label == nil  {
-            label = UILabel()
-            label.textColor = UIColor(0xffffff, 0.87, 0x070D20, 1.0)
-            label.font = UIFont.systemFont(ofSize: 30, weight: .medium)
-            label.textAlignment = .center
-        }
-      
-        label.text = self.pickerView(pickerView, titleForRow: row, forComponent: component)
-        return label
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return viewModel.width(forComponent: component)
-    }
-
-    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 48
+        super.handleBackgroundViewTapped(completion: completion)
+        self.completion?()
     }
 }
 

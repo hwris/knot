@@ -359,4 +359,74 @@ class KNOTDialogViewController: KNOTTranslucentViewController {
             }
         }
     }
+    
+    override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
+        dismiss(animated: true, completion: nil)
+        completion()
+    }
+    
+    @IBAction func cancelButtonClicked(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func confirmButtonClicked(_ sender: UIButton) {
+        
+    }
+}
+
+class KNOTPickerViewController: KNOTDialogViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    @IBOutlet var pickerView: UIPickerView!
+    
+    var viewModel: KNOTPickerViewModel!
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return viewModel.numberOfComponents
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return viewModel.numberOfRows(inComponent: component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return viewModel.title(forRow: row, forComponent: component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        viewModel.didSelect(row: row, inComponent: component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var label: UILabel! = view as? UILabel
+        if label == nil  {
+            label = UILabel()
+            label.textColor = UIColor(0xffffff, 0.87, 0x070D20, 1.0)
+            label.font = UIFont.systemFont(ofSize: 30, weight: .medium)
+            label.textAlignment = .center
+        }
+      
+        label.text = self.pickerView(pickerView, titleForRow: row, forComponent: component)
+        return label
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return viewModel.width(forComponent: component)
+    }
+
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 48
+    }
+    
+    override func confirmButtonClicked(_ sender: UIButton) {
+        viewModel.confirmButtonDidClicked()
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+protocol KNOTPickerViewModel {
+    var numberOfComponents: Int { get }
+    func numberOfRows(inComponent component: Int) -> Int
+    func title(forRow row: Int, forComponent component: Int) -> String?
+    func width(forComponent component: Int) -> CGFloat
+    func didSelect(row: Int, inComponent component: Int)
+    func confirmButtonDidClicked()
 }

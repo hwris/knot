@@ -277,7 +277,7 @@
                                                                 </view>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" image="img_card_corner" translatesAutoresizingMaskIntoConstraints="NO" id="kVX-uv-EQE">
                                                                     <rect key="frame" x="288" y="46" width="47" height="43"/>
-                                                                    <color key="tintColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                                     <userDefinedRuntimeAttributes>
                                                                         <userDefinedRuntimeAttribute type="color" keyPath="darkTintColor">
                                                                             <color key="value" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -857,6 +857,9 @@
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="GSp-HY-mJJ">
                                                         <rect key="frame" x="173" y="12.5" width="51" height="31"/>
                                                         <color key="onTintColor" red="0.32156862749999998" green="0.46274509800000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <connections>
+                                                            <action selector="reminderSwitchChanged:" destination="ywf-KX-aqH" eventType="valueChanged" id="yFc-w5-dOY"/>
+                                                        </connections>
                                                     </switch>
                                                 </subviews>
                                             </stackView>
@@ -922,11 +925,13 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="reminderSwitch" destination="GSp-HY-mJJ" id="QuV-NE-5SR"/>
                         <outlet property="repeatSwitch" destination="s5k-4P-TVM" id="Hts-Qz-Rjr"/>
                         <outletCollection property="flagButtons" destination="34l-x0-ehs" collectionClass="NSMutableArray" id="dNl-TJ-c7a"/>
                         <outletCollection property="flagButtons" destination="mE7-86-eKY" collectionClass="NSMutableArray" id="qdU-ES-kza"/>
                         <outletCollection property="flagButtons" destination="w0Z-bU-iXc" collectionClass="NSMutableArray" id="1HB-OX-2c4"/>
                         <segue destination="jIr-d0-hCk" kind="presentation" identifier="repeat" id="m4L-2z-img"/>
+                        <segue destination="3rb-pt-otL" kind="presentation" identifier="reminder" id="6xh-lZ-cNv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jFA-Ul-KWD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -934,16 +939,16 @@
             </objects>
             <point key="canvasLocation" x="3239" y="-89"/>
         </scene>
-        <!--Plan Repeat View Controller-->
+        <!--Plan Picker View Controller-->
         <scene sceneID="KdY-Jf-ViB">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="jIr-d0-hCk" customClass="KNOTPlanRepeatViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="jIr-d0-hCk" customClass="KNOTPlanPickerViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bdp-S5-trW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="802"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewK-Fs-LNz">
-                                <rect key="frame" x="40.5" y="232" width="333" height="338.5"/>
+                                <rect key="frame" x="42" y="232" width="330" height="338.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Repeat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmq-8S-Tr2">
                                         <rect key="frame" x="24" y="21" width="58.5" height="21.5"/>
@@ -956,10 +961,24 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </label>
-                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vB-di-UeD" customClass="KNOTPickerView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50.5" width="333" height="216"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Every" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BgU-MM-aUS">
+                                        <rect key="frame" x="0.0" y="140.5" width="110" height="36"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="333" id="Ntv-hD-CHd"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="dux-Mw-a89"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
+                                        <color key="textColor" red="0.027450980392156862" green="0.050980392156862744" blue="0.12549019607843137" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vB-di-UeD" customClass="KNOTPickerView" customModule="Knot" customModuleProvider="target">
+                                        <rect key="frame" x="110" y="50.5" width="220" height="216"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="220" id="Ntv-hD-CHd"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="dataSource" destination="jIr-d0-hCk" id="x5n-ni-XPv"/>
@@ -967,10 +986,10 @@
                                         </connections>
                                     </pickerView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="lxE-u8-kD3">
-                                        <rect key="frame" x="21" y="266.5" width="291" height="51"/>
+                                        <rect key="frame" x="21" y="266.5" width="288" height="51"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvX-bv-9HO">
-                                                <rect key="frame" x="0.0" y="0.0" width="135" height="51"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="133.5" height="51"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="51" id="VUo-8C-dbA"/>
                                                 </constraints>
@@ -983,7 +1002,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-Pp-dKx">
-                                                <rect key="frame" x="156" y="0.0" width="135" height="51"/>
+                                                <rect key="frame" x="154.5" y="0.0" width="133.5" height="51"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="51" id="UVc-wR-nkG"/>
                                                 </constraints>
@@ -1000,7 +1019,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="7vB-di-UeD" firstAttribute="leading" secondItem="BgU-MM-aUS" secondAttribute="trailing" id="2mY-bl-kR5"/>
                                     <constraint firstItem="lxE-u8-kD3" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" constant="21" id="3W5-48-86f"/>
+                                    <constraint firstItem="BgU-MM-aUS" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" id="438-KR-Ogx"/>
                                     <constraint firstItem="Rmq-8S-Tr2" firstAttribute="top" secondItem="ewK-Fs-LNz" secondAttribute="top" constant="21" id="81a-ko-ypz"/>
                                     <constraint firstAttribute="trailing" secondItem="7vB-di-UeD" secondAttribute="trailing" id="K1H-MU-Ztq"/>
                                     <constraint firstAttribute="bottom" secondItem="lxE-u8-kD3" secondAttribute="bottom" constant="21" id="ROj-EJ-iZM"/>
@@ -1008,7 +1029,7 @@
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Rmq-8S-Tr2" secondAttribute="trailing" constant="20" symbolic="YES" id="TWG-fW-wow"/>
                                     <constraint firstItem="lxE-u8-kD3" firstAttribute="top" secondItem="7vB-di-UeD" secondAttribute="bottom" id="U8I-3A-RrH"/>
                                     <constraint firstAttribute="trailing" secondItem="lxE-u8-kD3" secondAttribute="trailing" constant="21" id="UCb-9U-Rdl"/>
-                                    <constraint firstItem="7vB-di-UeD" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" id="mJi-wg-6Jt"/>
+                                    <constraint firstItem="BgU-MM-aUS" firstAttribute="centerY" secondItem="7vB-di-UeD" secondAttribute="centerY" id="cLM-ww-8bt"/>
                                     <constraint firstItem="Rmq-8S-Tr2" firstAttribute="leading" secondItem="ewK-Fs-LNz" secondAttribute="leading" constant="24" id="qFw-3Q-Kfc"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -1035,13 +1056,138 @@
                     <connections>
                         <outlet property="cancelButton" destination="JvX-bv-9HO" id="Myq-uI-zpn"/>
                         <outlet property="confirmButton" destination="jcU-Pp-dKx" id="4tQ-Zk-xhR"/>
-                        <outlet property="repeatPickerView" destination="7vB-di-UeD" id="8PW-SF-BEO"/>
+                        <outlet property="pickerView" destination="7vB-di-UeD" id="orS-vv-uHV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iT3-Vt-mB4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="mnE-vC-a4W"/>
             </objects>
-            <point key="canvasLocation" x="4036" y="-88"/>
+            <point key="canvasLocation" x="4084" y="-392"/>
+        </scene>
+        <!--Plan Picker View Controller-->
+        <scene sceneID="sVF-2a-WXh">
+            <objects>
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="3rb-pt-otL" customClass="KNOTPlanPickerViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="w5P-n0-r8c">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="802"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZC-U7-4gw">
+                                <rect key="frame" x="40.5" y="232" width="333" height="338.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rvl-ZI-qgj">
+                                        <rect key="frame" x="24" y="21" width="79" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                        <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=":" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AXY-ts-Jft">
+                                        <rect key="frame" x="153" y="140.5" width="110" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="110" id="Uql-zp-OTT"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
+                                        <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i5d-MH-ldy" customClass="KNOTPickerView" customModule="Knot" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50.5" width="333" height="216"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="333" id="KEt-aF-AcK"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="dataSource" destination="3rb-pt-otL" id="PO8-dd-t3h"/>
+                                            <outlet property="delegate" destination="3rb-pt-otL" id="88y-6v-uOi"/>
+                                        </connections>
+                                    </pickerView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="hkO-OO-AA5">
+                                        <rect key="frame" x="21" y="266.5" width="291" height="51"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JE5-UB-U23">
+                                                <rect key="frame" x="0.0" y="0.0" width="135" height="51"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="51" id="Tmu-AA-oGW"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" red="0.32156862749999998" green="0.46274509800000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="cancelButtonClicked:" destination="3rb-pt-otL" eventType="touchUpInside" id="UfB-Ag-qL3"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lds-x8-9Lk">
+                                                <rect key="frame" x="156" y="0.0" width="135" height="51"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="51" id="ehu-5S-YGF"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                <state key="normal" title="Confirm">
+                                                    <color key="titleColor" red="0.32156862749999998" green="0.46274509800000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="confirmButtonClicked:" destination="3rb-pt-otL" eventType="touchUpInside" id="mgP-eL-OLM"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="rvl-ZI-qgj" firstAttribute="leading" secondItem="jZC-U7-4gw" secondAttribute="leading" constant="24" id="0qO-aR-NDM"/>
+                                    <constraint firstAttribute="trailing" secondItem="hkO-OO-AA5" secondAttribute="trailing" constant="21" id="2FA-qc-xnx"/>
+                                    <constraint firstAttribute="trailing" secondItem="i5d-MH-ldy" secondAttribute="trailing" id="EDG-04-ZIi"/>
+                                    <constraint firstItem="i5d-MH-ldy" firstAttribute="leading" secondItem="jZC-U7-4gw" secondAttribute="leading" id="HDz-G4-Hxi"/>
+                                    <constraint firstItem="AXY-ts-Jft" firstAttribute="centerY" secondItem="i5d-MH-ldy" secondAttribute="centerY" id="QWg-b2-GJK"/>
+                                    <constraint firstItem="AXY-ts-Jft" firstAttribute="centerX" secondItem="i5d-MH-ldy" secondAttribute="centerX" multiplier="1.25" id="X4L-5t-KOO"/>
+                                    <constraint firstItem="hkO-OO-AA5" firstAttribute="leading" secondItem="jZC-U7-4gw" secondAttribute="leading" constant="21" id="YNS-zf-epr"/>
+                                    <constraint firstItem="rvl-ZI-qgj" firstAttribute="top" secondItem="jZC-U7-4gw" secondAttribute="top" constant="21" id="YU6-cW-KJ9"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="rvl-ZI-qgj" secondAttribute="trailing" constant="20" symbolic="YES" id="dlv-rK-ZPG"/>
+                                    <constraint firstAttribute="bottom" secondItem="hkO-OO-AA5" secondAttribute="bottom" constant="21" id="esX-1r-w2r"/>
+                                    <constraint firstItem="hkO-OO-AA5" firstAttribute="top" secondItem="i5d-MH-ldy" secondAttribute="bottom" id="g1K-Nq-JOw"/>
+                                    <constraint firstItem="i5d-MH-ldy" firstAttribute="top" secondItem="rvl-ZI-qgj" secondAttribute="bottom" constant="8" symbolic="YES" id="nul-X8-vXS"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="darkBackgroundColor">
+                                        <color key="value" red="0.14901960780000001" green="0.16078431369999999" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="32"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="9Ie-S3-e9w"/>
+                        <color key="backgroundColor" red="0.3294117647" green="0.34509803919999998" blue="0.39607843139999999" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="jZC-U7-4gw" firstAttribute="centerY" secondItem="w5P-n0-r8c" secondAttribute="centerY" id="LG9-Ng-XV9"/>
+                            <constraint firstItem="jZC-U7-4gw" firstAttribute="centerX" secondItem="w5P-n0-r8c" secondAttribute="centerX" id="VQp-yN-5TX"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="cCd-yX-2pp" appends="YES" id="uEg-yJ-bAd"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="JE5-UB-U23" id="AEj-y9-34e"/>
+                        <outlet property="confirmButton" destination="lds-x8-9Lk" id="o89-gi-EyA"/>
+                        <outlet property="pickerView" destination="i5d-MH-ldy" id="owI-ft-VMo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zzG-3v-6r7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="cCd-yX-2pp"/>
+            </objects>
+            <point key="canvasLocation" x="4084" y="260"/>
         </scene>
     </scenes>
     <resources>
