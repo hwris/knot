@@ -121,6 +121,46 @@ extension KNOTModelImpl: KNOTPlanModel {
         }
     }
     
+    func plans(onDay day: Date) -> [KNOTPlanEntity] {
+        guard let plans = plansSubject.value?.0 else {
+            return []
+        }
+        
+        let calendar = Calendar.current
+        let targetDateComponents = calendar.dateComponents([ .year, .month, .day ], from: day)
+        let items = plans.filter {
+            let planDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.remindDate)
+            guard let repeatInfo = $0.repeat else {
+                return planDateComponents == targetDateComponents
+            }
+            
+            let planDate = calendar.date(from: planDateComponents)!
+            let targetDate = calendar.date(from: targetDateComponents)!
+            
+            guard planDate <= targetDate else {
+                return false
+            }
+            
+            let interval = targetDate.timeIntervalSince(planDate)
+            
+            switch repeatInfo.type {
+            case .Day:
+                return Int64(interval) % Int64(repeatInfo.interval * 24 * 3600) == 0
+            case .Week:
+                return Int64(interval) % Int64(repeatInfo.interval * 7 * 24 * 3600) == 0
+            case .Month:
+                return targetDateComponents.day == planDateComponents.day
+                    && (targetDateComponents.month! - planDateComponents.month!) % repeatInfo.interval == 0
+            case .Year:
+                return targetDateComponents.day == planDateComponents.day
+                    && targetDateComponents.month == planDateComponents.month
+                    && (targetDateComponents.year! - planDateComponents.year!) % repeatInfo.interval == 0
+            }
+        }
+        
+        return items
+    }
+    
     func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
         var plans = plansSubject.value?.0 ?? []
         if let index = plans.firstIndex(of: plan) {

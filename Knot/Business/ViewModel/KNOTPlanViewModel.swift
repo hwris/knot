@@ -32,14 +32,9 @@ class KNOTPlanViewModel {
     }
     
     private func publishPlans(_ plans: [KNOTPlanEntity]?) {
-        let calendar = Calendar.current
-        let selectedDateComponents = calendar.dateComponents([ .year, .month, .day ], from: self.selectedDate)
-        let items = plans?.filter({
-            if $0.isDone { return false}
-            let creationDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.remindDate)
-            return creationDateComponents == selectedDateComponents
-        }).sorted(by: { $0.priority > $1.priority }).map({ planItemViewModel(model: $0) })
-        
+        let items = model.plans(onDay: selectedDate)
+            .sorted(by: { $0.priority > $1.priority })
+            .map({ planItemViewModel(model: $0) })
         itemsSubject.publish((items, .reset, nil))
     }
     
