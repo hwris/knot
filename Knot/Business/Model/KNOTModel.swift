@@ -11,5 +11,3 @@ import Foundation
 protocol KNOTModel {
     var planModel: KNOTPlanModel { get }
 }
-
-

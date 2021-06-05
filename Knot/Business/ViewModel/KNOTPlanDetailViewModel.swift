@@ -90,6 +90,7 @@ class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
 
 class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
     private let model: KNOTPlanMoreModel
+    var deletePlanFunc: ((KNOTPlanMoreViewModel) -> Task<Void>)?
     let isRepeatSwitchOnSubject: Subject<Bool>
     let isReminderSwitchOnSubject: Subject<Bool>
     
@@ -120,6 +121,10 @@ class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
         let vm = KNOTPlanReminderViewModel(model: model.plan)
         vm.isReminderSwitchOnSubject = isReminderSwitchOnSubject
         return vm
+    }
+    
+    func deletePlan() -> Task<Void> {
+        return deletePlanFunc?(self) ?? Task(())
     }
 }
 

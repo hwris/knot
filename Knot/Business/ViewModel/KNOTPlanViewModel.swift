@@ -108,6 +108,22 @@ class KNOTPlanViewModel {
         moreViewModel.updateCompleteHandler = { [weak self] _ in
             return (self?.updatePlan(at: index, insert: nil) ?? Task(()))
         }
+        moreViewModel.deletePlanFunc = { [weak self] _ in
+            guard let s = self else {
+                return Task(())
+            }
+            
+            let t = s.model.deletePlan(plan)
+            return t.continueWith(.mainThread, continuation: { t in
+                if let e = t.error {
+                    throw e
+                }
+                
+                var planViewModels = s.itemsSubject.value?.0 ?? []
+                planViewModels.remove(at: index)
+                s.itemsSubject.publish((planViewModels, .remove, [IndexPath(row: index, section: 0)]))
+            })
+        }
         return moreViewModel
     }
     

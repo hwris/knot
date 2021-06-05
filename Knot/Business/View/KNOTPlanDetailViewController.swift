@@ -19,6 +19,7 @@ class KNOTPlanEditViewController<VieModel: KNOTPlanEditViewModel>: KNOTTransluce
     }
     
     override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
+        //todo: 判断下有没有更新
         viewModel.updatePlan().continueWith(.mainThread) {
             if let error = $0.error {
                 assert(false, error.localizedDescription)
@@ -234,6 +235,23 @@ class KNOTPlanMoreViewController: KNOTPlanEditViewController<KNOTPlanMoreViewMod
         
         sender.isOn = false
         performSegue(withIdentifier: reminderSegueId, sender: nil)
+    }
+    
+    @IBAction func deleteSwitchChanged(_ sender: UISwitch) {
+        if !sender.isOn {
+           return
+        }
+        
+        //todo: 加上提示
+        viewModel.deletePlan().continueWith { [weak self] t in
+            if let e = t.error {
+                assert(false, e.localizedDescription)
+                //todo: handle error
+                return
+            }
+            
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
