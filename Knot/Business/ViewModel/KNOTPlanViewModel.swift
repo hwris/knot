@@ -145,23 +145,23 @@ class KNOTPlanItemViewModel {
     fileprivate let model: KNOTPlanEntity
     fileprivate var planDidDone: ((KNOTPlanItemViewModel) -> Task<Void>)?
     
-    private(set) var content: String
-    private(set) var items: [KNOTPlanItemItemViewModel]
-    private(set) var colors: ItemColors
+    private(set) var content: String!
+    private(set) var items: [KNOTPlanItemItemViewModel]!
+    private(set) var colors: ItemColors!
+    let shoudldAlarm = Subject(value: false)
     var cachedContent: Any?
     
     init(model: KNOTPlanEntity) {
-        content = model.content
-        items = model.items?.map({ KNOTPlanItemItemViewModel(model: $0) }) ?? []
-        colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
         self.model = model
+        refresh()
     }
     
-    fileprivate func refresh() {
+    fileprivate func refresh(shoudldAlarm: Bool = false) {
         content = model.content
         items = model.items?.map({ KNOTPlanItemItemViewModel(model: $0) }) ?? []
         colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
         cachedContent = nil
+        self.shoudldAlarm.publish(shoudldAlarm)
     }
     
     func makePlanDone() -> Task<Void> {
