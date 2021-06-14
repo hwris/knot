@@ -37,24 +37,6 @@ private class KNOTModelImpl: KNOTModel {
 }
 
 extension KNOTModelImpl: KNOTPlanModel {
-    private class PlanEditModelImpl: KNOTPlanDetailModel, KNOTPlanMoreModel {
-        let plan: KNOTPlanEntity
-        
-        init(plan: KNOTPlanEntity) {
-            self.plan = plan
-        }
-        
-        var flagColor: UInt32 {
-            get {
-                return plan.flagColor
-            }
-            
-            set {
-                plan.flagColor = newValue
-            }
-        }
-    }
-    
     func loadPlans() -> Task<Void> {
         var plans = [KNOTPlanEntity]()
         let query = CKQuery(recordType: KNOTPlanEntity.recordType, predicate: NSPredicate(value: true))
@@ -208,33 +190,21 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
-        return PlanEditModelImpl(plan: plan)
+        return plan
     }
     
     func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-        return PlanEditModelImpl(plan: plan)
+        return plan
+    }
+}
+
+extension KNOTPlanEntity: KNOTPlanDetailModel, KNOTPlanMoreModel {
+    var plan: KNOTPlanEntity {
+        return self
     }
 }
 
 extension KNOTModelImpl: KNOTProjectModel {
-    private class ProjectEditModelImpl: KNOTProjectDetailModel {
-        let project: KNOTProjectEntity
-        
-        init(project: KNOTProjectEntity) {
-            self.project = project
-        }
-        
-        var flagColor: UInt32 {
-            get {
-                return project.flagColor
-            }
-            
-            set {
-                project.flagColor = newValue
-            }
-        }
-    }
-    
     func loadProjects() -> Task<Void> {
         let loadPlansTcs = TaskCompletionSource<Void>()
         let loadProjectsTcs = TaskCompletionSource<Void>()
@@ -324,6 +294,12 @@ extension KNOTModelImpl: KNOTProjectModel {
     }
     
     func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
-        return ProjectEditModelImpl(project: proj)
+        return proj
+    }
+}
+
+extension KNOTProjectEntity: KNOTProjectDetailModel {
+    var project: KNOTProjectEntity {
+        return self
     }
 }
