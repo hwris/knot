@@ -63,8 +63,11 @@ class KNOTHomeViewController: UIViewController {
     
     private func setViewModelForSelectedItemViewController() {
         let selectedItemViewController = self.selectedItemViewController
-        if selectedItemViewController is KNOTPlanViewController {
-            (selectedItemViewController as! KNOTPlanViewController).viewModel = viewModel.planViewModel
+        
+        if let planVC = selectedItemViewController as? KNOTPlanViewController, planVC.viewModel == nil {
+            planVC.viewModel = viewModel.planViewModel
+        } else if let projVC = selectedItemViewController as? KNOTProjectViewController, projVC.viewModel == nil {
+            projVC.viewModel = viewModel.projectViewModel
         }
     }
 }

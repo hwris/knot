@@ -16,7 +16,6 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     fileprivate let moreSegueId = "more"
     
     @IBOutlet weak var calendarView: KNOTCalendarView!
-    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var calendarViewTop: NSLayoutConstraint!
     
     private var itemsSubscription: Subscription<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>?
@@ -301,9 +300,6 @@ class KNOTPlanItemCell: UITableViewCell {
             }
         }
     }
-}
-
-class KNOTPlanEmptyItemCell: UITableViewCell {
 }
 
 class KNOTCalendarView: UIControl, CVCalendarViewDelegate, CVCalendarMenuViewDelegate {

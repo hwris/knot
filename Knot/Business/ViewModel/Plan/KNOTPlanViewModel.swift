@@ -84,11 +84,11 @@ class KNOTPlanViewModel {
         let plan = KNOTPlanEntity(remindDate: selectedDate,
                                   priority: (highPriority + lowPriority) * 0.5,
                                   content: "",
-                                  flagColor: KNOTPlanItemFlagColor.blue.rawValue)
+                                  flagColor: KNOTFlagColor.blue.rawValue)
         let detailModel = model.planDetailModel(with: plan)
         let detailViewModel = KNOTPlanDetailViewModel(model: detailModel)
         detailViewModel.updateCompleteHandler = { [weak self] _ in
-            return (self?.updatePlan(at: index, insert: plan) ?? Task(()))
+            return self?.updatePlan(at: index, insert: plan) ?? Task(())
         }
         return detailViewModel
     }
@@ -97,7 +97,7 @@ class KNOTPlanViewModel {
         let plan = itemsSubject.value!.0![index].model
         let detailViewModel = KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
         detailViewModel.updateCompleteHandler = { [weak self] _ in
-            return (self?.updatePlan(at: index, insert: nil) ?? Task(()))
+            return self?.updatePlan(at: index, insert: nil) ?? Task(())
         }
         return detailViewModel
     }
@@ -144,7 +144,7 @@ class KNOTPlanViewModel {
 }
 
 class KNOTPlanItemViewModel {
-    struct ItemColors {
+    class ItemColors {
         let flagColors: (UIColor, UIColor)
         let flagBkColors: (UIColor, UIColor)
         let flagImageName: String
@@ -152,9 +152,48 @@ class KNOTPlanItemViewModel {
         
         init(flagColor: UInt32, alarm: Bool) {
             flagColors = (UIColor(flagColor), UIColor(flagColor))
-            flagBkColors = KNOTPlanItemFlagColor.flagBkColors(byRawValue: flagColor)
-            flagImageName = KNOTPlanItemFlagColor.flagImageName(byRawValue: flagColor)
-            alarmColors = alarm ? KNOTPlanItemFlagColor.alarmColors(byRawValue: flagColor) : nil
+            flagBkColors = ItemColors.flagBkColors(byRawValue: flagColor)
+            flagImageName = ItemColors.flagImageName(byRawValue: flagColor)
+            alarmColors = alarm ? ItemColors.alarmColors(byRawValue: flagColor) : nil
+        }
+        
+        private class func flagBkColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
+            switch rawValue {
+            case KNOTFlagColor.red.rawValue:
+                return (UIColor(0xFEE6E3), UIColor(0x262949))
+            case KNOTFlagColor.blue.rawValue:
+                return (UIColor(0xE5EBFF), UIColor(0x262949))
+            case KNOTFlagColor.yellow.rawValue:
+                return (UIColor(0xFFF6CF), UIColor(0x262949))
+            default:
+                return (UIColor(rawValue, 0.5), UIColor(0x262949))
+            }
+        }
+
+        private class func alarmColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
+            switch rawValue {
+            case KNOTFlagColor.red.rawValue:
+                return (UIColor(0xFB9F93), UIColor(0x262949))
+            case KNOTFlagColor.blue.rawValue:
+                return (UIColor(0x95A7EB), UIColor(0x262949))
+            case KNOTFlagColor.yellow.rawValue:
+                return (UIColor(0xFFE374), UIColor(0x262949))
+            default:
+                return (UIColor(rawValue, 0.8), UIColor(0x262949))
+            }
+        }
+
+        private class func flagImageName(byRawValue rawValue: UInt32) -> String {
+            switch rawValue {
+            case KNOTFlagColor.red.rawValue:
+                return "ic_select_on_red"
+            case KNOTFlagColor.blue.rawValue:
+                return "ic_select_on_blue"
+            case KNOTFlagColor.yellow.rawValue:
+                return "ic_select_on_yellow"
+            default:
+                return "ic_select_on_blue"
+            }
         }
     }
     
@@ -199,50 +238,5 @@ class KNOTPlanItemItemViewModel {
     
     var isDoneButtonSelected: Bool {
         return model.isDone
-    }
-}
-
-enum KNOTPlanItemFlagColor: UInt32 {
-    case blue = 0x5276FF
-    case red = 0xF95943
-    case yellow = 0xFFD00E
-    
-    static func flagBkColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
-        switch rawValue {
-        case KNOTPlanItemFlagColor.red.rawValue:
-            return (UIColor(0xFEE6E3), UIColor(0x262949))
-        case KNOTPlanItemFlagColor.blue.rawValue:
-            return (UIColor(0xE5EBFF), UIColor(0x262949))
-        case KNOTPlanItemFlagColor.yellow.rawValue:
-            return (UIColor(0xFFF6CF), UIColor(0x262949))
-        default:
-            return (UIColor(rawValue, 0.5), UIColor(0x262949))
-        }
-    }
-    
-    static func alarmColors(byRawValue rawValue: UInt32) -> (UIColor, UIColor) {
-        switch rawValue {
-        case KNOTPlanItemFlagColor.red.rawValue:
-            return (UIColor(0xFB9F93), UIColor(0x262949))
-        case KNOTPlanItemFlagColor.blue.rawValue:
-            return (UIColor(0x95A7EB), UIColor(0x262949))
-        case KNOTPlanItemFlagColor.yellow.rawValue:
-            return (UIColor(0xFFE374), UIColor(0x262949))
-        default:
-            return (UIColor(rawValue, 0.8), UIColor(0x262949))
-        }
-    }
-    
-    static func flagImageName(byRawValue rawValue: UInt32) -> String {
-        switch rawValue {
-        case KNOTPlanItemFlagColor.red.rawValue:
-            return "ic_select_on_red"
-        case KNOTPlanItemFlagColor.blue.rawValue:
-            return "ic_select_on_blue"
-        case KNOTPlanItemFlagColor.yellow.rawValue:
-            return "ic_select_on_yellow"
-        default:
-            return "ic_select_on_blue"
-        }
     }
 }

@@ -11,10 +11,16 @@ import Foundation
 class KNOTViewModel {
     private let model: KNOTModel
     
-    private(set) lazy var planViewModel = KNOTPlanViewModel(model: self.model.planModel)
-    
     init(model: KNOTModel) {
         self.model = model
+    }
+    
+    var planViewModel: KNOTPlanViewModel {
+        return KNOTPlanViewModel(model: model.planModel)
+    }
+    
+    var projectViewModel: KNOTProjectViewModel {
+        return KNOTProjectViewModel(model: model.projectModel)
     }
 }
 

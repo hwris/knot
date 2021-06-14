@@ -6,14 +6,12 @@
 //  Copyright © 2020 SUYANG. All rights reserved.
 //
 
-import BoltsSwift
+import Foundation
 
-protocol KNOTPlanEditModel {
+protocol KNOTPlanDetailModel: KNOTEditModel {
     var plan: KNOTPlanEntity { get }
 }
 
-protocol KNOTPlanDetailModel: KNOTPlanEditModel {
-}
-
-protocol KNOTPlanMoreModel: KNOTPlanEditModel {
+protocol KNOTPlanMoreModel: KNOTEditModel {
+    var plan: KNOTPlanEntity { get }
 }

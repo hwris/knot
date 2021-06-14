@@ -8,41 +8,13 @@
 
 import BoltsSwift
 
-class KNOTPlanEditViewModel {
-    private let flagColorS = [ KNOTPlanItemFlagColor.blue, .red, .yellow ]
-    private let model: KNOTPlanEditModel
-    var updateCompleteHandler: ((KNOTPlanEditViewModel) -> Task<Void>)?
-    
-    init(model: KNOTPlanEditModel) {
-        self.model = model
-    }
-    
-    var selectedFlagColorIndex: Int {
-        return flagColorS.firstIndex(of: KNOTPlanItemFlagColor(rawValue: model.plan.flagColor) ?? .blue)!
-    }
-    
-    func selectedFlagColor(at index: Int) {
-        model.plan.flagColor = flagColorS[index].rawValue
-    }
-    
-    func updatePlan() -> Task<Void> {
-        guard let updateCompleteHandler = self.updateCompleteHandler else {
-            return Task(())
-        }
-        
-        let t = updateCompleteHandler(self)
-        self.updateCompleteHandler = nil
-        return t
-    }
-}
-
-class KNOTPlanDetailViewModel: KNOTPlanEditViewModel{
+class KNOTPlanDetailViewModel: KNOTEditViewModel {
     private let model: KNOTPlanDetailModel
     private(set) var items: [KNOTPlanDetailItemViewModel]
     
-    override init(model: KNOTPlanEditModel) {
+    override init(model: KNOTEditModel) {
         self.model = model as! KNOTPlanDetailModel
-        items = model.plan.items?.map({ KNOTPlanDetailItemViewModel(model: $0) }) ?? []
+        items = self.model.plan.items?.map({ KNOTPlanDetailItemViewModel(model: $0) }) ?? []
         super.init(model: model)
     }
     
@@ -88,16 +60,16 @@ class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
     }
 }
 
-class KNOTPlanMoreViewModel: KNOTPlanEditViewModel {
+class KNOTPlanMoreViewModel: KNOTEditViewModel {
     private let model: KNOTPlanMoreModel
     var deletePlanFunc: ((KNOTPlanMoreViewModel) -> Task<Void>)?
     let isRepeatSwitchOnSubject: Subject<Bool>
     let isReminderSwitchOnSubject: Subject<Bool>
     
-    override init(model: KNOTPlanEditModel) {
+    override init(model: KNOTEditModel) {
         self.model = model as! KNOTPlanMoreModel
-        isRepeatSwitchOnSubject = Subject(value: model.plan.repeat != nil)
-        isReminderSwitchOnSubject = Subject(value: model.plan.remindTime != nil)
+        isRepeatSwitchOnSubject = Subject(value: self.model.plan.repeat != nil)
+        isReminderSwitchOnSubject = Subject(value: self.model.plan.remindTime != nil)
         super.init(model: model)
     }
     

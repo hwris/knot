@@ -21,6 +21,7 @@ private class KNOTModelImpl: KNOTModel {
     let projectsSubject = Subject<ArraySubscription<KNOTProjectEntity>>()
     
     var planModel: KNOTPlanModel { self }
+    var projectModel: KNOTProjectModel { self }
     
     private func accessDatabase<T>(_ action: (@escaping (T?, Error?) -> ()) -> ()) -> Task<Void> {
         let tcs = TaskCompletionSource<Void>()
@@ -36,6 +37,24 @@ private class KNOTModelImpl: KNOTModel {
 }
 
 extension KNOTModelImpl: KNOTPlanModel {
+    private class PlanEditModelImpl: KNOTPlanDetailModel, KNOTPlanMoreModel {
+        let plan: KNOTPlanEntity
+        
+        init(plan: KNOTPlanEntity) {
+            self.plan = plan
+        }
+        
+        var flagColor: UInt32 {
+            get {
+                return plan.flagColor
+            }
+            
+            set {
+                plan.flagColor = newValue
+            }
+        }
+    }
+    
     func loadPlans() -> Task<Void> {
         var plans = [KNOTPlanEntity]()
         let query = CKQuery(recordType: KNOTPlanEntity.recordType, predicate: NSPredicate(value: true))
@@ -53,21 +72,15 @@ extension KNOTModelImpl: KNOTPlanModel {
             
             var batchFetchIDs = [CKRecord.ID]()
             var itemToPlan = [CKRecord.ID : KNOTPlanEntity]()
-            var projectToPlan = [CKRecord.ID : KNOTPlanEntity]()
             for record in records {
                 var itemRecordIDs: [CKRecord.ID]?
-                var projectRecordID: CKRecord.ID?
-                let plan = KNOTPlanEntity(from: record, itemRecordIDs: &itemRecordIDs, projectRecordID: &projectRecordID)
+                let plan = KNOTPlanEntity(from: record, itemRecordIDs: &itemRecordIDs)
                 plans.append(plan)
                 
                 if let ids = itemRecordIDs {
                     plan.items = []
                     batchFetchIDs.append(contentsOf: ids)
                     ids.forEach { itemToPlan[$0] = plan }
-                }
-                if let id = projectRecordID {
-                    batchFetchIDs.append(id)
-                    projectToPlan[id] = plan
                 }
             }
             
@@ -90,11 +103,7 @@ extension KNOTModelImpl: KNOTPlanModel {
                     return
                 }
                 
-                if let plan = itemToPlan[id] {
-                    plan.items?.append(KNOTPlanItemEntity(from: record!))
-                } else if let plan = projectToPlan[id] {
-                    plan.project = KNOTProjectEntity(from: record!)
-                }
+                itemToPlan[id]?.items?.append(KNOTPlanItemEntity(from: record!))
             }
             batchFetch.fetchRecordsCompletionBlock = { (records, error) in
                 if let e = error {
@@ -199,21 +208,122 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
-        return KNOTPlanEditModelImpl(plan: plan)
+        return PlanEditModelImpl(plan: plan)
     }
     
     func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-        return KNOTPlanEditModelImpl(plan: plan)
+        return PlanEditModelImpl(plan: plan)
     }
 }
 
-private class KNOTPlanEditModelImpl: KNOTPlanDetailModel, KNOTPlanMoreModel {
-    let plan: KNOTPlanEntity
+extension KNOTModelImpl: KNOTProjectModel {
+    private class ProjectEditModelImpl: KNOTProjectDetailModel {
+        let project: KNOTProjectEntity
+        
+        init(project: KNOTProjectEntity) {
+            self.project = project
+        }
+        
+        var flagColor: UInt32 {
+            get {
+                return project.flagColor
+            }
+            
+            set {
+                project.flagColor = newValue
+            }
+        }
+    }
     
-    init(plan: KNOTPlanEntity) {
-        self.plan = plan
+    func loadProjects() -> Task<Void> {
+        let loadPlansTcs = TaskCompletionSource<Void>()
+        let loadProjectsTcs = TaskCompletionSource<Void>()
+        
+        var plans = [KNOTPlanEntity]()
+        var projs = [KNOTProjectEntity]()
+        var planToProject = [CKRecord.ID : KNOTProjectEntity]()
+        
+        let plansSubscription = plansSubject.listen { new, _ in
+            if let value = new?.0 {
+                plans = value
+                loadPlansTcs.set(result: ())
+            }
+        }
+        
+        let query = CKQuery(recordType: KNOTProjectEntity.recordType, predicate: NSPredicate(value: true))
+        database.perform(query, inZoneWith: nil) { (results, error) in
+            guard error == nil else {
+                loadProjectsTcs.set(error: error!)
+                return
+            }
+            
+            guard let records = results, records.isEmpty == false else {
+                loadProjectsTcs.set(result: ())
+                return
+            }
+            
+            projs = records.map { (record) -> (KNOTProjectEntity) in
+                var planRecordIDs: [CKRecord.ID]?
+                let project = KNOTProjectEntity(from: record, planRecordIDs: &planRecordIDs)
+                
+                if let ids = planRecordIDs {
+                    project.plans = []
+                    ids.forEach { planToProject[$0] = project }
+                }
+                
+                return project
+            }
+            
+            loadProjectsTcs.set(result: ())
+        }
+        
+        return Task.whenAll(loadPlansTcs.task, loadProjectsTcs.task).continueWith { t in
+            plansSubscription.cancel()
+            
+            guard t.error == nil else {
+                throw t.error!
+            }
+            
+            plans.forEach { plan in
+                planToProject[plan.ckRecordID]?.plans?.append(plan)
+            }
+            
+            self.projectsSubject.publish((projs, .reset, nil))
+        }
     }
-}
-
-extension String: Error {
+    
+    func add(plan: KNOTPlanEntity, toProject project: KNOTProjectEntity) -> Task<Void> {
+        let projs = projectsSubject.value?.0 ?? []
+        let index = projs.firstIndex(of: project)!
+        project.plans?.append(plan)
+        projectsSubject.publish((projs, .update, [index]))
+        
+        return accessDatabase { database.save(plan.ckRecord, completionHandler: $0) }
+    }
+    
+    func updateProject(_ proj: KNOTProjectEntity) -> Task<Void> {
+        var projs = projectsSubject.value?.0 ?? []
+        if let index = projs.firstIndex(of: proj) {
+            projectsSubject.publish((projs, .update, [index]))
+        } else {
+            projs.append(proj)
+            projectsSubject.publish((projs, .insert, [projs.endIndex - 1]))
+        }
+        
+        return accessDatabase {  database.save(proj.ckRecord, completionHandler: $0) }
+    }
+    
+    func deleteProject(_ proj: KNOTProjectEntity) -> Task<Void> {
+        if var projs = projectsSubject.value?.0 {
+            let index = projs.firstIndex(of: proj)
+            projs.removeAll { $0 == proj }
+            projectsSubject.publish((projs, .remove, index.map { [$0] }))
+        }
+        
+        return accessDatabase { database.delete(withRecordID: proj.ckRecordID, completionHandler: $0) }
+    }
+    
+    func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
+        return ProjectEditModelImpl(project: proj)
+    }
 }

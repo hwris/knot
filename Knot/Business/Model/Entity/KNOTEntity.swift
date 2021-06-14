@@ -58,10 +58,11 @@ class KNOTProjectEntity: KNOTEntityBase {
         super.init()
     }
     
-    override init(from record: CKRecord) {
+    init(from record: CKRecord, planRecordIDs: inout [CKRecord.ID]?) {
         priority = record["priority"] as! Double
         name = record["name"] as! String
         flagColor = record["flagColor"] as! UInt32
+        planRecordIDs = (record["plans"] as? [CKRecord.Reference])?.map({ $0.recordID })
         super.init(from: record)
     }
     
@@ -71,7 +72,7 @@ class KNOTProjectEntity: KNOTEntityBase {
             record["priority"] = priority
             record["name"] = name
             record["flagColor"] = flagColor
-
+            record["plans"] = plans?.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
             return record
         }
         
@@ -100,7 +101,6 @@ class KNOTPlanEntity: KNOTEntityBase {
     var isDone = false
     var remindTime: Date?
     var `repeat`: Repeat?
-    var project: KNOTProjectEntity?
     
     init(remindDate: Date, priority: Double, content: String, flagColor: UInt32) {
         self.remindDate = remindDate
@@ -110,7 +110,7 @@ class KNOTPlanEntity: KNOTEntityBase {
         super.init()
     }
     
-    init(from record: CKRecord, itemRecordIDs: inout [CKRecord.ID]?, projectRecordID: inout CKRecord.ID?) {
+    init(from record: CKRecord, itemRecordIDs: inout [CKRecord.ID]?) {
         remindDate = record["remindDate"] as! Date
         priority = record["priority"] as! Double
         content = record["content"] as! String
@@ -118,7 +118,6 @@ class KNOTPlanEntity: KNOTEntityBase {
         isDone = record["isDone"] as! Bool
         remindTime = record["remindTime"] as? Date
         itemRecordIDs = (record["items"] as? [CKRecord.Reference])?.map({ $0.recordID })
-        projectRecordID = (record["project"] as? CKRecord.Reference)?.recordID
         
         if let repeatInterval = record["repeatInterval"] as? Int,
            let repeatTypeRawValue = record["repeatType"] as? Int,
@@ -141,7 +140,6 @@ class KNOTPlanEntity: KNOTEntityBase {
             record["repeatInterval"] = `repeat`?.interval
             record["repeatType"] = `repeat`?.type.rawValue
             record["items"] = items?.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
-            record["project"] = project.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
             
             return record
         }
