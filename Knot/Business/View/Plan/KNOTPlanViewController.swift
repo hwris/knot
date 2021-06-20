@@ -150,20 +150,22 @@ class KNOTPlanItemCell: UITableViewCell {
             alarmImageView.darkTintColor = viewModel.colors.alarmColors?.1
             
             updateContentView()
-            resetDoneView()
         }
     }
     
-    private func updateContentView(withStrikethrough useStrikethrough: Bool = false) {
+    private func updateContentView() {
+        resetDoneView()
         contentLabel.text = nil
         contentLabel.attributedText = nil
         
-        if useStrikethrough == false, viewModel.items.isEmpty {
+        let useStrikethrough = viewModel.isDone
+        let notNeedsAttText = !useStrikethrough && viewModel.items.isEmpty
+        if notNeedsAttText {
             contentLabel.text = viewModel.content
             return
         }
         
-        if useStrikethrough == false, let attText = viewModel.cachedContent as? NSAttributedString {
+        if let attText = viewModel.cachedContent as? NSAttributedString {
             contentLabel.attributedText = attText
             return
         }
@@ -193,6 +195,10 @@ class KNOTPlanItemCell: UITableViewCell {
         let range = NSRange(location: viewModel.content.count, length: attText.string.count - viewModel.content.count)
         let attributes = [ NSAttributedString.Key.paragraphStyle : paragraphStyle as Any]
         attText.addAttributes(attributes, range: range)
+        
+        if useStrikethrough {
+            attText.addAttribute(.strikethroughStyle, value: 2, range: NSMakeRange(0, attText.length))
+        }
         
         contentLabel.attributedText = attText
         viewModel.cachedContent = attText
@@ -257,7 +263,6 @@ class KNOTPlanItemCell: UITableViewCell {
                 doneView.transform = shouldDone ? .identity : CGAffineTransform(scaleX: 0, y: 0)
                 self.flagBackgroundView.transform =
                     shouldDone ? CGAffineTransform(translationX: self.doneView.frame.width + 20, y: 0) : .identity
-                self.updateContentView(withStrikethrough: shouldDone)
             }, completion: { _ in
                 if !shouldDone {
                     doneView.removeFromSuperview()
@@ -290,12 +295,18 @@ class KNOTPlanItemCell: UITableViewCell {
     @objc
     private func doneButtonTouched(_ sender: UIButton) {
         sender.isEnabled = false
-        viewModel.makePlanDone().continueWith(.mainThread) {
+        viewModel.makePlanDone(!viewModel.isDone).continueWith(.mainThread) {
             if let error = $0.error {
                 sender.isEnabled = true
                 assert(false, error.localizedDescription)
                 // Todo: handle error
                 return
+            }
+            
+            
+            UIView.animate(withDuration: 0.2) {
+                self.viewModel.cachedContent = nil
+                self.updateContentView()
             }
         }
     }

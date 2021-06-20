@@ -40,16 +40,8 @@ class KNOTPlanViewModel {
     
     private func planItemViewModel(model: KNOTPlanEntity) -> KNOTPlanItemViewModel {
         let vm = KNOTPlanItemViewModel(model: model)
-        vm.planDidDone = { [unowned self] (planItemViewModel) in
-            guard var planItemViewModels = self.itemsSubject.value?.0,
-                  let index = (planItemViewModels.firstIndex { $0 === planItemViewModel }) else {
-                return Task(())
-            }
-            
-            return self.model.updatePlan(planItemViewModel.model).continueOnSuccessWith(.mainThread) {
-                planItemViewModels.remove(at: index)
-                self.itemsSubject.publish((planItemViewModels, .remove, [IndexPath(row: index, section: 0)]))
-            }
+        vm.planDidDone = { [unowned self] in
+            return self.model.updatePlan($0.model)
         }
         return vm
     }
@@ -201,6 +193,7 @@ class KNOTPlanItemViewModel {
     fileprivate var planDidDone: ((KNOTPlanItemViewModel) -> Task<Void>)?
     
     private(set) var content: String!
+    var isDone: Bool { return model.isDone }
     private(set) var items: [KNOTPlanItemItemViewModel]!
     private(set) var colors: ItemColors!
     let shoudldAlarm = Subject(value: false)
@@ -219,9 +212,12 @@ class KNOTPlanItemViewModel {
         self.shoudldAlarm.publish(shoudldAlarm)
     }
     
-    func makePlanDone() -> Task<Void> {
-        model.isDone = true
-        return planDidDone?(self) ?? Task(())
+    func makePlanDone(_ isDone: Bool) -> Task<Void> {
+        let old = model.isDone
+        model.isDone = isDone
+        return planDidDone?(self) ?? Task(()).continueOnErrorWith {_ in 
+            self.model.isDone = old
+        }
     }
 }
 
