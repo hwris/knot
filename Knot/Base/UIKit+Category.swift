@@ -215,7 +215,9 @@ class KNOTButton: UIButton {
 }
 
 extension UIView {
-    func setRoundCorners(frome point: CGPoint) {
+    typealias RoundingCorners = CGPoint/*(x: UIRectCorner.rawvalue, y: cornerRadii)*/
+    
+    func setRoundCorners(frome point: RoundingCorners) {
         setRoundCorners(point == .zero ? nil : UIRectCorner(rawValue: UInt(point.x)), cornerRadii: point.y)
     }
     
@@ -237,7 +239,7 @@ extension UIView {
 
 class KNOTRoundCornersView : UIView {
     @IBInspectable
-    private var roundingCorners: CGPoint = .zero {
+    private var roundingCorners: RoundingCorners = .zero {
         didSet {
             setNeedsLayout()
         }

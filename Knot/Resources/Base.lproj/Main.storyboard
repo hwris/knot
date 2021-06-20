@@ -400,7 +400,6 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="374" id="GHJ-wU-2p3"/>
                                     <constraint firstItem="4Sp-JP-hyA" firstAttribute="leading" secondItem="D6C-h1-RWL" secondAttribute="leading" id="ILS-cV-wfx"/>
                                     <constraint firstItem="7FY-de-HMo" firstAttribute="top" secondItem="jy4-I5-J85" secondAttribute="bottom" constant="12" id="J64-cN-t6P"/>
                                     <constraint firstAttribute="trailing" secondItem="4Sp-JP-hyA" secondAttribute="trailing" id="LJr-lJ-W4K"/>
@@ -482,25 +481,25 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" systemColor="systemBlueColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="5Kx-LD-Gjx" customClass="KNOTProjectCell" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="98"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="5Kx-LD-Gjx" customClass="KNOTProjectCell" customModule="Knot" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="24.5" width="414" height="99"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Kx-LD-Gjx" id="7iZ-Hk-G2G">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="98"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="99"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="22q-w3-DyL">
-                                                    <rect key="frame" x="20" y="2" width="374" height="86"/>
+                                                    <rect key="frame" x="20" y="2" width="374" height="87"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bIU-l2-Rux">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bIU-l2-Rux" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
                                                             <rect key="frame" x="104" y="12.5" width="270" height="24"/>
                                                             <color key="backgroundColor" systemColor="systemPinkColor"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="24" id="WMD-hs-bqk"/>
                                                             </constraints>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="16"/>
+                                                                <userDefinedRuntimeAttribute type="point" keyPath="roundingCorners">
+                                                                    <point key="value" x="2" y="16"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
@@ -510,14 +509,11 @@
                                                                 <constraint firstAttribute="height" constant="24.5" id="25i-dJ-6JX"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_pin_b" translatesAutoresizingMaskIntoConstraints="NO" id="BzJ-hg-T9w">
-                                                            <rect key="frame" x="15" y="-2" width="23" height="29"/>
-                                                        </imageView>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gn7-Bb-Ix2">
-                                                            <rect key="frame" x="0.0" y="24.5" width="374" height="61.5"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gn7-Bb-Ix2" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="23.5" width="374" height="63.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CCC-Ub-5jy">
-                                                                    <rect key="frame" x="20" y="20" width="334" height="21.5"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CCC-Ub-5jy">
+                                                                    <rect key="frame" x="20" y="21" width="334" height="21.5"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                                     <color key="textColor" red="0.027450980392156862" green="0.050980392156862744" blue="0.12549019607843137" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -532,20 +528,23 @@
                                                             <constraints>
                                                                 <constraint firstItem="CCC-Ub-5jy" firstAttribute="leading" secondItem="Gn7-Bb-Ix2" secondAttribute="leading" constant="20" id="30o-rT-crP"/>
                                                                 <constraint firstAttribute="trailing" secondItem="CCC-Ub-5jy" secondAttribute="trailing" constant="20" id="WDH-aD-fIm"/>
-                                                                <constraint firstAttribute="bottom" secondItem="CCC-Ub-5jy" secondAttribute="bottom" constant="20" id="mAO-ew-63T"/>
-                                                                <constraint firstItem="CCC-Ub-5jy" firstAttribute="top" secondItem="Gn7-Bb-Ix2" secondAttribute="top" constant="20" id="pFt-Sy-wM1"/>
+                                                                <constraint firstAttribute="bottom" secondItem="CCC-Ub-5jy" secondAttribute="bottom" constant="21" id="mAO-ew-63T"/>
+                                                                <constraint firstItem="CCC-Ub-5jy" firstAttribute="top" secondItem="Gn7-Bb-Ix2" secondAttribute="top" constant="21" id="pFt-Sy-wM1"/>
                                                             </constraints>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="16"/>
+                                                                <userDefinedRuntimeAttribute type="point" keyPath="roundingCorners">
+                                                                    <point key="value" x="14" y="16"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_pin_b" translatesAutoresizingMaskIntoConstraints="NO" id="BzJ-hg-T9w">
+                                                            <rect key="frame" x="15" y="-2" width="23" height="29"/>
+                                                        </imageView>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="bIU-l2-Rux" firstAttribute="leading" secondItem="3eW-JW-3xu" secondAttribute="trailing" constant="-20" id="4mb-7Q-XwC"/>
-                                                        <constraint firstItem="3eW-JW-3xu" firstAttribute="bottom" secondItem="Gn7-Bb-Ix2" secondAttribute="top" id="8Kc-a9-gmG"/>
+                                                        <constraint firstItem="3eW-JW-3xu" firstAttribute="bottom" secondItem="Gn7-Bb-Ix2" secondAttribute="top" constant="1" id="8Kc-a9-gmG"/>
                                                         <constraint firstAttribute="bottom" secondItem="Gn7-Bb-Ix2" secondAttribute="bottom" id="8xi-SV-8st"/>
                                                         <constraint firstItem="bIU-l2-Rux" firstAttribute="trailing" secondItem="Gn7-Bb-Ix2" secondAttribute="trailing" id="P7F-FT-Blz"/>
                                                         <constraint firstItem="3eW-JW-3xu" firstAttribute="top" secondItem="22q-w3-DyL" secondAttribute="top" id="PlY-2O-WVz"/>
@@ -567,6 +566,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="22q-w3-DyL" secondAttribute="bottom" constant="10" id="kg2-py-VU8"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="contentLabel" destination="CCC-Ub-5jy" id="jb0-Ax-LdA"/>
                                             <outlet property="folderImageView" destination="3eW-JW-3xu" id="WoG-iy-Yk3"/>
@@ -576,7 +576,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="empty" id="KFN-nE-sA7">
-                                        <rect key="frame" x="0.0" y="122.5" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="123.5" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KFN-nE-sA7" id="Nhh-k8-38z">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -1360,13 +1360,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RMn-gO-Eko" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="432" width="414" height="370"/>
+                                <rect key="frame" x="0.0" y="482" width="414" height="320"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5Ee-Fw-vst">
-                                        <rect key="frame" x="20" y="20" width="374" height="300"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5Ee-Fw-vst">
+                                        <rect key="frame" x="20" y="20" width="374" height="250"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="300" id="qdV-ZA-2Lf"/>
+                                            <constraint firstAttribute="height" constant="250" id="qdV-ZA-2Lf"/>
                                         </constraints>
                                         <color key="textColor" red="0.027450980390000001" green="0.050980392159999999" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -1376,9 +1376,12 @@
                                                 <color key="value" red="1" green="1" blue="1" alpha="0.87" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="G1S-bC-Hgv" id="cUl-hM-S6q"/>
+                                        </connections>
                                     </textView>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lG6-2T-azB">
-                                        <rect key="frame" x="0.0" y="320" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1403,7 +1406,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x9B-CI-ta3" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="320" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="3C7-wv-dNX">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>

@@ -13,19 +13,19 @@ class KNOTProjectDetailViewController: KNOTEditViewController<KNOTProjectDetailV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        nameTextView.text = viewModel.projName
+        nameTextView.becomeFirstResponder()
     }
-    
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension KNOTProjectDetailViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        let size = textView.bounds.size
+        let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
+        
+        if size.height <= newSize.height {
+            textView.scrollRectToVisible(CGRect(x: 0, y: newSize.height, width: size.width, height: 0), animated: true)
+        }
+        viewModel.updateProjName(textView.text)
     }
-    */
-
 }

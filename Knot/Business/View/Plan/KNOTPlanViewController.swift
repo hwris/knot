@@ -20,26 +20,25 @@ class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel>
     
     private var itemsSubscription: Subscription<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>?
     
-    override var viewModel: KNOTPlanViewModel! {
-        didSet {
-            itemsSubscription?.cancel()
-            itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (arg0, _) in
-                guard let (_, action, indexPaths) = arg0 else {
-                    return
-                }
-                
-                switch action {
-                case .reset:
-                    self?.tableView.reloadData()
-                case .remove:
-                    self?.tableView.deleteRows(at: indexPaths ?? [], with: .automatic)
-                case .update, .insert:
-                    self?.tableView.reloadRows(at: indexPaths ?? [], with: .automatic)
-                }
-            })
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        itemsSubscription?.cancel()
+        itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (arg0, _) in
+            guard let (_, action, indexPaths) = arg0 else {
+                return
+            }
             
-            loadItems(at: Date())
-        }
+            switch action {
+            case .reset:
+                self?.tableView.reloadData()
+            case .remove:
+                self?.tableView.deleteRows(at: indexPaths ?? [], with: .automatic)
+            case .update, .insert:
+                self?.tableView.reloadRows(at: indexPaths ?? [], with: .automatic)
+            }
+        })
+        
+        loadItems(at: Date())
     }
     
     deinit {

@@ -17,6 +17,8 @@ private class KNOTModelImpl: KNOTModel {
     private var ckContainer: CKContainer { CKContainer.default() }
     private var database: CKDatabase { ckContainer.privateCloudDatabase }
     
+    private var loadTask: Task<Void>?
+    
     let plansSubject = Subject<ArraySubscription<KNOTPlanEntity>>()
     let projectsSubject = Subject<ArraySubscription<KNOTProjectEntity>>()
     
@@ -34,13 +36,42 @@ private class KNOTModelImpl: KNOTModel {
         }
         return tcs.task
     }
-}
-
-extension KNOTModelImpl: KNOTPlanModel {
-    func loadPlans() -> Task<Void> {
-        var plans = [KNOTPlanEntity]()
+    
+    private func loadData() -> Task<Void> {
+        if let loadTask = self.loadTask {
+            return loadTask
+        }
+        
+        if plansSubject.value != nil && projectsSubject.value != nil {
+            return Task<Void>(())
+        }
+        
+        var getPlanToProject: (() -> ([CKRecord.ID : KNOTProjectEntity]))!
+        let planTask = _loadPlans()
+        let projectTask = _loadProjects(&getPlanToProject)
+        let t = Task.whenAll([planTask, projectTask])
+        self.loadTask = t.continueWith(.mainThread) {
+            self.loadTask = nil
+            
+            if let e = $0.error {
+                throw e
+            }
+            self.plansSubject.publish((planTask.result as? [KNOTPlanEntity], .reset, nil))
+            
+            let planToProject = getPlanToProject()
+            planTask.result?.forEach { plan in
+                planToProject[plan.ckRecordID]?.plans?.append(plan as! KNOTPlanEntity)
+            }
+            
+            self.projectsSubject.publish((projectTask.result as? [KNOTProjectEntity], .reset, nil))
+        }
+        
+        return self.loadTask!
+    }
+    
+    private func _loadPlans() -> Task<[KNOTEntityBase]> {
+        let queryTcs = TaskCompletionSource<[KNOTEntityBase]>()
         let query = CKQuery(recordType: KNOTPlanEntity.recordType, predicate: NSPredicate(value: true))
-        let queryTcs = TaskCompletionSource<Void>()
         database.perform(query, inZoneWith: nil) { (results, error) in
             guard error == nil else {
                 queryTcs.set(error: error!)
@@ -48,10 +79,11 @@ extension KNOTModelImpl: KNOTPlanModel {
             }
             
             guard let records = results, records.isEmpty == false else {
-                queryTcs.set(result: ())
+                queryTcs.set(result: [])
                 return
             }
             
+            var plans = [KNOTPlanEntity]()
             var batchFetchIDs = [CKRecord.ID]()
             var itemToPlan = [CKRecord.ID : KNOTPlanEntity]()
             for record in records {
@@ -67,7 +99,7 @@ extension KNOTModelImpl: KNOTPlanModel {
             }
             
             guard batchFetchIDs.isEmpty == false else {
-                queryTcs.set(result: ())
+                queryTcs.set(result: plans)
                 return
             }
             
@@ -100,16 +132,53 @@ extension KNOTModelImpl: KNOTPlanModel {
                 if let error = $0.error {
                     queryTcs.set(error: error)
                 } else {
-                    queryTcs.set(result: ())
+                    queryTcs.set(result: plans)
                 }
             }
         }
-        return queryTcs.task.continueWith(Executor.mainThread) {
-            if $0.error != nil {
-                throw $0.error!
+        
+        return queryTcs.task
+    }
+    
+    func _loadProjects(_ getPlanToProject: inout (() -> ([CKRecord.ID : KNOTProjectEntity]))?) -> Task<[KNOTEntityBase]> {
+        var planToProject = [CKRecord.ID : KNOTProjectEntity]()
+        let loadProjectsTcs = TaskCompletionSource<[KNOTEntityBase]>()
+        let query = CKQuery(recordType: KNOTProjectEntity.recordType, predicate: NSPredicate(value: true))
+        database.perform(query, inZoneWith: nil) { (results, error) in
+            guard error == nil else {
+                loadProjectsTcs.set(error: error!)
+                return
             }
-            self.plansSubject.publish((plans, .reset, nil))
+            
+            guard let records = results, records.isEmpty == false else {
+                loadProjectsTcs.set(result: [])
+                return
+            }
+            
+            let projs = records.map { (record) -> (KNOTProjectEntity) in
+                var planRecordIDs: [CKRecord.ID]?
+                let project = KNOTProjectEntity(from: record, planRecordIDs: &planRecordIDs)
+                
+                if let ids = planRecordIDs {
+                    project.plans = []
+                    ids.forEach { planToProject[$0] = project }
+                }
+                
+                return project
+            }
+            
+            loadProjectsTcs.set(result: projs)
         }
+        
+        getPlanToProject = { planToProject }
+        
+        return loadProjectsTcs.task
+    }
+}
+
+extension KNOTModelImpl: KNOTPlanModel {
+    func loadPlans() -> Task<Void> {
+        return loadData()
     }
     
     func plans(onDay day: Date) -> [KNOTPlanEntity] {
@@ -206,60 +275,7 @@ extension KNOTPlanEntity: KNOTPlanDetailModel, KNOTPlanMoreModel {
 
 extension KNOTModelImpl: KNOTProjectModel {
     func loadProjects() -> Task<Void> {
-        let loadPlansTcs = TaskCompletionSource<Void>()
-        let loadProjectsTcs = TaskCompletionSource<Void>()
-        
-        var plans = [KNOTPlanEntity]()
-        var projs = [KNOTProjectEntity]()
-        var planToProject = [CKRecord.ID : KNOTProjectEntity]()
-        
-        let plansSubscription = plansSubject.listen { new, _ in
-            if let value = new?.0 {
-                plans = value
-                loadPlansTcs.set(result: ())
-            }
-        }
-        
-        let query = CKQuery(recordType: KNOTProjectEntity.recordType, predicate: NSPredicate(value: true))
-        database.perform(query, inZoneWith: nil) { (results, error) in
-            guard error == nil else {
-                loadProjectsTcs.set(error: error!)
-                return
-            }
-            
-            guard let records = results, records.isEmpty == false else {
-                loadProjectsTcs.set(result: ())
-                return
-            }
-            
-            projs = records.map { (record) -> (KNOTProjectEntity) in
-                var planRecordIDs: [CKRecord.ID]?
-                let project = KNOTProjectEntity(from: record, planRecordIDs: &planRecordIDs)
-                
-                if let ids = planRecordIDs {
-                    project.plans = []
-                    ids.forEach { planToProject[$0] = project }
-                }
-                
-                return project
-            }
-            
-            loadProjectsTcs.set(result: ())
-        }
-        
-        return Task.whenAll(loadPlansTcs.task, loadProjectsTcs.task).continueWith { t in
-            plansSubscription.cancel()
-            
-            guard t.error == nil else {
-                throw t.error!
-            }
-            
-            plans.forEach { plan in
-                planToProject[plan.ckRecordID]?.plans?.append(plan)
-            }
-            
-            self.projectsSubject.publish((projs, .reset, nil))
-        }
+        return loadData()
     }
     
     func add(plan: KNOTPlanEntity, toProject project: KNOTProjectEntity) -> Task<Void> {

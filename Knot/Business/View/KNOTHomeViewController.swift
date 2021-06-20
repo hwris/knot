@@ -42,8 +42,7 @@ class KNOTHomeViewController: UIViewController {
         addButton.delegate = self
         
         _tabBarController = children.first as? UITabBarController
-        _tabBarController.selectedIndex = 0;
-        buttonDidClicked(buttons[_tabBarController.selectedIndex])
+        buttonDidClicked(buttons[0])
     }
     
     fileprivate var selectedItemViewController: UIViewController & KNOTHomeItemViewController {
@@ -56,17 +55,15 @@ class KNOTHomeViewController: UIViewController {
         }
         
         buttons.forEach { $0.isSelected = sender == $0 }
-        _tabBarController.selectedIndex = buttons.firstIndex(of: sender)!
-        
-        setViewModelForSelectedItemViewController();
+        let index = buttons.firstIndex(of: sender)!
+        setViewModelForSelectedItemViewController(_tabBarController.viewControllers![index])
+        _tabBarController.selectedIndex = index
     }
     
-    private func setViewModelForSelectedItemViewController() {
-        let selectedItemViewController = self.selectedItemViewController
-        
-        if let planVC = selectedItemViewController as? KNOTPlanViewController, planVC.viewModel == nil {
+    private func setViewModelForSelectedItemViewController(_ vc: UIViewController) {
+        if let planVC = vc as? KNOTPlanViewController, planVC.viewModel == nil {
             planVC.viewModel = viewModel.planViewModel
-        } else if let projVC = selectedItemViewController as? KNOTProjectViewController, projVC.viewModel == nil {
+        } else if let projVC = vc as? KNOTProjectViewController, projVC.viewModel == nil {
             projVC.viewModel = viewModel.projectViewModel
         }
     }

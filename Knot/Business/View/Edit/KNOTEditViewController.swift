@@ -11,13 +11,13 @@ import UIKit
 class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewController {
     var viewModel: VieModel!
     
-    @IBOutlet weak var keyboardButton: UIButton!
-    @IBOutlet weak var actionViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var keyboardButton: UIButton?
+    @IBOutlet weak var actionViewBottom: NSLayoutConstraint?
     @IBOutlet var flagButtons: [UIButton]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        keyboardButton.isHidden = true
+        keyboardButton?.isHidden = true
         flagColorButtonCliked(flagButtons.filter({ $0.tag == viewModel.selectedFlagColorIndex }).first!)
         
         NotificationCenter.default.addObserver(self,
@@ -66,6 +66,10 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
         let keyboardAnimationDuration = not.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else {
             return
         }
+        
+        guard let actionViewBottom = self.actionViewBottom, let keyboardButton = self.keyboardButton else {
+            return
+        }
 
         actionViewBottom.constant = keyboardButton.isHidden ? 0 : frame.height
         UIView.animate(withDuration: keyboardAnimationDuration) {
@@ -75,12 +79,12 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
     }
     
     @objc @IBAction func keyboardWillShow(_ not: Notification) {
-        keyboardButton.isHidden = false
+        keyboardButton?.isHidden = false
         keyboardDidChangeFrame(not)
     }
     
     @objc @IBAction func keyboardWillHide(_ not: Notification) {
-        keyboardButton.isHidden = true
+        keyboardButton?.isHidden = true
         keyboardDidChangeFrame(not)
     }
     
