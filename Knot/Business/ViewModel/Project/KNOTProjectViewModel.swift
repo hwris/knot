@@ -62,15 +62,6 @@ class KNOTProjectViewModel {
         return detailViewModel
     }
     
-    func detailViewModel(at index: Int) -> KNOTProjectDetailViewModel {
-        let proj = projCellViewModelsSubject.value!.0![index].model
-        let vm = KNOTProjectDetailViewModel(model: model.detailModel(with: proj))
-        vm.updateCompleteHandler = { [weak self] _ in
-            (self?.updatePlan(at: index, insert: nil) ?? Task(()))
-        }
-        return vm
-    }
-    
     private func updatePlan(at index: Int, insert _proj: KNOTProjectEntity? = nil) -> Task<Void> {
         var projViewModels = projCellViewModelsSubject.value?.0 ?? []
         var viewModel: KNOTProjectCellViewModel!
@@ -84,6 +75,20 @@ class KNOTProjectViewModel {
             projCellViewModelsSubject.publish((projViewModels, .update, [IndexPath(row: index, section: 0)]))
         }
         return model.updateProject(viewModel.model)
+    }
+    
+    func detailViewModel(at index: Int) -> KNOTProjectDetailViewModel {
+        let proj = projCellViewModelsSubject.value!.0![index].model
+        let vm = KNOTProjectDetailViewModel(model: model.detailModel(with: proj))
+        vm.updateCompleteHandler = { [weak self] _ in
+            (self?.updatePlan(at: index, insert: nil) ?? Task(()))
+        }
+        return vm
+    }
+    
+    func plansViewModel(at index: Int) -> KNOTPlanViewModel {
+        let proj = projCellViewModelsSubject.value!.0![index].model
+        return KNOTPlanViewModel(model: model.plansModel(with: proj))
     }
 }
 

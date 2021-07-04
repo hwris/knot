@@ -8,7 +8,7 @@
 
 import UIKit
 
-class KNOTProjectViewController: KNOTHomeItemTableViewController<KNOTProjectViewModel> {
+class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewModel> {
     fileprivate let detailSegueId = "detail"
     
     private var cellsSubscription: Subscription<ArrayIndexPathSubscription<KNOTProjectCellViewModel>>?

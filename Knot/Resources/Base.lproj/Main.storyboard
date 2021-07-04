@@ -103,7 +103,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEo-41-0sM" customClass="KNOTHomeAddButton" customModule="Knot" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEo-41-0sM" customClass="KNOTDragAddButton" customModule="Knot" customModuleProvider="target">
                                 <rect key="frame" x="333" y="784" width="56" height="56"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="56" id="ZHE-0V-PU0"/>

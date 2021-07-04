@@ -140,7 +140,7 @@ private class KNOTModelImpl: KNOTModel {
         return queryTcs.task
     }
     
-    func _loadProjects(_ getPlanToProject: inout (() -> ([CKRecord.ID : KNOTProjectEntity]))?) -> Task<[KNOTEntityBase]> {
+    private func _loadProjects(_ getPlanToProject: inout (() -> ([CKRecord.ID : KNOTProjectEntity]))?) -> Task<[KNOTEntityBase]> {
         var planToProject = [CKRecord.ID : KNOTProjectEntity]()
         let loadProjectsTcs = TaskCompletionSource<[KNOTEntityBase]>()
         let query = CKQuery(recordType: KNOTProjectEntity.recordType, predicate: NSPredicate(value: true))
@@ -174,11 +174,48 @@ private class KNOTModelImpl: KNOTModel {
         
         return loadProjectsTcs.task
     }
+    
+    private func updatePlan(_ plan: KNOTPlanEntity, plansSubject: Subject<ArraySubscription<KNOTPlanEntity>>) -> Task<Void> {
+        var plans = plansSubject.value?.0 ?? []
+        if let index = plans.firstIndex(of: plan) {
+            plansSubject.publish((plans, .update, [index]))
+        } else {
+            plans.append(plan)
+            plansSubject.publish((plans, .insert, [plans.endIndex - 1]))
+        }
+        
+        let tcs = TaskCompletionSource<Void>()
+        let records = [ plan.ckRecord ] + (plan.items?.map({ $0.ckRecord }) ?? [])
+        let modifyOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+        modifyOperation.database = database
+        modifyOperation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
+            if let e = error {
+                tcs.set(error: e)
+            } else {
+                plan.ckRecord = records!.first(where: { $0.recordID == plan.ckRecordID })!
+                plan.items?.forEach({ (item) in item.ckRecord = records!.first(where: { $0.recordID == item.ckRecordID })! })
+                tcs.set(result: ())
+            }
+        }
+        modifyOperation.start()
+        
+        return tcs.task
+    }
+    
+    private func deletePlan(_ plan: KNOTPlanEntity, plansSubject: Subject<ArraySubscription<KNOTPlanEntity>>) -> Task<Void> {
+        if var plans = plansSubject.value?.0 {
+            let index = plans.firstIndex(of: plan)
+            plans.removeAll { $0 == plan }
+            plansSubject.publish((plans, .remove, index.map { [$0] }))
+        }
+        
+        return accessDatabase { database.delete(withRecordID: plan.ckRecordID, completionHandler: $0) }
+    }
 }
 
 extension KNOTModelImpl: KNOTPlanModel {
     func loadPlans() -> Task<Void> {
-        return loadData()
+        loadData()
     }
     
     func plans(onDay day: Date) -> [KNOTPlanEntity] {
@@ -222,60 +259,31 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-        var plans = plansSubject.value?.0 ?? []
-        if let index = plans.firstIndex(of: plan) {
-            plansSubject.publish((plans, .update, [index]))
-        } else {
-            plans.append(plan)
-            plansSubject.publish((plans, .insert, [plans.endIndex - 1]))
-        }
-        
-        let tcs = TaskCompletionSource<Void>()
-        let records = [ plan.ckRecord ] + (plan.items?.map({ $0.ckRecord }) ?? [])
-        let modifyOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-        modifyOperation.database = database
-        modifyOperation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
-            if let e = error {
-                tcs.set(error: e)
-            } else {
-                plan.ckRecord = records!.first(where: { $0.recordID == plan.ckRecordID })!
-                plan.items?.forEach({ (item) in item.ckRecord = records!.first(where: { $0.recordID == item.ckRecordID })! })
-                tcs.set(result: ())
-            }
-        }
-        modifyOperation.start()
-        
-        return tcs.task
+        updatePlan(plan, plansSubject: plansSubject)
     }
     
     func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-        if var plans = plansSubject.value?.0 {
-            let index = plans.firstIndex(of: plan)
-            plans.removeAll { $0 == plan }
-            plansSubject.publish((plans, .remove, index.map { [$0] }))
-        }
-        
-        return accessDatabase { database.delete(withRecordID: plan.ckRecordID, completionHandler: $0) }
+        deletePlan(plan, plansSubject: plansSubject)
     }
     
     func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
-        return plan
+        plan
     }
     
     func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-        return plan
+        plan
     }
 }
 
 extension KNOTPlanEntity: KNOTPlanDetailModel, KNOTPlanMoreModel {
     var plan: KNOTPlanEntity {
-        return self
+        self
     }
 }
 
 extension KNOTModelImpl: KNOTProjectModel {
     func loadProjects() -> Task<Void> {
-        return loadData()
+        loadData()
     }
     
     func add(plan: KNOTPlanEntity, toProject project: KNOTProjectEntity) -> Task<Void> {
@@ -310,7 +318,48 @@ extension KNOTModelImpl: KNOTProjectModel {
     }
     
     func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
-        return proj
+        proj
+    }
+    
+    func plansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel {
+        class PlansModelImpl: KNOTPlanModel {
+            private let knotModelImpl: KNOTModelImpl
+            private let proj: KNOTProjectEntity
+            
+            let plansSubject = Subject<ArraySubscription<KNOTPlanEntity>>()
+            
+            init(knotModelImpl: KNOTModelImpl, proj: KNOTProjectEntity) {
+                self.knotModelImpl = knotModelImpl
+                self.proj = proj
+                plansSubject.publish(((proj.plans, .reset, nil)))
+            }
+            
+            func loadPlans() -> Task<Void> {
+                fatalError("don't support")
+            }
+            
+            func plans(onDay day: Date) -> [KNOTPlanEntity] {
+                fatalError("don't support")
+            }
+            
+            func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
+                knotModelImpl.updatePlan(plan, plansSubject: plansSubject)
+            }
+            
+            func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
+                knotModelImpl.deletePlan(plan, plansSubject: plansSubject)
+            }
+            
+            func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
+                return plan
+            }
+            
+            func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
+                return plan
+            }
+        }
+        
+        return PlansModelImpl(knotModelImpl: self, proj: proj)
     }
 }
 

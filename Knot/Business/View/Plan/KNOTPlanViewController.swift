@@ -11,7 +11,7 @@ import BoltsSwift
 import SnapKit
 import CVCalendar
 
-class KNOTPlanViewController: KNOTHomeItemTableViewController<KNOTPlanViewModel> {
+class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel> {
     fileprivate let detailSegueId = "detail"
     fileprivate let moreSegueId = "more"
     

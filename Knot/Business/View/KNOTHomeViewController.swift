@@ -8,10 +8,8 @@
 
 import UIKit
 
-class KNOTHomeViewController: UIViewController {
+class KNOTHomeViewController: KNOTDragAddViewController {
     @IBOutlet private var buttons: [KNOTButton]!
-    @IBOutlet private weak var addButton: KNOTHomeAddButton!
-    fileprivate var snapshotAddButton: UIView?
     private weak var _tabBarController: UITabBarController!
     
     var viewModel: KNOTViewModel!
@@ -30,23 +28,12 @@ class KNOTHomeViewController: UIViewController {
             }, for: .selected)
         }
         
-        let addImage = UIImage.fromColor(color: UIColor(0x5276FF), cornerRadius: 28.0)
-        let deleteLightImage = UIImage.fromColor(color: UIColor(0x545865), cornerRadius: 28.0)
-        let deleteDarkImage = UIImage.fromColor(color: UIColor(0xffffff, 0.12), cornerRadius: 28.0)
-        addButton.setBackgroundImage(dynamicProvider: {_ in
-            return addImage;
-        }, for: .normal)
-        addButton.setBackgroundImage(dynamicProvider: {
-            return $0 == .dark ? deleteDarkImage : deleteLightImage;
-        }, for: .selected)
-        addButton.delegate = self
-        
         _tabBarController = children.first as? UITabBarController
         buttonDidClicked(buttons[0])
     }
     
-    fileprivate var selectedItemViewController: UIViewController & KNOTHomeItemViewController {
-        return _tabBarController.selectedViewController as! UIViewController & KNOTHomeItemViewController
+    override var contentViewController: (UIViewController & KNOTDragAddContentViewController)? {
+        return _tabBarController.selectedViewController as? UIViewController & KNOTDragAddContentViewController
     }
     
     @IBAction func buttonDidClicked(_ sender: KNOTButton) {
@@ -69,8 +56,72 @@ class KNOTHomeViewController: UIViewController {
     }
 }
 
-extension KNOTHomeViewController: KNOTHomeAddButtonDelegate {
-    func addButton(_ button: KNOTHomeAddButton, beginTracking touch: UITouch, with event: UIEvent?) {
+class KNOTDragAddButton: KNOTButton {
+    weak var delegate: (AnyObject & KNOTDragAddButtonDelegate)?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        commonInit()
+    }
+    
+    private func commonInit() {
+        let addImage = UIImage.fromColor(color: UIColor(0x5276FF), cornerRadius: 28.0)
+        let deleteLightImage = UIImage.fromColor(color: UIColor(0x545865), cornerRadius: 28.0)
+        let deleteDarkImage = UIImage.fromColor(color: UIColor(0xffffff, 0.12), cornerRadius: 28.0)
+        setBackgroundImage(dynamicProvider: {_ in
+            return addImage;
+        }, for: .normal)
+        setBackgroundImage(dynamicProvider: {
+            return $0 == .dark ? deleteDarkImage : deleteLightImage;
+        }, for: .selected)
+    }
+    
+    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        let r = super.beginTracking(touch, with: event)
+        if r {
+            delegate?.dragAddButton(self, beginTracking: touch, with: event)
+        }
+        return r
+    }
+    
+    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        let r = super.continueTracking(touch, with: event)
+        if r {
+            delegate?.dragAddButton(self, continueTracking: touch, with: event)
+        }
+        return r;
+    }
+    
+    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        delegate?.dragAddButton(self, endTracking: touch, with: event)
+    }
+    
+    override func cancelTracking(with event: UIEvent?) {
+        delegate?.dragAddButton(self, cancelTrackingWith: event)
+    }
+}
+
+protocol KNOTDragAddButtonDelegate {
+    func dragAddButton(_ button: KNOTDragAddButton, beginTracking touch: UITouch, with event: UIEvent?)
+    func dragAddButton(_ button: KNOTDragAddButton, continueTracking touch: UITouch, with event: UIEvent?)
+    func dragAddButton(_ button: KNOTDragAddButton, endTracking touch: UITouch?, with event: UIEvent?)
+    func dragAddButton(_ button: KNOTDragAddButton, cancelTrackingWith event: UIEvent?)
+}
+
+class KNOTDragAddViewController: UIViewController, KNOTDragAddButtonDelegate {
+    private var snapshotAddButton: UIView?
+    
+    @IBOutlet private weak var addButton: KNOTDragAddButton! {
+        didSet {
+            addButton.delegate = self
+        }
+    }
+    
+    var contentViewController: (KNOTDragAddContentViewController & UIViewController)? {
+        return children.first { $0 is KNOTDragAddContentViewController } as? KNOTDragAddContentViewController & UIViewController
+    }
+    
+    func dragAddButton(_ button: KNOTDragAddButton, beginTracking touch: UITouch, with event: UIEvent?) {
         if let snapshotAddButton = button.snapshotView(afterScreenUpdates: false) {
             snapshotAddButton.alpha = 0
             self.snapshotAddButton = snapshotAddButton
@@ -84,18 +135,18 @@ extension KNOTHomeViewController: KNOTHomeAddButtonDelegate {
             impactFeedback.impactOccurred()
         }
         
-        selectedItemViewController.homeViewController(self, addButton: button, continueTracking: touch)
+        contentViewController?.dragAddViewController(self, addButton: button, continueTracking: touch)
     }
     
-    func addButton(_ button: KNOTHomeAddButton, continueTracking touch: UITouch, with event: UIEvent?) {
+    func dragAddButton(_ button: KNOTDragAddButton, continueTracking touch: UITouch, with event: UIEvent?) {
         let inButton = button.bounds.contains(touch.location(in: button))
         snapshotAddButton?.alpha = inButton ? 0 : 1.0
         snapshotAddButton?.center = touch.location(in: view)
         
-        selectedItemViewController.homeViewController(self, addButton: button, continueTracking: touch)
+        contentViewController?.dragAddViewController(self, addButton: button, continueTracking: touch)
     }
     
-    func addButton(_ button: KNOTHomeAddButton, endTracking touch: UITouch?, with event: UIEvent?) {
+    func dragAddButton(_ button: KNOTDragAddButton, endTracking touch: UITouch?, with event: UIEvent?) {
         snapshotAddButton?.removeFromSuperview()
         snapshotAddButton = nil
         
@@ -106,63 +157,28 @@ extension KNOTHomeViewController: KNOTHomeAddButtonDelegate {
             isEndInAddbutton = true
         }
         
-        selectedItemViewController.homeViewController(self,
-                                                      addButton: addButton,
-                                                      endTracking:touch,
-                                                      inAddButton: isEndInAddbutton)
+        contentViewController?.dragAddViewController(self,
+                                                     addButton: addButton,
+                                                     endTracking:touch,
+                                                     inAddButton: isEndInAddbutton)
     }
     
-    func addButton(_ button: KNOTHomeAddButton, cancelTrackingWith event: UIEvent?) {
-        addButton(button, endTracking: nil, with: event)
+    func dragAddButton(_ button: KNOTDragAddButton, cancelTrackingWith event: UIEvent?) {
+        dragAddButton(button, endTracking: nil, with: event)
     }
 }
 
-protocol KNOTHomeItemViewController {
-    func homeViewController(_ homeViewController: KNOTHomeViewController,
-                            addButton button: UIButton,
-                            continueTracking touch: UITouch)
-    func homeViewController(_ homeViewController: KNOTHomeViewController,
-                            addButton button: UIButton,
-                            endTracking touch: UITouch?,
-                            inAddButton: Bool)
+protocol KNOTDragAddContentViewController {
+    func dragAddViewController(_ dragAddViewController: KNOTDragAddViewController,
+                               addButton button: UIButton,
+                               continueTracking touch: UITouch)
+    func dragAddViewController(_ dragAddViewController: KNOTDragAddViewController,
+                               addButton button: UIButton,
+                               endTracking touch: UITouch?,
+                               inAddButton: Bool)
 }
 
-class KNOTHomeAddButton: KNOTButton {
-    weak var delegate: (AnyObject & KNOTHomeAddButtonDelegate)?
-    
-    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        let r = super.beginTracking(touch, with: event)
-        if r {
-            delegate?.addButton(self, beginTracking: touch, with: event)
-        }
-        return r
-    }
-    
-    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        let r = super.continueTracking(touch, with: event)
-        if r {
-            delegate?.addButton(self, continueTracking: touch, with: event)
-        }
-        return r;
-    }
-    
-    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-        delegate?.addButton(self, endTracking: touch, with: event)
-    }
-    
-    override func cancelTracking(with event: UIEvent?) {
-        delegate?.addButton(self, cancelTrackingWith: event)
-    }
-}
-
-protocol KNOTHomeAddButtonDelegate {
-    func addButton(_ button: KNOTHomeAddButton, beginTracking touch: UITouch, with event: UIEvent?)
-    func addButton(_ button: KNOTHomeAddButton, continueTracking touch: UITouch, with event: UIEvent?)
-    func addButton(_ button: KNOTHomeAddButton, endTracking touch: UITouch?, with event: UIEvent?)
-    func addButton(_ button: KNOTHomeAddButton, cancelTrackingWith event: UIEvent?)
-}
-
-class KNOTHomeItemTableViewController<T>: UIViewController, UITableViewDataSource {
+class KNOTDragAddTableViewController<T>: UIViewController, UITableViewDataSource, KNOTDragAddContentViewController {
     let dataCellId = "cell"
     let emptyCellId = "empty"
     
@@ -208,10 +224,10 @@ class KNOTHomeItemTableViewController<T>: UIViewController, UITableViewDataSourc
         
         return cell
     }
-}
-
-extension KNOTHomeItemTableViewController: KNOTHomeItemViewController {
-    func homeViewController(_ homeViewController: KNOTHomeViewController, addButton button: UIButton, continueTracking touch: UITouch) {
+    
+    func dragAddViewController(_ dragAddViewController: KNOTDragAddViewController,
+                               addButton button: UIButton,
+                               continueTracking touch: UITouch) {
         if !button.bounds.contains(touch.location(in: button)), !isTrackingOutInAddButton {
             isTrackingOutInAddButton = true
         }
@@ -260,10 +276,10 @@ extension KNOTHomeItemTableViewController: KNOTHomeItemViewController {
         }
     }
     
-    func homeViewController(_ homeViewController: KNOTHomeViewController,
-                            addButton button: UIButton,
-                            endTracking touch: UITouch?,
-                            inAddButton: Bool) {
+    func dragAddViewController(_ dragAddViewController: KNOTDragAddViewController,
+                               addButton button: UIButton,
+                               endTracking touch: UITouch?,
+                               inAddButton: Bool) {
         if inAddButton, isTrackingOutInAddButton, let _emptyIndexPath = emptyIndexPath {
             isTrackingOutInAddButton = false
             emptyIndexPath = nil

@@ -15,4 +15,5 @@ protocol KNOTProjectModel {
     func updateProject(_ proj: KNOTProjectEntity) -> Task<Void>
     func deleteProject(_ proj: KNOTProjectEntity) -> Task<Void>
     func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel
+    func plansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel
 }
