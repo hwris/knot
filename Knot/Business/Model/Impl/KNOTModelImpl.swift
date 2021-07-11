@@ -209,7 +209,20 @@ private class KNOTModelImpl: KNOTModel {
             plansSubject.publish((plans, .remove, index.map { [$0] }))
         }
         
-        return accessDatabase { database.delete(withRecordID: plan.ckRecordID, completionHandler: $0) }
+        let tcs = TaskCompletionSource<Void>()
+        let records = [ plan.ckRecordID ] + (plan.items?.map({ $0.ckRecordID }) ?? [])
+        let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: records)
+        modifyOperation.database = database
+        modifyOperation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
+            if let e = error {
+                tcs.set(error: e)
+            } else {
+                tcs.set(result: ())
+            }
+        }
+        modifyOperation.start()
+        
+        return tcs.task
     }
 }
 
@@ -275,13 +288,7 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-        plan
-    }
-}
-
-extension KNOTPlanEntity: KNOTPlanDetailModel, KNOTPlanMoreModel {
-    var plan: KNOTPlanEntity {
-        self
+        KNOTPlanMoreModelImpl(plan: plan, projectModel: self)
     }
 }
 
@@ -312,7 +319,20 @@ extension KNOTModelImpl: KNOTProjectModel {
             projectsSubject.publish((projs, .remove, index.map { [$0] }))
         }
         
-        return accessDatabase { database.delete(withRecordID: proj.ckRecordID, completionHandler: $0) }
+        let tcs = TaskCompletionSource<Void>()
+        let records = [ proj.ckRecordID ] + (proj.plans?.filter{ $0.remindDate == nil }.map{ $0.ckRecordID } ?? [])
+        let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: records)
+        modifyOperation.database = database
+        modifyOperation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
+            if let e = error {
+                tcs.set(error: e)
+            } else {
+                tcs.set(result: ())
+            }
+        }
+        modifyOperation.start()
+        
+        return tcs.task
     }
     
     func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
@@ -341,9 +361,13 @@ extension KNOTModelImpl: KNOTProjectModel {
             }
             
             func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-                plan.remindDate = nil
+                if proj.plans?.contains(plan) != true {
+                    plan.remindDate = nil
+                }
+                
                 return knotModelImpl.updatePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
-                    if let plans = self.proj.plans, plans.contains(plan) {
+                    let isUpdate = plan.remindDate != nil
+                    if isUpdate {
                         self.knotModelImpl.updateProjectLocal(self.proj)
                         return Task(())
                     }
@@ -358,27 +382,84 @@ extension KNOTModelImpl: KNOTProjectModel {
             }
             
             func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-                knotModelImpl.deletePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
-                    self.proj.plans?.removeAll { $0 == plan }
-                    return self.knotModelImpl.updateProject(self.proj)
+                self.proj.plans?.removeAll { $0 == plan }
+                
+                if plan.remindDate == nil {
+                    return knotModelImpl.deletePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
+                        self.knotModelImpl.updateProject(self.proj)
+                    }
                 }
+                
+                return self.knotModelImpl.updateProject(proj)
             }
             
             func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
-                return plan
+                plan
             }
             
             func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-                return plan
+                KNOTPlanMoreModelImpl(plan: plan, projectModel: knotModelImpl)
             }
         }
         
         return PlansModelImpl(knotModelImpl: self, proj: proj)
+    }
+    
+    func sync(_ plan: KNOTPlanEntity, to proj: KNOTProjectEntity) -> Task<Void> {
+        if let plans = proj.plans, plans.contains(plan) {
+            updateProjectLocal(proj)
+            return Task(())
+        }
+        
+        if proj.plans == nil {
+            proj.plans = []
+        }
+        
+        proj.plans?.append(plan)
+        return updateProject(proj)
+    }
+}
+
+extension KNOTPlanEntity: KNOTPlanDetailModel {
+    var plan: KNOTPlanEntity {
+        self
     }
 }
 
 extension KNOTProjectEntity: KNOTProjectDetailModel {
     var project: KNOTProjectEntity {
         return self
+    }
+}
+
+private class KNOTPlanMoreModelImpl: KNOTPlanMoreModel, KNOTPlanSyncToProjModel {
+    let plan: KNOTPlanEntity
+    private let projectModel: KNOTProjectModel
+    
+    var projs: [KNOTProjectEntity] {
+        return projectModel.projectsSubject.value?.0 ?? []
+    }
+    
+    var syncToProjModel: KNOTPlanSyncToProjModel {
+        return self
+    }
+    
+    var flagColor: UInt32 {
+        get {
+            return plan.flagColor
+        }
+        
+        set {
+            plan.flagColor = newValue
+        }
+    }
+    
+    init(plan: KNOTPlanEntity, projectModel: KNOTProjectModel) {
+        self.plan = plan
+        self.projectModel = projectModel
+    }
+    
+    func syncPlanTo(_ proj: KNOTProjectEntity) -> Task<Void> {
+        return projectModel.sync(plan, to: proj)
     }
 }

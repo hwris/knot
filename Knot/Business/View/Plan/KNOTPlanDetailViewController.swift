@@ -111,6 +111,7 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
 class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel>  {
     private let repeatSegueId = "repeat"
     private let reminderSegueId = "reminder"
+    private let syncToProjSegudId = "syncToProj"
     
     private var isRepeatSwitchOnSubscription: Subscription<Bool>?
     private var isReminderSwitchOnSubscription: Subscription<Bool>?
@@ -155,6 +156,11 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
         performSegue(withIdentifier: reminderSegueId, sender: nil)
     }
     
+    @IBAction func syncToProjSwitchChanged(_ sender: UISwitch) {
+        sender.isOn = false
+        performSegue(withIdentifier: syncToProjSegudId, sender: nil)
+    }
+    
     @IBAction func deleteSwitchChanged(_ sender: UISwitch) {
         if !sender.isOn {
            return
@@ -183,6 +189,11 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
             let VC = segue.destination as! KNOTPlanPickerViewController
             VC.completion = showView
             VC.viewModel = viewModel.reminderViewModel
+        } else if segue.identifier == syncToProjSegudId {
+            hideView()
+            let VC = segue.destination as! KNOTPlanPickerViewController
+            VC.completion = showView
+            VC.viewModel = viewModel.syncToProjViewModel
         }
     }
     

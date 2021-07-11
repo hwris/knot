@@ -95,6 +95,10 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
         return vm
     }
     
+    var syncToProjViewModel: KNOTPickerViewModel {
+        return KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
+    }
+    
     func deletePlan() -> Task<Void> {
         return deletePlanFunc?(self) ?? Task(())
     }
@@ -268,6 +272,43 @@ private class KNOTPlanReminderViewModel: KNOTPickerViewModel {
         let dateComponents = DateComponents(calendar: .current, timeZone: .current, hour: hour, minute: selectedMinuteIndex)
         model.remindTime = dateComponents.date!
         isReminderSwitchOnSubject?.publish(true)
+    }
+}
+
+private class KNOTPlanSyncToProjViewModel: KNOTPickerViewModel {
+    private let model: KNOTPlanSyncToProjModel
+    private var selectedProjIndex = 0
+    
+    init(model: KNOTPlanSyncToProjModel) {
+        self.model = model
+    }
+    
+    var numberOfComponents: Int {
+        return 1
+    }
+    
+    func numberOfRows(inComponent component: Int) -> Int {
+        return model.projs.count
+    }
+    
+    func title(forRow row: Int, forComponent component: Int) -> String? {
+        return model.projs[row].name
+    }
+    
+    func width(forComponent component: Int) -> CGFloat {
+        return 330
+    }
+    
+    func didSelect(row: Int, inComponent component: Int) {
+        selectedProjIndex = row
+    }
+    
+    func confirmButtonDidClicked() {
+        let proj = model.projs[selectedProjIndex]
+        model.syncPlanTo(proj).continueOnErrorWith { e in
+            // handle error
+            assert(false, e.localizedDescription)
+        }
     }
 }
 
