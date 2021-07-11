@@ -93,7 +93,7 @@ class KNOTPlanEntity: KNOTEntityBase {
         var type: Type_
     }
     
-    var remindDate: Date
+    var remindDate: Date?
     var priority: Double
     var content: String
     var flagColor: UInt32
@@ -111,7 +111,7 @@ class KNOTPlanEntity: KNOTEntityBase {
     }
     
     init(from record: CKRecord, itemRecordIDs: inout [CKRecord.ID]?) {
-        remindDate = record["remindDate"] as! Date
+        remindDate = record["remindDate"] as? Date
         priority = record["priority"] as! Double
         content = record["content"] as! String
         flagColor = record["flagColor"] as! UInt32

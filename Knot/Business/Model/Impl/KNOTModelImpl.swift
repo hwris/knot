@@ -226,7 +226,11 @@ extension KNOTModelImpl: KNOTPlanModel {
         let calendar = Calendar.current
         let targetDateComponents = calendar.dateComponents([ .year, .month, .day ], from: day)
         let items = plans.filter {
-            let planDateComponents = calendar.dateComponents([ .year, .month, .day ], from: $0.remindDate)
+            guard let remindDate = $0.remindDate else {
+                return false
+            }
+            
+            let planDateComponents = calendar.dateComponents([ .year, .month, .day ], from: remindDate)
             guard let repeatInfo = $0.repeat else {
                 return planDateComponents == targetDateComponents
             }
@@ -337,7 +341,8 @@ extension KNOTModelImpl: KNOTProjectModel {
             }
             
             func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-                knotModelImpl.updatePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
+                plan.remindDate = nil
+                return knotModelImpl.updatePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
                     if let plans = self.proj.plans, plans.contains(plan) {
                         self.knotModelImpl.updateProjectLocal(self.proj)
                         return Task(())
