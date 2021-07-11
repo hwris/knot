@@ -16,11 +16,20 @@ class KNOTProjectViewModel {
     init(model: KNOTProjectModel) {
         self.model = model
         projsSubscription = self.model.projectsSubject.listen({ [weak self] new, old in
-            guard let (projs, action, _) = new, action == .reset else {
+            guard let (projs, action, indexs) = new else {
                 return
             }
             
-            self?.publishProjs(projs ?? [])
+            switch action {
+            case .reset:
+                self?.publishProjs(projs ?? [])
+            case .update:
+                DispatchQueue.main.async {
+                    self?.updateProjs(projs ?? [], at: indexs ?? [])
+                }
+            default:
+                break
+            }
         })
     }
     
@@ -33,6 +42,12 @@ class KNOTProjectViewModel {
         let projCellViewModels = projs.sorted(by: { $0.priority > $1.priority })
             .map({ KNOTProjectCellViewModel(model: $0) })
         projCellViewModelsSubject.publish((projCellViewModels, .reset, nil))
+    }
+    
+    private func updateProjs(_ projs: [KNOTProjectEntity], at indexs: [Int]) {
+        indexs.forEach { index in
+            self.projCellViewModelsSubject.value?.0?.first { projs[index] == $0.model }?.refresh()
+        }
     }
     
     func loadProjs() -> Task<Void> {
@@ -57,12 +72,12 @@ class KNOTProjectViewModel {
         let detailModel = model.detailModel(with: proj)
         let detailViewModel = KNOTProjectDetailViewModel(model: detailModel)
         detailViewModel.updateCompleteHandler = { [weak self] _ in
-            return (self?.updatePlan(at: index, insert: proj) ?? Task(()))
+            return (self?.updateProj(at: index, insert: proj) ?? Task(()))
         }
         return detailViewModel
     }
     
-    private func updatePlan(at index: Int, insert _proj: KNOTProjectEntity? = nil) -> Task<Void> {
+    private func updateProj(at index: Int, insert _proj: KNOTProjectEntity? = nil) -> Task<Void> {
         var projViewModels = projCellViewModelsSubject.value?.0 ?? []
         var viewModel: KNOTProjectCellViewModel!
         if let proj = _proj {
@@ -81,14 +96,17 @@ class KNOTProjectViewModel {
         let proj = projCellViewModelsSubject.value!.0![index].model
         let vm = KNOTProjectDetailViewModel(model: model.detailModel(with: proj))
         vm.updateCompleteHandler = { [weak self] _ in
-            (self?.updatePlan(at: index, insert: nil) ?? Task(()))
+            (self?.updateProj(at: index, insert: nil) ?? Task(()))
         }
         return vm
     }
     
-    func plansViewModel(at index: Int) -> KNOTPlanViewModel {
-        let proj = projCellViewModelsSubject.value!.0![index].model
-        return KNOTPlanViewModel(model: model.plansModel(with: proj))
+    func plansViewModel(at index: Int) -> KNOTProjectPlanViewModel {
+        let projVM = projCellViewModelsSubject.value!.0![index]
+        let proj = projVM.model
+        let vm = KNOTProjectPlanViewModel(model: model.plansModel(with: proj))
+        vm.title = projVM.content
+        return vm
     }
 }
 
@@ -166,3 +184,6 @@ class KNOTProjectCellViewModel {
     }
 }
 
+class KNOTProjectPlanViewModel: KNOTPlanViewModel {
+    fileprivate(set) var title: String?
+}

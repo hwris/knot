@@ -8,8 +8,9 @@
 
 import UIKit
 
-class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewModel> {
+class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewModel>, UITableViewDelegate {
     fileprivate let detailSegueId = "detail"
+    fileprivate let planSegueId = "plan"
     
     private var cellsSubscription: Subscription<ArrayIndexPathSubscription<KNOTProjectCellViewModel>>?
     
@@ -41,6 +42,11 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
         cellsSubscription = nil
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     override var numberOfDateRows: Int {
         return viewModel.projCellViewModelsSubject.value?.0?.count ?? 0
     }
@@ -60,6 +66,18 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
             let detailViewModel = sender as! KNOTProjectDetailViewModel
             let detailVC = segue.destination as! KNOTProjectDetailViewController
             detailVC.viewModel = detailViewModel
+        } else if segue.identifier == planSegueId {
+            let planVM = sender as! KNOTProjectPlanViewModel
+            let planVC = segue.destination as! KNOTProjectPlanViewController
+            planVC.viewModel = planVM
+        }
+    }
+    
+    //MARK: - UITableViewDelegate
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let planVM = viewModel.plansViewModel(at: indexPath.row)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: self.planSegueId, sender: planVM)
         }
     }
 }

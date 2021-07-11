@@ -11,12 +11,9 @@ import BoltsSwift
 import SnapKit
 import CVCalendar
 
-class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel> {
+class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel>, KNOTSwipeTableViewDelegate {
     fileprivate let detailSegueId = "detail"
     fileprivate let moreSegueId = "more"
-    
-    @IBOutlet weak var calendarView: KNOTCalendarView!
-    @IBOutlet weak var calendarViewTop: NSLayoutConstraint!
     
     private var itemsSubscription: Subscription<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>?
     
@@ -44,6 +41,14 @@ class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel> 
     deinit {
         itemsSubscription?.cancel()
         itemsSubscription = nil
+    }
+    
+    func loadItems(at date: Date) {
+        let tast = viewModel.loadItems(at: date)
+        tast.continueOnErrorWith {
+            //todo: error handle
+            print($0)
+        }
     }
     
     override var numberOfDateRows: Int {
@@ -76,43 +81,14 @@ class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel> 
         }
     }
     
-    @IBAction func calendarViewDidClicked(_ sender: KNOTCalendarView) {
-        guard let date = sender.calendarView.presentedDate.convertedDate() else {
-            return
-        }
-        
-        loadItems(at: date)
-    }
+    // MARK: - KNOTSwipeTableViewDelegate
     
-    private func loadItems(at date: Date) {
-        let tast = viewModel.loadItems(at: date)
-        tast.continueOnErrorWith {
-            //todo: error handle
-            print($0)
-        }
-    }
-}
-
-extension KNOTPlanViewController: KNOTSwipeTableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tableView as! KNOTSwipeTableView).didSelectedRowAt(indexPath)
         let detailViewModel = self.viewModel.planDetailViewModel(at: indexPath.row)
         DispatchQueue.main.async {
             self.performSegue(withIdentifier: self.detailSegueId, sender: detailViewModel)
         }
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        let newConstant = scrollView.contentOffset.y < 0 ? 0 : -self.calendarView.frame.height
-        if newConstant == calendarViewTop.constant {
-            return
-        }
-        
-        UIView.animate(withDuration: 0.2) {
-            self.calendarViewTop.constant = newConstant
-            self.view.layoutIfNeeded()
-        }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
     
     func tableView(_ tableView: UITableView, rowPanGSRecognized gs: UIPanGestureRecognizer, at indexPath: IndexPath) {
@@ -309,6 +285,34 @@ class KNOTPlanItemCell: UITableViewCell {
                 self.updateContentView()
             }
         }
+    }
+}
+
+class KNOTHomePlanViewController: KNOTPlanViewController {
+    @IBOutlet weak var calendarView: KNOTCalendarView!
+    @IBOutlet weak var calendarViewTop: NSLayoutConstraint!
+    
+    @IBAction func calendarViewDidClicked(_ sender: KNOTCalendarView) {
+        guard let date = sender.calendarView.presentedDate.convertedDate() else {
+            return
+        }
+        
+        loadItems(at: date)
+    }
+    
+    //MARK: - KNOTSwipeTableViewDelegate
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let newConstant = scrollView.contentOffset.y < 0 ? 0 : -self.calendarView.frame.height
+        if newConstant == calendarViewTop.constant {
+            return
+        }
+        
+        UIView.animate(withDuration: 0.2) {
+            self.calendarViewTop.constant = newConstant
+            self.view.layoutIfNeeded()
+        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 }
 

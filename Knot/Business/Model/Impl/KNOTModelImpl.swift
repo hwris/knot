@@ -286,16 +286,12 @@ extension KNOTModelImpl: KNOTProjectModel {
         loadData()
     }
     
-    func add(plan: KNOTPlanEntity, toProject project: KNOTProjectEntity) -> Task<Void> {
-        let projs = projectsSubject.value?.0 ?? []
-        let index = projs.firstIndex(of: project)!
-        project.plans?.append(plan)
-        projectsSubject.publish((projs, .update, [index]))
-        
-        return accessDatabase { database.save(plan.ckRecord, completionHandler: $0) }
+    func updateProject(_ proj: KNOTProjectEntity) -> Task<Void> {
+        updateProjectLocal(proj)
+        return accessDatabase {  database.save(proj.ckRecord, completionHandler: $0) }
     }
     
-    func updateProject(_ proj: KNOTProjectEntity) -> Task<Void> {
+    private func updateProjectLocal(_ proj: KNOTProjectEntity) {
         var projs = projectsSubject.value?.0 ?? []
         if let index = projs.firstIndex(of: proj) {
             projectsSubject.publish((projs, .update, [index]))
@@ -303,8 +299,6 @@ extension KNOTModelImpl: KNOTProjectModel {
             projs.append(proj)
             projectsSubject.publish((projs, .insert, [projs.endIndex - 1]))
         }
-        
-        return accessDatabase {  database.save(proj.ckRecord, completionHandler: $0) }
     }
     
     func deleteProject(_ proj: KNOTProjectEntity) -> Task<Void> {
@@ -335,19 +329,34 @@ extension KNOTModelImpl: KNOTProjectModel {
             }
             
             func loadPlans() -> Task<Void> {
-                fatalError("don't support")
+                return Task(())
             }
             
             func plans(onDay day: Date) -> [KNOTPlanEntity] {
-                fatalError("don't support")
+                return plansSubject.value?.0 ?? []
             }
             
             func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-                knotModelImpl.updatePlan(plan, plansSubject: plansSubject)
+                knotModelImpl.updatePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
+                    if let plans = self.proj.plans, plans.contains(plan) {
+                        self.knotModelImpl.updateProjectLocal(self.proj)
+                        return Task(())
+                    }
+                    
+                    if self.proj.plans == nil {
+                        self.proj.plans = []
+                    }
+                    
+                    self.proj.plans?.append(plan)
+                    return self.knotModelImpl.updateProject(self.proj)
+                }
             }
             
             func deletePlan(_ plan: KNOTPlanEntity) -> Task<Void> {
-                knotModelImpl.deletePlan(plan, plansSubject: plansSubject)
+                knotModelImpl.deletePlan(plan, plansSubject: plansSubject).continueOnSuccessWithTask {
+                    self.proj.plans?.removeAll { $0 == plan }
+                    return self.knotModelImpl.updateProject(self.proj)
+                }
             }
             
             func planDetailModel(with plan: KNOTPlanEntity) -> KNOTPlanDetailModel {
