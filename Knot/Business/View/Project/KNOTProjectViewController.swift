@@ -42,11 +42,6 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
         cellsSubscription = nil
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.reloadData()
-    }
-    
     override var numberOfDateRows: Int {
         return viewModel.projCellViewModelsSubject.value?.0?.count ?? 0
     }

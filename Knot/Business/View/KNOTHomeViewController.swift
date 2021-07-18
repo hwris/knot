@@ -188,6 +188,11 @@ class KNOTDragAddTableViewController<T>: UIViewController, UITableViewDataSource
     
     var viewModel: T!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     var numberOfDateRows: Int {
         return 0;
     }

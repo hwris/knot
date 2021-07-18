@@ -101,6 +101,7 @@ class KNOTPlanEntity: KNOTEntityBase {
     var isDone = false
     var remindTime: Date?
     var `repeat`: Repeat?
+    weak var project: KNOTProjectEntity?
     
     init(remindDate: Date, priority: Double, content: String, flagColor: UInt32) {
         self.remindDate = remindDate

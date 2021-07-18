@@ -18,11 +18,20 @@ class KNOTPlanViewModel {
     init(model: KNOTPlanModel) {
         self.model = model
         plansSubscription = model.plansSubject.listen({ [weak self] (newValue, _) in
-            guard let (plans, action, _) = newValue, action == .reset else {
+            guard let (plans, action, indexs) = newValue else {
                 return
             }
             
-            self?.publishPlans(plans)
+            switch action {
+            case .reset:
+                self?.publishPlans(plans)
+            case .update:
+                DispatchQueue.main.async {
+                    self?.updatePlans(plans ?? [], at: indexs ?? [])
+                }
+            default:
+                break
+            }
         })
     }
     
@@ -36,6 +45,12 @@ class KNOTPlanViewModel {
             .sorted(by: { $0.priority > $1.priority })
             .map({ planItemViewModel(model: $0) })
         itemsSubject.publish((items, .reset, nil))
+    }
+    
+    private func updatePlans(_ plans: [KNOTPlanEntity], at indexs: [Int]) {
+        indexs.forEach { index in
+            self.itemsSubject.value?.0?.first(where: { plans[index] == $0.model })?.refresh()
+        }
     }
     
     private func planItemViewModel(model: KNOTPlanEntity) -> KNOTPlanItemViewModel {
