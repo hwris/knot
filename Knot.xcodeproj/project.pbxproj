@@ -19,6 +19,8 @@
 		2C4439D325C6AAA10054A5EE /* Pods_Knot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */; };
 		2C45CE232691A4270043FEF5 /* KNOTProjectPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45CE222691A4270043FEF5 /* KNOTProjectPlanViewController.swift */; };
 		2C55A89B25BC5EA0000EF1C0 /* KnotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */; };
+		2C58EDE426AD5FFD001E3218 /* KNOTProjectPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C58EDE326AD5FFD001E3218 /* KNOTProjectPlanViewModel.swift */; };
+		2C58EDE626AD64CB001E3218 /* KNOTProjectPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C58EDE526AD64CB001E3218 /* KNOTProjectPlanModel.swift */; };
 		2C6009082619642D00659FE1 /* KNOTPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6009072619642D00659FE1 /* KNOTPickerView.swift */; };
 		2C63D432261052FC00DD1810 /* KNOTModelImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63D431261052FC00DD1810 /* KNOTModelImpl.swift */; };
 		2C6EBD3625A166BE008A274C /* UITableView+Swipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */; };
@@ -73,6 +75,8 @@
 		2C55A89825BC5EA0000EF1C0 /* KnotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KnotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C55A89A25BC5EA0000EF1C0 /* KnotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotTests.swift; sourceTree = "<group>"; };
 		2C55A89C25BC5EA0000EF1C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C58EDE326AD5FFD001E3218 /* KNOTProjectPlanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectPlanViewModel.swift; sourceTree = "<group>"; };
+		2C58EDE526AD64CB001E3218 /* KNOTProjectPlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectPlanModel.swift; sourceTree = "<group>"; };
 		2C6009072619642D00659FE1 /* KNOTPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTPickerView.swift; sourceTree = "<group>"; };
 		2C63D431261052FC00DD1810 /* KNOTModelImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTModelImpl.swift; sourceTree = "<group>"; };
 		2C6EBD3525A166BE008A274C /* UITableView+Swipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Swipe.swift"; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 			children = (
 				2C7F53512675F84F0094137C /* KNOTProjectViewModel.swift */,
 				2C20A12B2677331700930AD6 /* KNOTProjectDetailViewModel.swift */,
+				2C58EDE326AD5FFD001E3218 /* KNOTProjectPlanViewModel.swift */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -222,6 +227,7 @@
 			children = (
 				2C80DD50266C9CA6009DF2CB /* KNOTProjectModel.swift */,
 				2C20A12926772DE700930AD6 /* KNOTProjectDetailModel.swift */,
+				2C58EDE526AD64CB001E3218 /* KNOTProjectPlanModel.swift */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -518,6 +524,8 @@
 				2C20A1222677252A00930AD6 /* KNOTEditViewController.swift in Sources */,
 				2C7F261D244C4BA500F13299 /* KNOTViewModel.swift in Sources */,
 				2C2AA58224386E630056B84F /* KNOTPlanViewController.swift in Sources */,
+				2C58EDE426AD5FFD001E3218 /* KNOTProjectPlanViewModel.swift in Sources */,
+				2C58EDE626AD64CB001E3218 /* KNOTProjectPlanModel.swift in Sources */,
 				2CE7920A2430D49F00975D99 /* UIColor+Hex.swift in Sources */,
 				2C20A1252677257D00930AD6 /* KNOTEditViewModel.swift in Sources */,
 				2C2AA57C243823FE0056B84F /* UIKit+Category.swift in Sources */,

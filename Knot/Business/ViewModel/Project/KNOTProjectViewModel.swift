@@ -183,7 +183,3 @@ class KNOTProjectCellViewModel {
         cachedContent = nil
     }
 }
-
-class KNOTProjectPlanViewModel: KNOTPlanViewModel {
-    fileprivate(set) var title: String?
-}

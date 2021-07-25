@@ -122,10 +122,10 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
     override func viewDidLoad() {
         super.viewDidLoad()
         isRepeatSwitchOnSubscription = viewModel.isRepeatSwitchOnSubject.listen({ [weak self] (new, old) in
-            self?.repeatSwitch.isOn = new ?? false
+            self?.repeatSwitch?.isOn = new ?? false
         })
         isReminderSwitchOnSubscription = viewModel.isReminderSwitchOnSubject.listen({ [weak self] (new, old) in
-            self?.reminderSwitch.isOn = new ?? false
+            self?.reminderSwitch?.isOn = new ?? false
         })
     }
     
@@ -197,13 +197,13 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
         }
     }
     
-    private func hideView() {
+    func hideView() {
         UIView.animate(withDuration: 0.3) {
             self.view.alpha = 0
         }
     }
     
-    private func showView() {
+    func showView() {
         UIView.animate(withDuration: 0.3) {
             self.view.alpha = 1.0
         }
@@ -211,22 +211,6 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
 }
 
 class KNOTPlanPickerViewController: KNOTPickerViewController {
-    fileprivate var completion: (() -> ())?
-    
-    override func cancelButtonClicked(_ sender: UIButton) {
-        super.cancelButtonClicked(sender)
-        completion?()
-    }
-    
-    override func confirmButtonClicked(_ sender: UIButton) {
-        super.confirmButtonClicked(sender)
-        completion?()
-    }
-    
-    override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
-        super.handleBackgroundViewTapped(completion: completion)
-        self.completion?()
-    }
 }
 
 fileprivate extension IndexPath {

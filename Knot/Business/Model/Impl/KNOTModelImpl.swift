@@ -348,7 +348,7 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-        KNOTPlanMoreModelImpl(plan: plan, projectModel: self)
+        KNOTPlanMoreModelImpl(plan: plan, knotModel: self)
     }
 }
 
@@ -431,14 +431,14 @@ extension KNOTModelImpl: KNOTProjectModel {
             }
             
             func planMoreModel(with plan: KNOTPlanEntity) -> KNOTPlanMoreModel {
-                KNOTPlanMoreModelImpl(plan: plan, projectModel: knotModelImpl)
+                KNOTPlanMoreModelImpl(plan: plan, knotModel: knotModelImpl)
             }
         }
         
         return PlansModelImpl(knotModelImpl: self, proj: proj)
     }
     
-    func sync(_ plan: KNOTPlanEntity, to proj: KNOTProjectEntity) -> Task<Void> {
+    fileprivate func sync(_ plan: KNOTPlanEntity, to proj: KNOTProjectEntity) -> Task<Void> {
         if !add(plan, to: proj) {
             return Task(())
         }
@@ -481,15 +481,21 @@ extension KNOTProjectEntity: KNOTProjectDetailModel {
     }
 }
 
-private class KNOTPlanMoreModelImpl: KNOTPlanMoreModel, KNOTPlanSyncToProjModel {
+private class KNOTPlanMoreModelImpl: KNOTProjectPlanMoreModel,
+                                     KNOTProjectSyncToPlanModel,
+                                     KNOTPlanSyncToProjModel {
     let plan: KNOTPlanEntity
-    private let projectModel: KNOTProjectModel
+    private let knotModel: KNOTModelImpl
     
     var projs: [KNOTProjectEntity] {
-        return projectModel.projectsSubject.value?.0 ?? []
+        return knotModel.projectsSubject.value?.0 ?? []
     }
     
     var syncToProjModel: KNOTPlanSyncToProjModel {
+        return self
+    }
+    
+    var syncToPlanModel: KNOTProjectSyncToPlanModel {
         return self
     }
     
@@ -503,12 +509,23 @@ private class KNOTPlanMoreModelImpl: KNOTPlanMoreModel, KNOTPlanSyncToProjModel 
         }
     }
     
-    init(plan: KNOTPlanEntity, projectModel: KNOTProjectModel) {
+    init(plan: KNOTPlanEntity, knotModel: KNOTModelImpl) {
         self.plan = plan
-        self.projectModel = projectModel
+        self.knotModel = knotModel
     }
     
     func syncPlanTo(_ proj: KNOTProjectEntity) -> Task<Void> {
-        return projectModel.sync(plan, to: proj)
+        return knotModel.sync(plan, to: proj)
+    }
+    
+    func syncToDate(_ date: Date) -> Task<Void> {
+        //todo
+//        if !plan.isOnlyInProject {
+//            return Task(error: "It has been added to the plan.")
+//        }
+        plan.remindDate = date
+        return knotModel.updatePlan(plan)
     }
 }
+
+extension String: Error {}

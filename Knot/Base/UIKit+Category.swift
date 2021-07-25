@@ -329,6 +329,8 @@ class KNOTDialogViewController: KNOTTranslucentViewController {
     @IBOutlet var cancelButton: UIButton!
     @IBOutlet var confirmButton: UIButton!
     
+    var completion: (() -> ())?
+    
     override func viewDidLoad() {
         cancelButton.backgroundColor = UIColor(0xffffff, 0.04, 0xffffff, 1.0)
         cancelButton.cornerRadius = 14
@@ -365,14 +367,16 @@ class KNOTDialogViewController: KNOTTranslucentViewController {
     override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
         dismiss(animated: true, completion: nil)
         completion()
+        self.completion?()
     }
     
     @IBAction func cancelButtonClicked(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
+        completion?()
     }
     
     @IBAction func confirmButtonClicked(_ sender: UIButton) {
-        
+        completion?()
     }
 }
 
@@ -419,6 +423,7 @@ class KNOTPickerViewController: KNOTDialogViewController, UIPickerViewDelegate, 
     }
     
     override func confirmButtonClicked(_ sender: UIButton) {
+        super.confirmButtonClicked(sender)
         viewModel.confirmButtonDidClicked()
         dismiss(animated: true, completion: nil)
     }
