@@ -438,6 +438,10 @@ extension KNOTModelImpl: KNOTProjectModel {
         return PlansModelImpl(knotModelImpl: self, proj: proj)
     }
     
+    func moreModel(with proj: KNOTProjectEntity) -> KNOTProjectMoreModel {
+        proj
+    }
+    
     fileprivate func sync(_ plan: KNOTPlanEntity, to proj: KNOTProjectEntity) -> Task<Void> {
         if !add(plan, to: proj) {
             return Task(())
@@ -475,7 +479,7 @@ extension KNOTPlanEntity: KNOTPlanDetailModel {
     }
 }
 
-extension KNOTProjectEntity: KNOTProjectDetailModel {
+extension KNOTProjectEntity: KNOTProjectDetailModel, KNOTProjectMoreModel {
     var project: KNOTProjectEntity {
         return self
     }

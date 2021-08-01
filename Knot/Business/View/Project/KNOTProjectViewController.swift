@@ -11,6 +11,7 @@ import UIKit
 class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewModel>, UITableViewDelegate {
     fileprivate let detailSegueId = "detail"
     fileprivate let planSegueId = "plan"
+    fileprivate let moreSegueId = "more"
     
     private var cellsSubscription: Subscription<ArrayIndexPathSubscription<KNOTProjectCellViewModel>>?
     
@@ -65,7 +66,37 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
             let planVM = sender as! KNOTProjectPlanViewModel
             let planVC = segue.destination as! KNOTProjectPlanViewController
             planVC.viewModel = planVM
+        } else if segue.identifier == moreSegueId {
+            var cell = sender as? UIView
+            while cell != nil, !(cell is UITableViewCell) { cell = cell?.superview }
+            if cell == nil { return }
+            let index = (tableView.indexPath(for: cell as! UITableViewCell)?.row)!
+            let moreVC = segue.destination as! KNOTProjectMoreViewController
+            moreVC.viewModel = viewModel.moreViewModel(at: index)
+            moreVC.deleteProjFunc = deleteProj
+            moreVC.renameProjFunc = renameProj
+            moreVC.context = index
         }
+    }
+    
+    private func deleteProj(_ sender: KNOTProjectMoreViewController) {
+        let index = sender.context as! Int
+        //todo: 加上提示
+        viewModel.deleteProj(at: index).continueWith { [weak sender] (t) in
+            if let e = t.error {
+                assert(false, e.localizedDescription)
+                //todo: handle error
+                return
+            }
+            sender?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    private func renameProj(_ sender: KNOTProjectMoreViewController) {
+        let index = sender.context as! Int
+        let detailVM = viewModel.detailViewModel(at: index)
+        sender.dismiss(animated: false, completion: nil)
+        performSegue(withIdentifier: detailSegueId, sender: detailVM)
     }
     
     //MARK: - UITableViewDelegate

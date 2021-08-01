@@ -11,3 +11,6 @@ import BoltsSwift
 protocol KNOTProjectDetailModel: KNOTEditModel {
     var project: KNOTProjectEntity { get }
 }
+
+protocol KNOTProjectMoreModel: KNOTEditModel {
+}

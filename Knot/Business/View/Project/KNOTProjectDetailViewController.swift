@@ -29,3 +29,19 @@ extension KNOTProjectDetailViewController: UITextViewDelegate {
         viewModel.updateProjName(textView.text)
     }
 }
+
+class KNOTProjectMoreViewController: KNOTEditViewController<KNOTProjectMoreViewModel>  {
+    var deleteProjFunc: ((KNOTProjectMoreViewController) -> (Void))?
+    var renameProjFunc: ((KNOTProjectMoreViewController) -> (Void))?
+    var context: Any?
+    
+    @IBAction func deleteSwitchChanged(_ sender: UISwitch) {
+        sender.isEnabled = false
+        deleteProjFunc?(self)
+    }
+    
+    @IBAction func renameSwitchChanged(_ sender: UISwitch) {
+        sender.isEnabled = false
+        renameProjFunc?(self)
+    }
+}

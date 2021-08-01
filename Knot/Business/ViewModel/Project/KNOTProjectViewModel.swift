@@ -92,6 +92,25 @@ class KNOTProjectViewModel {
         return model.updateProject(viewModel.model)
     }
     
+    func deleteProj(at index: Int) -> Task<Void> {
+        let proj = projCellViewModelsSubject.value!.0![index].model
+        return model.deleteProject(proj).continueWith(.mainThread) { t in
+            if let e = t.error {
+                throw e
+            }
+            
+            var vms = self.projCellViewModelsSubject.value?.0 ?? []
+            if vms.isEmpty {
+                return
+            }
+            
+            if let index = vms.firstIndex(where: { $0.model == proj }) {
+                vms.remove(at: index)
+                self.projCellViewModelsSubject.publish((vms, .remove, [IndexPath(row: index, section: 0)]))
+            }
+        }
+    }
+    
     func detailViewModel(at index: Int) -> KNOTProjectDetailViewModel {
         let proj = projCellViewModelsSubject.value!.0![index].model
         let vm = KNOTProjectDetailViewModel(model: model.detailModel(with: proj))
@@ -107,6 +126,23 @@ class KNOTProjectViewModel {
         let vm = KNOTProjectPlanViewModel(model: model.plansModel(with: proj))
         vm.title = projVM.content
         return vm
+    }
+    
+    func moreViewModel(at index: Int) -> KNOTProjectMoreViewModel {
+        let projVM = projCellViewModelsSubject.value!.0![index]
+        let proj = projVM.model
+        let moreVM = KNOTProjectMoreViewModel(model: model.moreModel(with: proj))
+        moreVM.updateCompleteHandler = { [weak self] _ in
+            guard let self = self else {
+                return Task<Void>(())
+            }
+            
+            if let index = self.projCellViewModelsSubject.value?.0?.firstIndex(where: { $0.model == proj }) {
+                return self.updateProj(at: index)
+            }
+            return Task<Void>(())
+        }
+        return moreVM
     }
 }
 

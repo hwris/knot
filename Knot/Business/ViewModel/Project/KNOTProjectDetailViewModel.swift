@@ -6,7 +6,7 @@
 //  Copyright © 2021 SUYANG. All rights reserved.
 //
 
-import Foundation
+import BoltsSwift
 
 class KNOTProjectDetailViewModel: KNOTEditViewModel {
     private let model: KNOTProjectDetailModel
@@ -22,5 +22,14 @@ class KNOTProjectDetailViewModel: KNOTEditViewModel {
     
     func updateProjName(_ name: String) {
         model.project.name = name
+    }
+}
+
+class KNOTProjectMoreViewModel: KNOTEditViewModel {
+    private let model: KNOTProjectMoreModel
+    
+    override init(model: KNOTEditModel) {
+        self.model = model as! KNOTProjectMoreModel
+        super.init(model: model)
     }
 }
