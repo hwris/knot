@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C1ED8BF26BFEE040022F3FE /* KNOTSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ED8BE26BFEE040022F3FE /* KNOTSearchViewController.swift */; };
 		2C20A11F2676378300930AD6 /* KNOTProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C20A11E2676378300930AD6 /* KNOTProjectViewController.swift */; };
 		2C20A1222677252A00930AD6 /* KNOTEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C20A1212677252A00930AD6 /* KNOTEditViewController.swift */; };
 		2C20A1252677257D00930AD6 /* KNOTEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C20A1242677257D00930AD6 /* KNOTEditViewModel.swift */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		2102F71CEF1CE3F665BD4E5C /* Pods_Knot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Knot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2369AA372A2665998D89910D /* Pods-Knot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Knot.release.xcconfig"; path = "Target Support Files/Pods-Knot/Pods-Knot.release.xcconfig"; sourceTree = "<group>"; };
+		2C1ED8BE26BFEE040022F3FE /* KNOTSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTSearchViewController.swift; sourceTree = "<group>"; };
 		2C20A11E2676378300930AD6 /* KNOTProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTProjectViewController.swift; sourceTree = "<group>"; };
 		2C20A1212677252A00930AD6 /* KNOTEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTEditViewController.swift; sourceTree = "<group>"; };
 		2C20A1242677257D00930AD6 /* KNOTEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNOTEditViewModel.swift; sourceTree = "<group>"; };
@@ -133,6 +135,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C1ED8BD26BF7EF90022F3FE /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2C1ED8BE26BFEE040022F3FE /* KNOTSearchViewController.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		2C20A11D2676375500930AD6 /* Project */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,6 +274,7 @@
 				2CE792052430C94900975D99 /* KNOTHomeViewController.swift */,
 				2C20A1202677250500930AD6 /* Edit */,
 				2C80DD4C266C988A009DF2CB /* Plan */,
+				2C1ED8BD26BF7EF90022F3FE /* Search */,
 				2C20A11D2676375500930AD6 /* Project */,
 			);
 			path = View;
@@ -540,6 +551,7 @@
 				2C20A11F2676378300930AD6 /* KNOTProjectViewController.swift in Sources */,
 				2C45CE232691A4270043FEF5 /* KNOTProjectPlanViewController.swift in Sources */,
 				2CEBFD2D24270526008807E1 /* AppDelegate.swift in Sources */,
+				2C1ED8BF26BFEE040022F3FE /* KNOTSearchViewController.swift in Sources */,
 				2CF757DF248B3A2A00DC0276 /* KNOTPlanDetailModel.swift in Sources */,
 				2C7F261F244C4FC500F13299 /* KNOTPlanModel.swift in Sources */,
 				2C8BE053247BA88D0059423F /* KNOTPlanDetailViewModel.swift in Sources */,
