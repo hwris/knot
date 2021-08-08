@@ -437,3 +437,25 @@ protocol KNOTPickerViewModel {
     func didSelect(row: Int, inComponent component: Int)
     func confirmButtonDidClicked()
 }
+
+class KNOTNavigationController: UINavigationController, UIGestureRecognizerDelegate {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setNavigationBarHidden(true, animated: false)
+        interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
+}
+
+extension UIViewController {
+    @IBAction func backButtonClicked(_ sender: UIButton) {
+        if let _ = presentingViewController {
+            dismiss(animated: true, completion: nil)
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+}

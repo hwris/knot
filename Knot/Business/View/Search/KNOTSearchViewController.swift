@@ -25,10 +25,6 @@ class KNOTSearchViewController: UIViewController {
         searchTextField.resignFirstResponder()
         searchTextField.text = nil
     }
-    
-    @IBAction func backButtonClicked(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
-    }
 }
 
 extension KNOTSearchViewController: UITextFieldDelegate {

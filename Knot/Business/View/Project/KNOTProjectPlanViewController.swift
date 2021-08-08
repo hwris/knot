@@ -18,11 +18,6 @@ class KNOTProjectPlanViewController: KNOTDragAddViewController {
         titleLabel.text = viewModel.title
     }
     
-    @IBAction func backButtonClicked(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
