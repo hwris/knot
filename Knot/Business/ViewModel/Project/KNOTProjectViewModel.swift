@@ -69,7 +69,7 @@ class KNOTProjectViewModel {
         let proj = KNOTProjectEntity(priority: (highPriority + lowPriority) * 0.5,
                                      name: "",
                                      flagColor: KNOTFlagColor.blue.rawValue)
-        let detailModel = model.detailModel(with: proj)
+        let detailModel = model.projectDetailModel(with: proj)
         let detailViewModel = KNOTProjectDetailViewModel(model: detailModel)
         detailViewModel.updateCompleteHandler = { [weak self] _ in
             return (self?.updateProj(at: index, insert: proj) ?? Task(()))
@@ -113,7 +113,7 @@ class KNOTProjectViewModel {
     
     func detailViewModel(at index: Int) -> KNOTProjectDetailViewModel {
         let proj = projCellViewModelsSubject.value!.0![index].model
-        let vm = KNOTProjectDetailViewModel(model: model.detailModel(with: proj))
+        let vm = KNOTProjectDetailViewModel(model: model.projectDetailModel(with: proj))
         vm.updateCompleteHandler = { [weak self] _ in
             (self?.updateProj(at: index, insert: nil) ?? Task(()))
         }
@@ -123,7 +123,7 @@ class KNOTProjectViewModel {
     func plansViewModel(at index: Int) -> KNOTProjectPlanViewModel {
         let projVM = projCellViewModelsSubject.value!.0![index]
         let proj = projVM.model
-        let vm = KNOTProjectPlanViewModel(model: model.plansModel(with: proj))
+        let vm = KNOTProjectPlanViewModel(model: model.projectPlansModel(with: proj))
         vm.title = projVM.content
         return vm
     }
@@ -131,7 +131,7 @@ class KNOTProjectViewModel {
     func moreViewModel(at index: Int) -> KNOTProjectMoreViewModel {
         let projVM = projCellViewModelsSubject.value!.0![index]
         let proj = projVM.model
-        let moreVM = KNOTProjectMoreViewModel(model: model.moreModel(with: proj))
+        let moreVM = KNOTProjectMoreViewModel(model: model.projectMoreModel(with: proj))
         moreVM.updateCompleteHandler = { [weak self] _ in
             guard let self = self else {
                 return Task<Void>(())

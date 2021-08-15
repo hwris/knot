@@ -158,7 +158,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1339.1304347826087" y="92.410714285714278"/>
+            <point key="canvasLocation" x="429" y="92"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="fue-ce-hex">
@@ -278,6 +278,7 @@
                                         <connections>
                                             <outlet property="contentLabel" destination="KRB-ru-M88" id="33V-i2-FkB"/>
                                             <outlet property="countLabel" destination="4ds-5h-gic" id="CNc-nJ-JVm"/>
+                                            <segue destination="G1S-bC-Hgv" kind="presentation" identifier="proj" id="eMC-jQ-pSP"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="plan" id="Tak-jI-ts3" customClass="KNOTSearchPlanCell" customModule="Knot" customModuleProvider="target">
@@ -310,6 +311,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="contentLabel" destination="PFu-2g-GRx" id="dp2-hD-7JT"/>
+                                            <segue destination="owD-Bc-jJt" kind="presentation" identifier="plan" id="9k0-B7-1DX"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -354,7 +356,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dSf-6K-jLU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="428.98550724637687" y="863.83928571428567"/>
+            <point key="canvasLocation" x="429" y="827"/>
         </scene>
         <!--Plan-->
         <scene sceneID="ePr-1R-kyc">
@@ -665,7 +667,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mUc-0Z-d7e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2184.057971014493" y="91.741071428571431"/>
+            <point key="canvasLocation" x="1235" y="92"/>
         </scene>
         <!--Project-->
         <scene sceneID="nwY-QP-dqv">
@@ -877,18 +879,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4V6-7j-eTL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3034.7826086956525" y="420.53571428571428"/>
+            <point key="canvasLocation" x="2133" y="404"/>
         </scene>
         <!--Plan Detail View Controller-->
         <scene sceneID="Ijt-E4-O1Z">
             <objects>
                 <viewController modalPresentationStyle="overFullScreen" id="owD-Bc-jJt" customClass="KNOTPlanDetailViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fRa-dL-zMu">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="714"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DbJ-Mx-Vme" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="364" width="414" height="350"/>
+                                <rect key="frame" x="0.0" y="512" width="414" height="384"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Tvf-Gr-zOb">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
@@ -992,7 +994,7 @@
                                         </connections>
                                     </tableView>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6D7-Ik-n0F">
-                                        <rect key="frame" x="0.0" y="300" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="300" width="414" height="84"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1017,7 +1019,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fBQ-jn-ZvH" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="300" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="300" width="414" height="84"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Naf-mk-CLR">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -1135,7 +1137,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kCS-p3-KxY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3957.971014492754" y="-393.08035714285711"/>
+            <point key="canvasLocation" x="3048" y="-307"/>
         </scene>
         <!--Plan More View Controller-->
         <scene sceneID="xUw-uW-xr1">
@@ -1611,11 +1613,11 @@
             <objects>
                 <viewController modalPresentationStyle="overFullScreen" id="G1S-bC-Hgv" customClass="KNOTProjectDetailViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MdW-gi-Ozo">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="802"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RMn-gO-Eko" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="482" width="414" height="320"/>
+                                <rect key="frame" x="0.0" y="542" width="414" height="354"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5Ee-Fw-vst">
                                         <rect key="frame" x="20" y="20" width="374" height="250"/>
@@ -1636,7 +1638,7 @@
                                         </connections>
                                     </textView>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lG6-2T-azB">
-                                        <rect key="frame" x="0.0" y="270" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="84"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1661,7 +1663,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x9B-CI-ta3" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="270" width="414" height="50"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="84"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="3C7-wv-dNX">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -1770,7 +1772,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fc1-5g-lkJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2906" y="1094"/>
+            <point key="canvasLocation" x="2533" y="1125"/>
         </scene>
         <!--Plan-->
         <scene sceneID="5gy-rH-sl9">
@@ -1863,7 +1865,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfD-tj-xHy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3815.9420289855075" y="420.53571428571428"/>
+            <point key="canvasLocation" x="2954" y="404"/>
         </scene>
         <!--Plan View Controller-->
         <scene sceneID="Cn9-j0-dyd">
@@ -2051,7 +2053,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4bC-PR-m8d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4602.898550724638" y="420.53571428571428"/>
+            <point key="canvasLocation" x="3710" y="404"/>
         </scene>
         <!--Plan Picker View Controller-->
         <scene sceneID="H46-gk-9tb">
@@ -2315,7 +2317,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7dj-h1-Gps" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="3ER-3a-PkO"/>
             </objects>
-            <point key="canvasLocation" x="3693" y="997"/>
+            <point key="canvasLocation" x="4497" y="388"/>
         </scene>
         <!--Project Plan Picker View Controller-->
         <scene sceneID="0bT-0f-Rvc">
@@ -2420,7 +2422,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZNm-Wr-Z0j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="jQF-3R-7v8"/>
             </objects>
-            <point key="canvasLocation" x="4516" y="996"/>
+            <point key="canvasLocation" x="4496" y="1000"/>
         </scene>
         <!--Project More View Controller-->
         <scene sceneID="n6X-eH-7Bq">
@@ -2591,11 +2593,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TlO-U1-zwv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="428.98550724637687" y="92.410714285714278"/>
+            <point key="canvasLocation" x="-523" y="92"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="R5E-27-sdf"/>
+        <segue reference="eMC-jQ-pSP"/>
+        <segue reference="9k0-B7-1DX"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="ic_add" width="21" height="21"/>

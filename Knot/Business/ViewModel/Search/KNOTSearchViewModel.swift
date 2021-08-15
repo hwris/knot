@@ -79,4 +79,18 @@ class KNOTSearchViewModel {
         
         searchResult.publish(searchResultViewModel)
     }
+    
+    func planDetailViewModel(at indexPath: IndexPath) -> KNOTPlanDetailViewModel {
+        let vm = tableView(cellViewModelForRowAt: indexPath)
+        let plan = vm.model as! KNOTPlanEntity
+        let model = model.planDetailModel(with: plan)
+        return KNOTPlanDetailViewModel(model: model)
+    }
+    
+    func projDetailViewModel(at indexPath: IndexPath) -> KNOTProjectDetailViewModel {
+        let vm = tableView(cellViewModelForRowAt: indexPath)
+        let proj = vm.model as! KNOTProjectEntity
+        let model = model.projectDetailModel(with: proj)
+        return KNOTProjectDetailViewModel(model: model)
+    }
 }

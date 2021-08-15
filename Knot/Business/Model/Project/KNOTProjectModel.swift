@@ -13,7 +13,7 @@ protocol KNOTProjectModel {
     func loadProjects() -> Task<Void>
     func updateProject(_ proj: KNOTProjectEntity) -> Task<Void>
     func deleteProject(_ proj: KNOTProjectEntity) -> Task<Void>
-    func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel
-    func plansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel
-    func moreModel(with proj: KNOTProjectEntity) -> KNOTProjectMoreModel
+    func projectDetailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel
+    func projectPlansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel
+    func projectMoreModel(with proj: KNOTProjectEntity) -> KNOTProjectMoreModel
 }

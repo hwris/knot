@@ -10,6 +10,7 @@ import UIKit
 
 class KNOTSearchViewController: UIViewController {
     private var searchResultSubscription: Subscription<KNOTSearchViewModel.SearchResultViewModel>?
+    private var searchWorkItem: DispatchWorkItem?
     
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
@@ -34,6 +35,24 @@ class KNOTSearchViewController: UIViewController {
         searchTextField.resignFirstResponder()
         searchTextField.text = nil
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "plan" {
+            let cell = sender as! UITableViewCell
+            let indexPath = resultTableView.indexPath(for: cell)!
+            let vm = viewModel.planDetailViewModel(at: indexPath)
+            let vc = segue.destination as! KNOTPlanDetailViewController
+            vc.viewModel = vm
+        } else if segue.identifier == "proj" {
+            let cell = sender as! UITableViewCell
+            let indexPath = resultTableView.indexPath(for: cell)!
+            let vm = viewModel.projDetailViewModel(at: indexPath)
+            let vc = segue.destination as! KNOTProjectDetailViewController
+            vc.viewModel = vm
+        } else {
+            super .prepare(for: segue, sender: sender)
+        }
+    }
 }
 
 extension KNOTSearchViewController: UITextFieldDelegate {
@@ -41,7 +60,12 @@ extension KNOTSearchViewController: UITextFieldDelegate {
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
         let text = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-        viewModel.search(with: text)
+        searchWorkItem?.cancel()
+        let searchWorkItem = DispatchWorkItem { [weak self] in
+            self?.viewModel.search(with: text)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: searchWorkItem)
+        self.searchWorkItem = searchWorkItem
         return true
     }
     

@@ -359,11 +359,11 @@ extension KNOTModelImpl: KNOTProjectModel {
         return deleteProjectRecord(proj)
     }
     
-    func detailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
+    func projectDetailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
         proj
     }
     
-    func plansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel {
+    func projectPlansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel {
         class PlansModelImpl: KNOTPlanModel {
             private let knotModelImpl: KNOTModelImpl
             private let proj: KNOTProjectEntity
@@ -430,7 +430,7 @@ extension KNOTModelImpl: KNOTProjectModel {
         return PlansModelImpl(knotModelImpl: self, proj: proj)
     }
     
-    func moreModel(with proj: KNOTProjectEntity) -> KNOTProjectMoreModel {
+    func projectMoreModel(with proj: KNOTProjectEntity) -> KNOTProjectMoreModel {
         proj
     }
     
