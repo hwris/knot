@@ -75,63 +75,18 @@ class KNOTPlanViewModel {
                                   content: "",
                                   flagColor: KNOTFlagColor.blue.rawValue)
         let detailModel = model.planDetailModel(with: plan)
-        let detailViewModel = KNOTPlanDetailViewModel(model: detailModel)
-        detailViewModel.updateCompleteHandler = { [weak self] _ in
-            return self?.updatePlan(at: index, insert: plan) ?? Task(())
-        }
-        return detailViewModel
+        return KNOTPlanDetailViewModel(model: detailModel)
     }
     
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
         let plan = itemsSubject.value!.0![index].model
-        let detailViewModel = KNOTPlanDetailViewModel(model: model.planDetailModel(with: plan))
-        detailViewModel.updateCompleteHandler = { [weak self] _ in
-            return self?.updatePlan(at: index, insert: nil) ?? Task(())
-        }
-        return detailViewModel
+        let detailModel = model.planDetailModel(with: plan)
+        return KNOTPlanDetailViewModel(model: detailModel)
     }
     
     func moreViewModel(at index: Int) -> KNOTPlanMoreViewModel {
         let plan = itemsSubject.value!.0![index].model
-        let moreViewModel = KNOTPlanMoreViewModel(model: model.planMoreModel(with: plan))
-        moreViewModel.updateCompleteHandler = { [weak self] _ in
-            return (self?.updatePlan(at: index, insert: nil) ?? Task(()))
-        }
-        moreViewModel.deletePlanFunc = { [weak self] _ in
-            guard let s = self else {
-                return Task(())
-            }
-            
-            let t = s.model.deletePlan(plan)
-            return t.continueWith(.mainThread, continuation: { t in
-                if let e = t.error {
-                    throw e
-                }
-                
-                var planViewModels = s.itemsSubject.value?.0 ?? []
-                if planViewModels.isEmpty {
-                    return
-                }
-                planViewModels.remove(at: index)
-                s.itemsSubject.publish((planViewModels, .remove, [IndexPath(row: index, section: 0)]))
-            })
-        }
-        return moreViewModel
-    }
-    
-    private func updatePlan(at index: Int, insert _plan: KNOTPlanEntity? = nil) -> Task<Void> {
-        var planViewModels = itemsSubject.value?.0 ?? []
-        var itemViewModel: KNOTPlanItemViewModel!
-        if let plan = _plan {
-            itemViewModel = planItemViewModel(model: plan)
-            planViewModels.insert(itemViewModel, at: index)
-            itemsSubject.publish((planViewModels, .insert, [IndexPath(row: index, section: 0)]))
-        } else {
-            itemViewModel = planViewModels[index]
-            itemViewModel.refresh()
-            itemsSubject.publish((planViewModels, .update, [IndexPath(row: index, section: 0)]))
-        }
-        return model.updatePlan(itemViewModel.model)
+        return KNOTPlanMoreViewModel(model: model.planMoreModel(with: plan))
     }
 }
 

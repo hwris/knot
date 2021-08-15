@@ -10,11 +10,12 @@ import BoltsSwift
 
 protocol KNOTPlanDetailModel: KNOTEditModel {
     var plan: KNOTPlanEntity { get }
+    func updatePlan() -> Task<Void>
 }
 
-protocol KNOTPlanMoreModel: KNOTEditModel {
-    var plan: KNOTPlanEntity { get }
+protocol KNOTPlanMoreModel: KNOTPlanDetailModel {
     var syncToProjModel: KNOTPlanSyncToProjModel { get }
+    func deletePlan() -> Task<Void>
 }
 
 protocol KNOTPlanSyncToProjModel {

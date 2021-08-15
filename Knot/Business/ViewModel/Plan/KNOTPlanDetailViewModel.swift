@@ -48,6 +48,10 @@ class KNOTPlanDetailViewModel: KNOTEditViewModel {
         items[srcIndex] = items[dstIndex]
         items[dstIndex] = tempPlanItemVM
     }
+    
+    override func update() -> Task<Void> {
+        model.updatePlan()
+    }
 }
 
 class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
@@ -62,7 +66,6 @@ class KNOTPlanDetailItemViewModel: KNOTPlanItemItemViewModel {
 
 class KNOTPlanMoreViewModel: KNOTEditViewModel {
     let model: KNOTPlanMoreModel
-    var deletePlanFunc: ((KNOTPlanMoreViewModel) -> Task<Void>)?
     let isRepeatSwitchOnSubject: Subject<Bool>
     let isReminderSwitchOnSubject: Subject<Bool>
     
@@ -96,11 +99,15 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
     }
     
     var syncToProjViewModel: KNOTPickerViewModel {
-        return KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
+        KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
+    }
+    
+    override func update() -> Task<Void> {
+        model.updatePlan()
     }
     
     func deletePlan() -> Task<Void> {
-        return deletePlanFunc?(self) ?? Task(())
+        model.deletePlan()
     }
 }
 

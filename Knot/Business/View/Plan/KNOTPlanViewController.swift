@@ -21,18 +21,7 @@ class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel>,
         super.viewDidLoad()
         itemsSubscription?.cancel()
         itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (arg0, _) in
-            guard let (_, action, indexPaths) = arg0 else {
-                return
-            }
-            
-            switch action {
-            case .reset:
-                self?.tableView.reloadData()
-            case .remove:
-                self?.tableView.deleteRows(at: indexPaths ?? [], with: .automatic)
-            case .update, .insert:
-                self?.tableView.reloadRows(at: indexPaths ?? [], with: .automatic)
-            }
+            self?.tableView.reloadData()
         })
         
         loadItems(at: Date())

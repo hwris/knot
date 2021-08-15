@@ -33,6 +33,8 @@ class KNOTEditViewModel {
         let t = updateCompleteHandler(self)
         self.updateCompleteHandler = nil
         return t
+        
+//        fatalError("Should implement by subclass")
     }
 }
 
