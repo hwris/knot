@@ -22,6 +22,10 @@ class KNOTViewModel {
     var projectViewModel: KNOTProjectViewModel {
         return KNOTProjectViewModel(model: model.projectModel)
     }
+    
+    var searchViewModel: KNOTSearchViewModel {
+        return KNOTSearchViewModel(model: model.searchModel)
+    }
 }
 
 extension KNOTViewModel {

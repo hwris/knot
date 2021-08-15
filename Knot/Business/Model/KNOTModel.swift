@@ -11,4 +11,5 @@ import Foundation
 protocol KNOTModel {
     var planModel: KNOTPlanModel { get }
     var projectModel: KNOTProjectModel { get }
+    var searchModel: KNOTSearchModel { get }
 }

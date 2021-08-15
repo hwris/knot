@@ -24,6 +24,7 @@ private class KNOTModelImpl: KNOTModel {
     
     var planModel: KNOTPlanModel { self }
     var projectModel: KNOTProjectModel { self }
+    var searchModel: KNOTSearchModel { self }
     
     private func loadData() -> Task<Void> {
         if let loadTask = self.loadTask {
@@ -453,6 +454,19 @@ extension KNOTModelImpl: KNOTProjectModel {
         proj.plans?.append(plan)
         plan.project = proj
         return true
+    }
+}
+
+extension KNOTModelImpl: KNOTSearchModel {
+    func search(with text: String) -> ([KNOTPlanEntity], [KNOTProjectEntity]) {
+        let planResult = plansSubject.value?.0?.filter {
+            $0.content.contains(text) ||
+                (($0.items?.contains(where: { $0.content.contains(text) })) == true)
+        }
+        let projResult = projectsSubject.value?.0?.filter {
+            $0.name.contains(text)
+        }
+        return (planResult ?? [], projResult ?? [])
     }
 }
 

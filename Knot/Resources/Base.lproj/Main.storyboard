@@ -120,7 +120,7 @@
                                 </constraints>
                                 <state key="normal" image="ic_search"/>
                                 <connections>
-                                    <segue destination="0dk-W7-4cv" kind="show" id="d9W-Dg-721"/>
+                                    <segue destination="0dk-W7-4cv" kind="show" identifier="search" id="d9W-Dg-721"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -228,7 +228,7 @@
                                 <rect key="frame" x="0.0" y="110" width="414" height="752"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="proj" id="fgt-lJ-VnP">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="proj" id="fgt-lJ-VnP" customClass="KNOTSearchProjCell" customModule="Knot" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fgt-lJ-VnP" id="CrT-43-m0l">
@@ -275,8 +275,12 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="contentLabel" destination="KRB-ru-M88" id="33V-i2-FkB"/>
+                                            <outlet property="countLabel" destination="4ds-5h-gic" id="CNc-nJ-JVm"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="plan" id="Tak-jI-ts3">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="plan" id="Tak-jI-ts3" customClass="KNOTSearchPlanCell" customModule="Knot" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="68.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Tak-jI-ts3" id="pVr-4H-IaB">
@@ -304,37 +308,15 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="title" id="I5c-pE-o4u">
-                                        <rect key="frame" x="0.0" y="112.5" width="414" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="I5c-pE-o4u" id="cPi-IA-EF5">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpW-q1-Oed">
-                                                    <rect key="frame" x="21" y="0.0" width="372" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" red="0.32156862745098036" green="0.46274509803921571" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="darkTextColor">
-                                                            <color key="value" white="1" alpha="0.87" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="UpW-q1-Oed" firstAttribute="leading" secondItem="cPi-IA-EF5" secondAttribute="leading" constant="21" id="BYu-tu-cKT"/>
-                                                <constraint firstItem="UpW-q1-Oed" firstAttribute="top" secondItem="cPi-IA-EF5" secondAttribute="top" id="FCY-Dh-bhk"/>
-                                                <constraint firstAttribute="bottom" secondItem="UpW-q1-Oed" secondAttribute="bottom" id="ZfT-Dm-DAR"/>
-                                                <constraint firstAttribute="trailing" secondItem="UpW-q1-Oed" secondAttribute="trailing" constant="21" id="qxh-ab-TUE"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="contentLabel" destination="PFu-2g-GRx" id="dp2-hD-7JT"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="0dk-W7-4cv" id="PTz-Qi-EY9"/>
+                                    <outlet property="delegate" destination="0dk-W7-4cv" id="yp2-Pr-eub"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="sMb-R7-yKe"/>

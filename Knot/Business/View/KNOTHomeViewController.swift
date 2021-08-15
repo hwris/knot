@@ -54,6 +54,15 @@ class KNOTHomeViewController: KNOTDragAddViewController {
             projVC.viewModel = viewModel.projectViewModel
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "search" {
+            let vc = segue.destination as! KNOTSearchViewController
+            vc.viewModel = viewModel.searchViewModel
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
 }
 
 class KNOTDragAddButton: KNOTButton {
