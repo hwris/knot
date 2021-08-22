@@ -23,6 +23,11 @@ class KNOTEntityBase: Equatable {
         _ckRecord = record
     }
     
+    init(entity: KNOTEntityBase) {
+        id = entity.id
+        _ckRecord = entity._ckRecord?.copy() as? CKRecord
+    }
+    
     var ckRecordID: CKRecord.ID {
         return _ckRecord?.recordID ?? CKRecord.ID(recordName: id)
     }
@@ -42,6 +47,10 @@ class KNOTEntityBase: Equatable {
     
     static func == (lhs: KNOTEntityBase, rhs: KNOTEntityBase) -> Bool {
         return lhs.id == rhs.id
+    }
+    
+    func isAbsolutelyEqual(_ other: KNOTEntityBase) -> Bool {
+        return self == other
     }
 }
 
@@ -66,6 +75,13 @@ class KNOTProjectEntity: KNOTEntityBase {
         super.init(from: record)
     }
     
+    init(entity: KNOTProjectEntity) {
+        priority = entity.priority
+        name = entity.name
+        flagColor = entity.flagColor
+        super.init(entity: entity)
+    }
+    
     override var ckRecord: CKRecord {
         get {
             let record = super.ckRecord
@@ -84,10 +100,21 @@ class KNOTProjectEntity: KNOTEntityBase {
     override class var recordType: CKRecord.RecordType {
         return "Project"
     }
+    
+    override func isAbsolutelyEqual(_ other: KNOTEntityBase) -> Bool {
+        guard super.isAbsolutelyEqual(other), let otherProj = other as? KNOTProjectEntity else {
+            return false
+        }
+        
+        return
+            priority == otherProj.priority &&
+            name == otherProj.name &&
+            flagColor == otherProj.flagColor
+    }
 }
 
 class KNOTPlanEntity: KNOTEntityBase {   
-    struct Repeat {
+    struct Repeat: Equatable {
         enum Type_: Int, CaseIterable { case Day, Week, Month, Year}
         var interval: Int
         var type: Type_
@@ -129,6 +156,19 @@ class KNOTPlanEntity: KNOTEntityBase {
         super.init(from: record)
     }
     
+    init(entity: KNOTPlanEntity) {
+        remindDate = entity.remindDate
+        priority = entity.priority
+        content = entity.content
+        flagColor = entity.flagColor
+        items = entity.items?.map({ KNOTPlanItemEntity(entity: $0) })
+        isDone = entity.isDone
+        remindTime = entity.remindTime
+        `repeat` = entity.repeat
+        project = entity.project
+        super.init(entity: entity)
+    }
+    
     override var ckRecord: CKRecord {
         get {
             let record = super.ckRecord
@@ -153,6 +193,37 @@ class KNOTPlanEntity: KNOTEntityBase {
     override class var recordType: CKRecord.RecordType {
         return "Plan"
     }
+    
+    override func isAbsolutelyEqual(_ other: KNOTEntityBase) -> Bool {
+        guard super.isAbsolutelyEqual(other), let otherPlan = other as? KNOTPlanEntity else {
+            return false
+        }
+        
+        if items?.count != otherPlan.items?.count {
+            return false
+        }
+        
+        for item in items ?? [] {
+            guard let otherItem = otherPlan.items?.first(where: { $0 == item }) else {
+                return false
+            }
+            
+            if !item.isAbsolutelyEqual(otherItem) {
+                return false
+            }
+        }
+        
+        return
+            remindDate == otherPlan.remindDate &&
+            priority == otherPlan.priority &&
+            content == otherPlan.content &&
+            flagColor == otherPlan.flagColor &&
+            isDone == otherPlan.isDone &&
+            remindTime == otherPlan.remindTime &&
+            `repeat` == otherPlan.repeat &&
+            project == otherPlan.project
+        
+    }
 }
 
 class KNOTPlanItemEntity: KNOTEntityBase {
@@ -171,6 +242,12 @@ class KNOTPlanItemEntity: KNOTEntityBase {
         super.init(from: record)
     }
     
+    init(entity: KNOTPlanItemEntity) {
+        content = entity.content
+        isDone = entity.isDone
+        super.init(entity: entity)
+    }
+    
     override var ckRecord: CKRecord {
         get {
             let record = super.ckRecord
@@ -186,5 +263,15 @@ class KNOTPlanItemEntity: KNOTEntityBase {
     
     override class var recordType: CKRecord.RecordType {
         return "PlanItem"
+    }
+    
+    override func isAbsolutelyEqual(_ other: KNOTEntityBase) -> Bool {
+        guard super.isAbsolutelyEqual(other), let otherItem = other as? KNOTPlanItemEntity else {
+            return false
+        }
+        
+        return
+            content == otherItem.content &&
+            isDone == otherItem.isDone
     }
 }

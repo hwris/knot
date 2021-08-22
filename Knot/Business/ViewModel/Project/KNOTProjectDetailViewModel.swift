@@ -37,11 +37,11 @@ class KNOTProjectMoreViewModel: KNOTEditViewModel {
         super.init(model: model)
     }
     
-    override func update() -> Task<Void> {
-        return Task(())
-    }
-    
     func deleteProj() -> Task<Void> {
         model.deleteProject()
+    }
+    
+    override func update() -> Task<Void> {
+        model.updateProject()
     }
 }

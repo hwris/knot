@@ -15,5 +15,6 @@ protocol KNOTProjectDetailModel: KNOTEditModel {
 
 protocol KNOTProjectMoreModel: KNOTEditModel {
     var project: KNOTProjectEntity { get }
+    func updateProject() -> Task<Void>
     func deleteProject() -> Task<Void>
 }

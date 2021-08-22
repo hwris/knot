@@ -35,7 +35,12 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
     }
     
     override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
-        //todo: 判断下有没有更新
+        if !viewModel.needUpdate {
+            completion()
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
         viewModel.update().continueWith(.mainThread) {
             if let error = $0.error {
                 assert(false, error.localizedDescription)

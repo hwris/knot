@@ -464,10 +464,12 @@ extension KNOTModelImpl: KNOTSearchModel {
 }
 
 private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
+    let originPlan: KNOTPlanEntity
     let plan: KNOTPlanEntity
     fileprivate let knotModel: KNOTModelImpl
     
     init(plan: KNOTPlanEntity, knotModel: KNOTModelImpl) {
+        originPlan = KNOTPlanEntity(entity: plan)
         self.plan = plan
         self.knotModel = knotModel
     }
@@ -484,6 +486,10 @@ private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
     
     func updatePlan() -> Task<Void> {
         knotModel.updatePlan(plan)
+    }
+    
+    var needUpdate: Bool {
+        originPlan.isAbsolutelyEqual(plan) == false
     }
 }
 
@@ -522,10 +528,12 @@ private class KNOTPlanMoreModelImpl: KNOTPlanDetailModelImpl,
 }
 
 private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMoreModel {
+    let originProject: KNOTProjectEntity
     let project: KNOTProjectEntity
     fileprivate let knotModel: KNOTModelImpl
     
     init(project: KNOTProjectEntity, knotModel: KNOTModelImpl) {
+        originProject = KNOTProjectEntity(entity: project)
         self.project = project
         self.knotModel = knotModel
     }
@@ -546,6 +554,10 @@ private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMor
     
     func deleteProject() -> Task<Void> {
         knotModel.deleteProject(project)
+    }
+    
+    var needUpdate: Bool {
+        originProject.isAbsolutelyEqual(project) == false
     }
 }
 
