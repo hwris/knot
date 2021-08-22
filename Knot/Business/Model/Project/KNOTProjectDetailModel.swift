@@ -10,7 +10,10 @@ import BoltsSwift
 
 protocol KNOTProjectDetailModel: KNOTEditModel {
     var project: KNOTProjectEntity { get }
+    func updateProject() -> Task<Void>
 }
 
 protocol KNOTProjectMoreModel: KNOTEditModel {
+    var project: KNOTProjectEntity { get }
+    func deleteProject() -> Task<Void>
 }

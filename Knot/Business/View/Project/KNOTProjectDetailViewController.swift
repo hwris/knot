@@ -31,13 +31,21 @@ extension KNOTProjectDetailViewController: UITextViewDelegate {
 }
 
 class KNOTProjectMoreViewController: KNOTEditViewController<KNOTProjectMoreViewModel>  {
-    var deleteProjFunc: ((KNOTProjectMoreViewController) -> (Void))?
     var renameProjFunc: ((KNOTProjectMoreViewController) -> (Void))?
     var context: Any?
     
     @IBAction func deleteSwitchChanged(_ sender: UISwitch) {
         sender.isEnabled = false
-        deleteProjFunc?(self)
+        //todo: 加上提示
+        viewModel.deleteProj().continueWith { [weak self] (t) in
+            if let e = t.error {
+                assert(false, e.localizedDescription)
+                //todo: handle error
+                sender.isEnabled = true
+                return
+            }
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
     
     @IBAction func renameSwitchChanged(_ sender: UISwitch) {

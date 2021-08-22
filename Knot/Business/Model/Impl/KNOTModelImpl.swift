@@ -362,7 +362,7 @@ extension KNOTModelImpl: KNOTProjectModel {
     }
     
     func projectDetailModel(with proj: KNOTProjectEntity) -> KNOTProjectDetailModel {
-        proj
+        KNOTProjectDetailModelImpl(project: proj, knotModel: self)
     }
     
     func projectPlansModel(with proj: KNOTProjectEntity) -> KNOTPlanModel {
@@ -430,7 +430,7 @@ extension KNOTModelImpl: KNOTProjectModel {
     }
     
     func projectMoreModel(with proj: KNOTProjectEntity) -> KNOTProjectMoreModel {
-        proj
+        KNOTProjectDetailModelImpl(project: proj, knotModel: self)
     }
     
     fileprivate func sync(_ plan: KNOTPlanEntity, to proj: KNOTProjectEntity) -> Task<Void> {
@@ -527,9 +527,31 @@ private class KNOTPlanMoreModelImpl: KNOTPlanDetailModelImpl,
     }
 }
 
-extension KNOTProjectEntity: KNOTProjectDetailModel, KNOTProjectMoreModel {
-    var project: KNOTProjectEntity {
-        return self
+private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMoreModel {
+    let project: KNOTProjectEntity
+    fileprivate let knotModel: KNOTModelImpl
+    
+    init(project: KNOTProjectEntity, knotModel: KNOTModelImpl) {
+        self.project = project
+        self.knotModel = knotModel
+    }
+    
+    var flagColor: UInt32 {
+        get {
+            return project.flagColor
+        }
+        
+        set {
+            project.flagColor = newValue
+        }
+    }
+    
+    func updateProject() -> Task<Void> {
+        knotModel.updateProject(project)
+    }
+    
+    func deleteProject() -> Task<Void> {
+        knotModel.deleteProject(project)
     }
 }
 

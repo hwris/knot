@@ -23,6 +23,10 @@ class KNOTProjectDetailViewModel: KNOTEditViewModel {
     func updateProjName(_ name: String) {
         model.project.name = name
     }
+    
+    override func update() -> Task<Void> {
+        model.updateProject()
+    }
 }
 
 class KNOTProjectMoreViewModel: KNOTEditViewModel {
@@ -31,5 +35,13 @@ class KNOTProjectMoreViewModel: KNOTEditViewModel {
     override init(model: KNOTEditModel) {
         self.model = model as! KNOTProjectMoreModel
         super.init(model: model)
+    }
+    
+    override func update() -> Task<Void> {
+        return Task(())
+    }
+    
+    func deleteProj() -> Task<Void> {
+        model.deleteProject()
     }
 }

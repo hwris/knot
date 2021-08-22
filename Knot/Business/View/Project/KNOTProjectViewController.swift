@@ -18,18 +18,7 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
     override func viewDidLoad() {
         cellsSubscription?.cancel()
         cellsSubscription = viewModel.projCellViewModelsSubject.listen({ [weak self] (arg0, _) in
-            guard let (_, action, indexPaths) = arg0 else {
-                return
-            }
-            
-            switch action {
-            case .reset:
-                self?.tableView.reloadData()
-            case .remove:
-                self?.tableView.deleteRows(at: indexPaths ?? [], with: .automatic)
-            case .update, .insert:
-                self?.tableView.reloadRows(at: indexPaths ?? [], with: .automatic)
-            }
+            self?.tableView.reloadData()
         })
         
         viewModel.loadProjs().continueOnErrorWith {
@@ -73,22 +62,8 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
             let index = (tableView.indexPath(for: cell as! UITableViewCell)?.row)!
             let moreVC = segue.destination as! KNOTProjectMoreViewController
             moreVC.viewModel = viewModel.moreViewModel(at: index)
-            moreVC.deleteProjFunc = deleteProj
             moreVC.renameProjFunc = renameProj
             moreVC.context = index
-        }
-    }
-    
-    private func deleteProj(_ sender: KNOTProjectMoreViewController) {
-        let index = sender.context as! Int
-        //todo: 加上提示
-        viewModel.deleteProj(at: index).continueWith { [weak sender] (t) in
-            if let e = t.error {
-                assert(false, e.localizedDescription)
-                //todo: handle error
-                return
-            }
-            sender?.dismiss(animated: true, completion: nil)
         }
     }
     

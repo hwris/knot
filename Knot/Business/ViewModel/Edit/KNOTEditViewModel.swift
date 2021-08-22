@@ -11,7 +11,6 @@ import BoltsSwift
 class KNOTEditViewModel {
     private let flagColors = [ KNOTFlagColor.blue, .red, .yellow ]
     private var model: KNOTEditModel
-    var updateCompleteHandler: ((KNOTEditViewModel) -> Task<Void>)?
     
     init(model: KNOTEditModel) {
         self.model = model
@@ -26,15 +25,7 @@ class KNOTEditViewModel {
     }
     
     func update() -> Task<Void> {
-        guard let updateCompleteHandler = self.updateCompleteHandler else {
-            return Task(())
-        }
-        
-        let t = updateCompleteHandler(self)
-        self.updateCompleteHandler = nil
-        return t
-        
-//        fatalError("Should implement by subclass")
+        fatalError("Should implement by subclass")
     }
 }
 
