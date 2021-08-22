@@ -40,7 +40,7 @@ class KNOTProjectPlanMoreViewController: KNOTPlanMoreViewController {
             hideView()
             let VC = segue.destination as! KNOTProjectPlanPickerViewController
             VC.completion = showView
-            VC.viewModel = viewModel.syncToPlanViewModel
+            VC.viewModel = (viewModel as! KNOTProjectPlanMoreViewModel).syncToPlanViewModel
         } else {
             super.prepare(for: segue, sender: sender)
         }

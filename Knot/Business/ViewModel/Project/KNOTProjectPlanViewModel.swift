@@ -10,9 +10,14 @@ import BoltsSwift
 
 class KNOTProjectPlanViewModel: KNOTPlanViewModel {
     var title: String?
+    
+    override func moreViewModel(at index: Int) -> KNOTPlanMoreViewModel {
+        let mode = super.moreViewModel(at: index).model
+        return KNOTProjectPlanMoreViewModel(model: mode)
+    }
 }
 
-extension KNOTPlanMoreViewModel {
+class KNOTProjectPlanMoreViewModel: KNOTPlanMoreViewModel {
     var syncToPlanViewModel: KNOTProjectSyncToPlanViewModel {
         let model = (model as! KNOTProjectPlanMoreModel).syncToPlanModel
         return KNOTProjectSyncToPlanViewModel(model: model)
