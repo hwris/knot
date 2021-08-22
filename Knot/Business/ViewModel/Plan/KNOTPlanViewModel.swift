@@ -11,15 +11,14 @@ import BoltsSwift
 
 class KNOTPlanViewModel {
     private let model: KNOTPlanModel
-    private var plansSubscription: Subscription<ArraySubscription<KNOTPlanEntity>>?
+    private var plansSubscription: Subscription<[KNOTPlanEntity]>?
     private var selectedDate = Date()
-    let itemsSubject = Subject<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>()
+    let itemsSubject = Subject<[KNOTPlanItemViewModel]>()
     
     init(model: KNOTPlanModel) {
         self.model = model
-        plansSubscription = model.plansSubject.listen({ [weak self] (newValue, _) in
-            let plans = newValue?.0 ?? []
-            self?.publishPlans(plans)
+        plansSubscription = model.plansSubject.listen({ [weak self] (plans, _) in
+            self?.publishPlans(plans ?? [])
         })
     }
     
@@ -32,7 +31,7 @@ class KNOTPlanViewModel {
         let items = model.plans(onDay: selectedDate)
             .sorted(by: { $0.priority > $1.priority })
             .map({ planItemViewModel(model: $0) })
-        itemsSubject.publish((items, .reset, nil))
+        itemsSubject.publish(items)
     }
     
     private func planItemViewModel(model: KNOTPlanEntity) -> KNOTPlanItemViewModel {
@@ -54,14 +53,14 @@ class KNOTPlanViewModel {
         }
         
         selectedDate = date
-        publishPlans(plans.0)
+        publishPlans(plans)
         return Task(())
     }
     
     func insertPlan(at index: Int) -> KNOTPlanDetailViewModel {
         var highPriority = Double.greatestFiniteMagnitude
         var lowPriority = Double.leastNormalMagnitude
-        if let planViewModels = itemsSubject.value?.0 {
+        if let planViewModels = itemsSubject.value {
             if index < planViewModels.endIndex {
                 lowPriority = planViewModels[index].model.priority
             }
@@ -79,13 +78,13 @@ class KNOTPlanViewModel {
     }
     
     func planDetailViewModel(at index: Int) -> KNOTPlanDetailViewModel {
-        let plan = itemsSubject.value!.0![index].model
+        let plan = itemsSubject.value![index].model
         let detailModel = model.planDetailModel(with: plan)
         return KNOTPlanDetailViewModel(model: detailModel)
     }
     
     func moreViewModel(at index: Int) -> KNOTPlanMoreViewModel {
-        let plan = itemsSubject.value!.0![index].model
+        let plan = itemsSubject.value![index].model
         return KNOTPlanMoreViewModel(model: model.planMoreModel(with: plan))
     }
 }

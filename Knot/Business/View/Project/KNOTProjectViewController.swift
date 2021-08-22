@@ -13,11 +13,11 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
     fileprivate let planSegueId = "plan"
     fileprivate let moreSegueId = "more"
     
-    private var cellsSubscription: Subscription<ArrayIndexPathSubscription<KNOTProjectCellViewModel>>?
+    private var cellsSubscription: Subscription<[KNOTProjectCellViewModel]>?
     
     override func viewDidLoad() {
         cellsSubscription?.cancel()
-        cellsSubscription = viewModel.projCellViewModelsSubject.listen({ [weak self] (arg0, _) in
+        cellsSubscription = viewModel.projCellViewModelsSubject.listen({ [weak self] (_, _) in
             self?.tableView.reloadData()
         })
         
@@ -33,12 +33,12 @@ class KNOTProjectViewController: KNOTDragAddTableViewController<KNOTProjectViewM
     }
     
     override var numberOfDateRows: Int {
-        return viewModel.projCellViewModelsSubject.value?.0?.count ?? 0
+        return viewModel.projCellViewModelsSubject.value?.count ?? 0
     }
     
     override func dataCell(_ cell: UITableViewCell, didDequeuedAtRow indexPath: IndexPath) {
         let projCell = cell as! KNOTProjectCell
-        projCell.viewModel = (viewModel.projCellViewModelsSubject.value?.0)![indexPath.row]
+        projCell.viewModel = (viewModel.projCellViewModelsSubject.value)![indexPath.row]
     }
     
     override func emptyCellDidInsert(at indexPath: IndexPath) {

@@ -10,14 +10,13 @@ import BoltsSwift
 
 class KNOTProjectViewModel {
     private let model: KNOTProjectModel
-    private var projsSubscription: Subscription<ArraySubscription<KNOTProjectEntity>>?
-    let projCellViewModelsSubject = Subject<ArrayIndexPathSubscription<KNOTProjectCellViewModel>>()
+    private var projsSubscription: Subscription<[KNOTProjectEntity]>?
+    let projCellViewModelsSubject = Subject<[KNOTProjectCellViewModel]>()
     
     init(model: KNOTProjectModel) {
         self.model = model
-        projsSubscription = self.model.projectsSubject.listen({ [weak self] new, old in
-            let projs = new?.0 ?? []
-            self?.publishProjs(projs)
+        projsSubscription = self.model.projectsSubject.listen({ [weak self] (projs, _) in
+            self?.publishProjs(projs ?? [])
         })
     }
     
@@ -29,7 +28,7 @@ class KNOTProjectViewModel {
     private func publishProjs(_ projs: [KNOTProjectEntity]) {
         let projCellViewModels = projs.sorted(by: { $0.priority > $1.priority })
             .map({ KNOTProjectCellViewModel(model: $0) })
-        projCellViewModelsSubject.publish((projCellViewModels, .reset, nil))
+        projCellViewModelsSubject.publish(projCellViewModels)
     }
     
     func loadProjs() -> Task<Void> {
@@ -39,7 +38,7 @@ class KNOTProjectViewModel {
     func insertProj(at index: Int) -> KNOTProjectDetailViewModel {
         var highPriority = Double.greatestFiniteMagnitude
         var lowPriority = Double.leastNormalMagnitude
-        if let projViewModels = projCellViewModelsSubject.value?.0 {
+        if let projViewModels = projCellViewModelsSubject.value {
             if index < projViewModels.endIndex {
                 lowPriority = projViewModels[index].model.priority
             }
@@ -56,12 +55,12 @@ class KNOTProjectViewModel {
     }
     
     func detailViewModel(at index: Int) -> KNOTProjectDetailViewModel {
-        let proj = projCellViewModelsSubject.value!.0![index].model
+        let proj = projCellViewModelsSubject.value![index].model
         return KNOTProjectDetailViewModel(model: model.projectDetailModel(with: proj))
     }
     
     func plansViewModel(at index: Int) -> KNOTProjectPlanViewModel {
-        let projVM = projCellViewModelsSubject.value!.0![index]
+        let projVM = projCellViewModelsSubject.value![index]
         let proj = projVM.model
         let vm = KNOTProjectPlanViewModel(model: model.projectPlansModel(with: proj))
         vm.title = projVM.content
@@ -69,7 +68,7 @@ class KNOTProjectViewModel {
     }
     
     func moreViewModel(at index: Int) -> KNOTProjectMoreViewModel {
-        let proj = projCellViewModelsSubject.value!.0![index].model
+        let proj = projCellViewModelsSubject.value![index].model
         return KNOTProjectMoreViewModel(model: model.projectMoreModel(with: proj))
     }
 }

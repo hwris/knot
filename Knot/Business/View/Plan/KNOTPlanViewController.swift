@@ -15,12 +15,12 @@ class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel>,
     fileprivate let detailSegueId = "detail"
     fileprivate let moreSegueId = "more"
     
-    private var itemsSubscription: Subscription<ArrayIndexPathSubscription<KNOTPlanItemViewModel>>?
+    private var itemsSubscription: Subscription<[KNOTPlanItemViewModel]>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         itemsSubscription?.cancel()
-        itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (arg0, _) in
+        itemsSubscription = viewModel.itemsSubject.listen({ [weak self] (_, _) in
             self?.tableView.reloadData()
         })
         
@@ -41,12 +41,12 @@ class KNOTPlanViewController: KNOTDragAddTableViewController<KNOTPlanViewModel>,
     }
     
     override var numberOfDateRows: Int {
-        return viewModel?.itemsSubject.value?.0?.count ?? 0;
+        return viewModel?.itemsSubject.value?.count ?? 0;
     }
     
     override func dataCell(_ cell: UITableViewCell, didDequeuedAtRow indexPath: IndexPath) {
         let itemCell = cell as! KNOTPlanItemCell
-        itemCell.viewModel = (viewModel.itemsSubject.value?.0)![indexPath.row]
+        itemCell.viewModel = (viewModel.itemsSubject.value)![indexPath.row]
     }
     
     override func emptyCellDidInsert(at indexPath: IndexPath) {

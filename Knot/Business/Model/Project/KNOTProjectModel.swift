@@ -9,7 +9,7 @@
 import BoltsSwift
 
 protocol KNOTProjectModel {
-    var projectsSubject: Subject<ArraySubscription<KNOTProjectEntity>> { get }
+    var projectsSubject: Subject<[KNOTProjectEntity]> { get }
     func loadProjects() -> Task<Void>
     func updateProject(_ proj: KNOTProjectEntity) -> Task<Void>
     func deleteProject(_ proj: KNOTProjectEntity) -> Task<Void>

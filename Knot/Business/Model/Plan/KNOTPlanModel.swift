@@ -9,7 +9,7 @@
 import BoltsSwift
 
 protocol KNOTPlanModel {
-    var plansSubject: Subject<ArraySubscription<KNOTPlanEntity>> { get }
+    var plansSubject: Subject<[KNOTPlanEntity]> { get }
     func loadPlans() -> Task<Void>
     func plans(onDay day: Date) -> [KNOTPlanEntity]
     func updatePlan(_ plan: KNOTPlanEntity) -> Task<Void>

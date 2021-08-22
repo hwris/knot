@@ -19,8 +19,8 @@ private class KNOTModelImpl: KNOTModel {
     
     private var loadTask: Task<Void>?
     
-    let plansSubject = Subject<ArraySubscription<KNOTPlanEntity>>()
-    let projectsSubject = Subject<ArraySubscription<KNOTProjectEntity>>()
+    let plansSubject = Subject<[KNOTPlanEntity]>()
+    let projectsSubject = Subject<[KNOTProjectEntity]>()
     
     var planModel: KNOTPlanModel { self }
     var projectModel: KNOTProjectModel { self }
@@ -45,7 +45,7 @@ private class KNOTModelImpl: KNOTModel {
             if let e = $0.error {
                 throw e
             }
-            self.plansSubject.publish((planTask.result as? [KNOTPlanEntity], .reset, nil))
+            self.plansSubject.publish(planTask.result as? [KNOTPlanEntity])
             
             let planToProject = getPlanToProject()
             planTask.result?.forEach {
@@ -54,7 +54,7 @@ private class KNOTModelImpl: KNOTModel {
                 planToProject[plan.ckRecordID]?.plans?.append(plan)
             }
             
-            self.projectsSubject.publish((projectTask.result as? [KNOTProjectEntity], .reset, nil))
+            self.projectsSubject.publish(projectTask.result as? [KNOTProjectEntity])
         }
         
         return self.loadTask!
@@ -166,14 +166,12 @@ private class KNOTModelImpl: KNOTModel {
         return loadProjectsTcs.task
     }
     
-    private func updatePlanLocal(_ plan: KNOTPlanEntity, _ plansSubject: Subject<ArraySubscription<KNOTPlanEntity>>) {
-        var plans = plansSubject.value?.0 ?? []
-        if let index = plans.firstIndex(of: plan) {
-            plansSubject.publish((plans, .update, [index]))
-        } else {
+    private func updatePlanLocal(_ plan: KNOTPlanEntity, _ plansSubject: Subject<[KNOTPlanEntity]>) {
+        var plans = plansSubject.value ?? []
+        if !plans.contains(plan) {
             plans.append(plan)
-            plansSubject.publish((plans, .insert, [plans.endIndex - 1]))
         }
+        plansSubject.publish(plans)
     }
     
     private func updatePlanRecord(_ plan: KNOTPlanEntity) -> Task<Void> {
@@ -189,11 +187,10 @@ private class KNOTModelImpl: KNOTModel {
     }
     
     private func deletePlanLocal(_ plan: KNOTPlanEntity,
-                                 _ plansSubject: Subject<ArraySubscription<KNOTPlanEntity>>) {
-        if var plans = plansSubject.value?.0 {
-            let index = plans.firstIndex(of: plan)
+                                 _ plansSubject: Subject<[KNOTPlanEntity]>) {
+        if var plans = plansSubject.value {
             plans.removeAll { $0 == plan }
-            plansSubject.publish((plans, .remove, index.map { [$0] }))
+            plansSubject.publish(plans)
         }
     }
     
@@ -204,14 +201,12 @@ private class KNOTModelImpl: KNOTModel {
     }
     
     private func updateProjectLocal(_ proj: KNOTProjectEntity,
-                                    _ projectsSubject: Subject<ArraySubscription<KNOTProjectEntity>>) {
-        var projs = projectsSubject.value?.0 ?? []
-        if let index = projs.firstIndex(of: proj) {
-            projectsSubject.publish((projs, .update, [index]))
-        } else {
+                                    _ projectsSubject: Subject<[KNOTProjectEntity]>) {
+        var projs = projectsSubject.value ?? []
+        if !projs.contains(proj) {
             projs.append(proj)
-            projectsSubject.publish((projs, .insert, [projs.endIndex - 1]))
         }
+        projectsSubject.publish(projs)
     }
     
     private func updateProjectRecord(_ proj: KNOTProjectEntity) -> Task<Void> {
@@ -226,11 +221,10 @@ private class KNOTModelImpl: KNOTModel {
     }
     
     private func deleteProjectLocal(_ proj: KNOTProjectEntity,
-                                    _ projectsSubject: Subject<ArraySubscription<KNOTProjectEntity>>) {
-        if var projs = projectsSubject.value?.0 {
-            let index = projs.firstIndex(of: proj)
+                                    _ projectsSubject: Subject<[KNOTProjectEntity]>) {
+        if var projs = projectsSubject.value {
             projs.removeAll { $0 == proj }
-            projectsSubject.publish((projs, .remove, index.map { [$0] }))
+            projectsSubject.publish(projs)
         }
     }
     
@@ -271,7 +265,7 @@ extension KNOTModelImpl: KNOTPlanModel {
     }
     
     func plans(onDay day: Date) -> [KNOTPlanEntity] {
-        guard let plans = plansSubject.value?.0 else {
+        guard let plans = plansSubject.value else {
             return []
         }
         
@@ -370,7 +364,7 @@ extension KNOTModelImpl: KNOTProjectModel {
             private let knotModel: KNOTModelImpl
             private let proj: KNOTProjectEntity
             
-            var plansSubject: Subject<ArraySubscription<KNOTPlanEntity>> { knotModel.plansSubject }
+            var plansSubject: Subject<[KNOTPlanEntity]> { knotModel.plansSubject }
             
             init(knotModel: KNOTModelImpl, proj: KNOTProjectEntity) {
                 self.knotModel = knotModel
@@ -458,11 +452,11 @@ extension KNOTModelImpl: KNOTProjectModel {
 
 extension KNOTModelImpl: KNOTSearchModel {
     func search(with text: String) -> ([KNOTPlanEntity], [KNOTProjectEntity]) {
-        let planResult = plansSubject.value?.0?.filter {
+        let planResult = plansSubject.value?.filter {
             $0.content.contains(text) ||
                 (($0.items?.contains(where: { $0.content.contains(text) })) == true)
         }
-        let projResult = projectsSubject.value?.0?.filter {
+        let projResult = projectsSubject.value?.filter {
             $0.name.contains(text)
         }
         return (planResult ?? [], projResult ?? [])
@@ -502,7 +496,7 @@ private class KNOTPlanMoreModelImpl: KNOTPlanDetailModelImpl,
     }
     
     var projs: [KNOTProjectEntity] {
-        knotModel.projectsSubject.value?.0 ?? []
+        knotModel.projectsSubject.value ?? []
     }
     
     var syncToProjModel: KNOTPlanSyncToProjModel {
