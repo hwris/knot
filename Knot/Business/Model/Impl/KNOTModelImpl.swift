@@ -409,7 +409,7 @@ extension KNOTModelImpl: KNOTProjectModel {
                     }
                     
                     override func updatePlan() -> Task<Void> {
-                        projectPlanModel.updatePlan(plan)
+                        needUpdate ? projectPlanModel.updatePlan(plan) : Task(())
                     }
                 }
                 
@@ -464,7 +464,7 @@ extension KNOTModelImpl: KNOTSearchModel {
 }
 
 private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
-    let originPlan: KNOTPlanEntity
+    private let originPlan: KNOTPlanEntity
     let plan: KNOTPlanEntity
     fileprivate let knotModel: KNOTModelImpl
     
@@ -485,9 +485,20 @@ private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
     }
     
     func updatePlan() -> Task<Void> {
-        originPlan.isAbsolutelyEqual(plan) ?
-            Task(()) :
-            knotModel.updatePlan(plan)
+        if needUpdate {
+            plan.items?.removeAll(where: { $0.content.isEmpty })
+            return knotModel.updatePlan(plan)
+        }
+        
+        let plans = knotModel.plansSubject.value
+        if plans?.contains(plan) == false {
+            knotModel.plansSubject.publish(plans)
+        }
+        return Task(())
+    }
+    
+    var needUpdate: Bool {
+        !originPlan.isAbsolutelyEqual(plan)
     }
 }
 
@@ -526,7 +537,7 @@ private class KNOTPlanMoreModelImpl: KNOTPlanDetailModelImpl,
 }
 
 private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMoreModel {
-    let originProject: KNOTProjectEntity
+    private let originProject: KNOTProjectEntity
     let project: KNOTProjectEntity
     fileprivate let knotModel: KNOTModelImpl
     
@@ -547,13 +558,23 @@ private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMor
     }
     
     func updateProject() -> Task<Void> {
-        knotModel.updateProject(project)
+        if needUpdate {
+            return knotModel.updateProject(project)
+        }
+        
+        let projs = knotModel.projectsSubject.value
+        if projs?.contains(project) == false {
+            knotModel.projectsSubject.publish(projs)
+        }
+        return Task(())
     }
     
     func deleteProject() -> Task<Void> {
-        originProject.isAbsolutelyEqual(project) ?
-            Task(()) :
-            knotModel.deleteProject(project)
+        knotModel.deleteProject(project)
+    }
+    
+    var needUpdate: Bool {
+        !originProject.isAbsolutelyEqual(project)
     }
 }
 

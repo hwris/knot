@@ -899,7 +899,7 @@
                                             <constraint firstAttribute="height" constant="300" id="m3U-NZ-Da5"/>
                                         </constraints>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="titleCell" id="Ys9-1j-ysg" customClass="KNOTTextViewTableViewCell" customModule="Knot" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="titleCell" id="Ys9-1j-ysg" customClass="KNOTPlanDetailListTitleCell" customModule="Knot" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="24.5" width="414" height="54.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ys9-1j-ysg" id="6ca-LT-Ks6">
@@ -935,7 +935,7 @@
                                                     <outlet property="contentTextView" destination="e0H-31-6BQ" id="ZIt-rZ-D7Y"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="9YB-Qj-HA3" customClass="KNOTPlanDetaiListCell" customModule="Knot" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="9YB-Qj-HA3" customClass="KNOTPlanDetailListCell" customModule="Knot" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="79" width="414" height="49.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9YB-Qj-HA3" id="j2U-Pb-0xs">

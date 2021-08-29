@@ -48,6 +48,10 @@ extension KNOTTextViewTableViewCell: UITextViewDelegate {
         
         delegate?.textViewTableViewCellTextDidChanged(self)
     }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        
+    }
 }
 
 protocol KNOTTextViewTableViewCellDelegate: AnyObject {

@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import BoltsSwift
 
 class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewController {
+    private var keyboardAnimationTask: Task<Void>?
     var viewModel: VieModel!
     
     @IBOutlet weak var keyboardButton: UIButton?
@@ -34,17 +36,45 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
                                                object: nil)
     }
     
-    override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
-        viewModel.update().continueWith(.mainThread) {
-            if let error = $0.error {
-                assert(false, error.localizedDescription)
-                // Todo: handle error
-                completion()
-                return
-            }
-            completion()
-            self.dismiss(animated: true)
+    deinit {
+        removeNotificationObservers()
+    }
+    
+    private func removeNotificationObservers() {
+        let names = [ UIResponder.keyboardDidChangeFrameNotification,
+                      UIResponder.keyboardWillShowNotification,
+                      UIResponder.keyboardWillHideNotification]
+        names.forEach {
+            NotificationCenter.default.removeObserver(self,
+                                                      name: $0,
+                                                      object: nil)
         }
+    }
+    
+    override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
+        removeNotificationObservers()
+        
+        let updateTask = {
+            self.viewModel.update().continueWith(.mainThread) {
+                if let error = $0.error {
+                    assert(false, error.localizedDescription)
+                    // Todo: handle error
+                    completion()
+                    return
+                }
+                completion()
+                self.dismiss(animated: true)
+            }
+        }
+        
+        if keyboardAnimationTask == nil {
+            let _ = updateTask()
+            return
+        }
+        
+        keyboardAnimationTask?.continueWith(continuation: { _ in
+            let _ = updateTask()
+        })
     }
     
     @IBAction func flagColorButtonCliked(_ sender: UIButton) {
@@ -70,10 +100,20 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
             return
         }
 
-        actionViewBottom.constant = keyboardButton.isHidden ? 0 : frame.height
+        let constant = keyboardButton.isHidden ? 0 : frame.height
+        if actionViewBottom.constant == constant {
+            return
+        }
+        
+        let tcs = TaskCompletionSource<Void>()
+        keyboardAnimationTask = tcs.task
+        actionViewBottom.constant = constant
         UIView.animate(withDuration: keyboardAnimationDuration) {
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
+        } completion: { _ in
+            tcs.set(result: ())
+            self.keyboardAnimationTask = nil
         }
     }
     

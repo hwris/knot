@@ -32,19 +32,15 @@ extension KNOTPlanDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellId = indexPath.isPlanTitleRow ? "titleCell" : "cell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! KNOTTextViewTableViewCell
         if (indexPath.isPlanTitleRow) {
-            let textView = cell.contentTextView!
-            textView.text = viewModel.content
-            if textView.text.isEmpty {
-                textView.becomeFirstResponder()
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath) as! KNOTPlanDetailListTitleCell
+            cell.viewModel = viewModel
+            return cell
         } else {
-            (cell as! KNOTPlanDetaiListCell).viewModel = viewModel.items[indexPath.planItemRowIndex]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! KNOTPlanDetailListCell
+            cell.viewModel = viewModel.items[indexPath.planItemRowIndex]
+            return cell
         }
-        cell.delegate = self
-        return cell
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -75,19 +71,24 @@ extension KNOTPlanDetailViewController: UITableViewDelegate {
     }
 }
 
-extension KNOTPlanDetailViewController: KNOTTextViewTableViewCellDelegate {
-    func textViewTableViewCellTextDidChanged(_ cell: KNOTTextViewTableViewCell) {
-        guard let indexPath = itemsTableView.indexPath(for: cell) else {
-            return
+class KNOTPlanDetailListTitleCell: KNOTTextViewTableViewCell {
+    var viewModel: KNOTPlanDetailViewModel! {
+        didSet {
+            contentTextView.text = viewModel.content
+            
+            if viewModel.content.isEmpty {
+                contentTextView.becomeFirstResponder()
+            }
         }
-        
-        if indexPath.isPlanTitleRow {
-            viewModel.updateContent(cell.contentTextView.text)
-        }
+    }
+    
+    override func textViewDidChange(_ textView: UITextView) {
+        super.textViewDidChange(textView)
+        viewModel.updateContent(textView.text)
     }
 }
 
-class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
+class KNOTPlanDetailListCell: KNOTTextViewTableViewCell {
     @IBOutlet weak var isDoneButtong: UIButton!
     
     var viewModel: KNOTPlanDetailItemViewModel! {
@@ -95,6 +96,10 @@ class KNOTPlanDetaiListCell: KNOTTextViewTableViewCell {
             contentTextView.text = viewModel.content
             isDoneButtong.isSelected = viewModel.isDoneButtonSelected
             contentTextView.alpha = viewModel.isDoneButtonSelected ? 0.5 : 1.0
+            
+            if viewModel.content.isEmpty {
+                contentTextView.becomeFirstResponder()
+            }
         }
     }
     

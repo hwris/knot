@@ -14,7 +14,9 @@ class KNOTProjectDetailViewController: KNOTEditViewController<KNOTProjectDetailV
     override func viewDidLoad() {
         super.viewDidLoad()
         nameTextView.text = viewModel.projName
-        nameTextView.becomeFirstResponder()
+        if viewModel.projName.isEmpty {
+            nameTextView.becomeFirstResponder()
+        }
     }
     
     override var enableHalfScreen: Bool { true }
