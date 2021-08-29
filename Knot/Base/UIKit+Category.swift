@@ -267,8 +267,19 @@ class KNOTRoundCornersTableView: UITableView {
     }
 }
 
-class KNOTTranslucentViewController: UIViewController {
+class KNOTTranslucentViewController: KNOTHalfScreenDefaultViewController {
     private var isHandling = false
+    var enableHalfScreen: Bool { false }
+    
+    override var modalPresentationStyle: UIModalPresentationStyle {
+        get { enableHalfScreen ? .custom : super.modalPresentationStyle }
+        set { super.modalPresentationStyle = newValue }
+    }
+    
+    override var transitioningDelegate: UIViewControllerTransitioningDelegate? {
+        get { enableHalfScreen ? self : super.transitioningDelegate }
+        set { super.transitioningDelegate = newValue }
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isHandling {
@@ -457,5 +468,68 @@ extension UIViewController {
         } else {
             navigationController?.popViewController(animated: true)
         }
+    }
+}
+
+class KNOTHalfScreenAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        0.25
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        let duration = transitionDuration(using: transitionContext)
+        
+        guard let fromVC = transitionContext.viewController(forKey: .from),
+              let toVC = transitionContext.viewController(forKey: .to) else {
+            return
+        }
+        
+        if toVC.isBeingPresented {
+            let presentedView = transitionContext.view(forKey: .to)!
+            let halfScreenView = (toVC as! KNOTHalfScreenViewController).halfScreenView!
+            containerView.addSubview(presentedView)
+            presentedView.frame = containerView.bounds
+            presentedView.setNeedsLayout()
+            presentedView.layoutIfNeeded()
+            presentedView.alpha = 0
+            let originY = halfScreenView.frame.minY
+            halfScreenView.frame.origin.y = presentedView.bounds.maxY
+            UIView.animate(withDuration: duration) {
+                presentedView.alpha = 1
+                halfScreenView.frame.origin.y = originY
+            } completion: {
+                transitionContext.completeTransition($0)
+            }
+        } else if fromVC.isBeingDismissed {
+            let presentedView = transitionContext.view(forKey: .from)!
+            let halfScreenView = (fromVC as! KNOTHalfScreenViewController).halfScreenView!
+            UIView.animate(withDuration: duration) {
+                presentedView.alpha = 0
+                halfScreenView.frame.origin.y = presentedView.bounds.maxY
+            } completion: {
+                transitionContext.completeTransition($0)
+            }
+        } else {
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        }
+    }
+}
+
+protocol KNOTHalfScreenViewController: UIViewController, UIViewControllerTransitioningDelegate {
+    var halfScreenView: UIView? { get }
+}
+
+class KNOTHalfScreenDefaultViewController: UIViewController, KNOTHalfScreenViewController {
+    @IBOutlet var halfScreenView: UIView?
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        KNOTHalfScreenAnimatedTransitioning()
+    }
+    
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        KNOTHalfScreenAnimatedTransitioning()
     }
 }

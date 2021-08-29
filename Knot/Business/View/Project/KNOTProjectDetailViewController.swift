@@ -16,6 +16,8 @@ class KNOTProjectDetailViewController: KNOTEditViewController<KNOTProjectDetailV
         nameTextView.text = viewModel.projName
         nameTextView.becomeFirstResponder()
     }
+    
+    override var enableHalfScreen: Bool { true }
 }
 
 extension KNOTProjectDetailViewController: UITextViewDelegate {

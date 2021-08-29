@@ -476,7 +476,7 @@ private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
     
     var flagColor: UInt32 {
         get {
-            return plan.flagColor
+            plan.flagColor
         }
         
         set {
@@ -485,11 +485,9 @@ private class KNOTPlanDetailModelImpl: KNOTPlanDetailModel {
     }
     
     func updatePlan() -> Task<Void> {
-        knotModel.updatePlan(plan)
-    }
-    
-    var needUpdate: Bool {
-        originPlan.isAbsolutelyEqual(plan) == false
+        originPlan.isAbsolutelyEqual(plan) ?
+            Task(()) :
+            knotModel.updatePlan(plan)
     }
 }
 
@@ -540,7 +538,7 @@ private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMor
     
     var flagColor: UInt32 {
         get {
-            return project.flagColor
+            project.flagColor
         }
         
         set {
@@ -553,11 +551,9 @@ private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMor
     }
     
     func deleteProject() -> Task<Void> {
-        knotModel.deleteProject(project)
-    }
-    
-    var needUpdate: Bool {
-        originProject.isAbsolutelyEqual(project) == false
+        originProject.isAbsolutelyEqual(project) ?
+            Task(()) :
+            knotModel.deleteProject(project)
     }
 }
 

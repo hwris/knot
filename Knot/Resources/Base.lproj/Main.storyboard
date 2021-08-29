@@ -1127,6 +1127,7 @@
                     </view>
                     <connections>
                         <outlet property="actionViewBottom" destination="Xdq-hP-tP3" id="OGZ-UR-68u"/>
+                        <outlet property="halfScreenView" destination="DbJ-Mx-Vme" id="zbY-uQ-VwB"/>
                         <outlet property="itemsTableView" destination="Tvf-Gr-zOb" id="O3A-ri-BdS"/>
                         <outlet property="keyboardButton" destination="pqs-tx-i48" id="E52-Ml-Uxr"/>
                         <outlet property="listButton" destination="Xw2-mT-caK" id="YrO-Q3-AgV"/>
@@ -1613,11 +1614,11 @@
             <objects>
                 <viewController modalPresentationStyle="overFullScreen" id="G1S-bC-Hgv" customClass="KNOTProjectDetailViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MdW-gi-Ozo">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="802"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RMn-gO-Eko" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="542" width="414" height="354"/>
+                                <rect key="frame" x="0.0" y="482" width="414" height="320"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5Ee-Fw-vst">
                                         <rect key="frame" x="20" y="20" width="374" height="250"/>
@@ -1638,7 +1639,7 @@
                                         </connections>
                                     </textView>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lG6-2T-azB">
-                                        <rect key="frame" x="0.0" y="270" width="414" height="84"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1663,7 +1664,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x9B-CI-ta3" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="270" width="414" height="84"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="3C7-wv-dNX">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -1763,6 +1764,7 @@
                     </view>
                     <connections>
                         <outlet property="actionViewBottom" destination="0Ke-OE-JzI" id="UM8-4M-f7j"/>
+                        <outlet property="halfScreenView" destination="RMn-gO-Eko" id="5LM-Cl-g32"/>
                         <outlet property="keyboardButton" destination="8UW-Os-wxF" id="LPh-td-28A"/>
                         <outlet property="nameTextView" destination="5Ee-Fw-vst" id="9x6-Jx-Cgb"/>
                         <outletCollection property="flagButtons" destination="0UU-f5-ChV" collectionClass="NSMutableArray" id="cuI-Nn-Guy"/>
@@ -2597,7 +2599,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="eMC-jQ-pSP"/>
+        <segue reference="SdL-zQ-1ww"/>
         <segue reference="9k0-B7-1DX"/>
     </inferredMetricsTieBreakers>
     <resources>

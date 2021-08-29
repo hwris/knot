@@ -20,10 +20,6 @@ class KNOTEditViewModel {
         return flagColors.firstIndex(of: KNOTFlagColor(rawValue: model.flagColor) ?? .blue)!
     }
     
-    var needUpdate: Bool {
-        model.needUpdate
-    }
-    
     func selectedFlagColor(at index: Int) {
         model.flagColor = flagColors[index].rawValue
     }

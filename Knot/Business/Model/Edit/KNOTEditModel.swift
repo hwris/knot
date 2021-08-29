@@ -10,5 +10,4 @@ import Foundation
 
 protocol KNOTEditModel {
     var flagColor: UInt32 { get set }
-    var needUpdate: Bool { get }
 }

@@ -35,12 +35,6 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
     }
     
     override func handleBackgroundViewTapped(completion: @escaping () -> ()) {
-        if !viewModel.needUpdate {
-            completion()
-            dismiss(animated: true, completion: nil)
-            return
-        }
-        
         viewModel.update().continueWith(.mainThread) {
             if let error = $0.error {
                 assert(false, error.localizedDescription)
@@ -49,7 +43,7 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
                 return
             }
             completion()
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true)
         }
     }
     

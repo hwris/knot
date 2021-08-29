@@ -22,6 +22,8 @@ class KNOTPlanDetailViewController: KNOTEditViewController<KNOTPlanDetailViewMod
         viewModel.insertItem(at: index)
         itemsTableView.insertRows(at: [IndexPath(row: index + 1, section: 0)], with: .none)
     }
+    
+    override var enableHalfScreen: Bool { true }
 }
 
 extension KNOTPlanDetailViewController: UITableViewDataSource {
