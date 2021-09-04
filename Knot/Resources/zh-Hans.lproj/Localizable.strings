@@ -1,7 +1,27 @@
-/* 
-  Localizable.strings
-  Knot
+/* No comment provided by engineer. */
+" plan(s)" = " 计划";
 
-  Created by 苏杨 on 2020/3/22.
-  Copyright © 2020 SUYANG. All rights reserved.
-*/
+/* No comment provided by engineer. */
+"AM" = "上午";
+
+/* No comment provided by engineer. */
+"Day(s)" = "天";
+
+/* No comment provided by engineer. */
+"Month(s)" = "月";
+
+/* No comment provided by engineer. */
+"PM" = "下午";
+
+/* No comment provided by engineer. */
+"Search plan:" = "搜索计划:";
+
+/* No comment provided by engineer. */
+"Search project:" = "搜索项目:";
+
+/* No comment provided by engineer. */
+"Week(s)" = "周";
+
+/* No comment provided by engineer. */
+"Year(s)" = "年";
+

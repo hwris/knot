@@ -67,7 +67,7 @@ class KNOTSearchViewModel {
             vm.model = $0
             return vm
         }
-        searchResultViewModel.planSearchDesc = NSLocalizedString("Search plan: \(text)", comment: "")
+        searchResultViewModel.planSearchDesc = NSLocalizedString("Search plan:", comment: "") + " \(text)"
         searchResultViewModel.projItems = projResult.map {
             let vm = SearchItemViewModel()
             vm.title = $0.name
@@ -75,7 +75,7 @@ class KNOTSearchViewModel {
             vm.model = $0
             return vm
         }
-        searchResultViewModel.projSearchDesc = NSLocalizedString("Search project: \(text)", comment: "")
+        searchResultViewModel.projSearchDesc = NSLocalizedString("Search project:", comment: "") + " \(text)"
         
         searchResult.publish(searchResultViewModel)
     }

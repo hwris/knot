@@ -1,12 +1,114 @@
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "1Qj-rd-s2X"; */
+"1Qj-rd-s2X.normalTitle" = "取消";
+
+/* Class = "UIButton"; normalTitle = "Confirm"; ObjectID = "2sg-Hq-Ky9"; */
+"2sg-Hq-Ky9.normalTitle" = "确定";
+
+/* Class = "UILabel"; text = "Delete"; ObjectID = "3xl-Jj-Rjw"; */
+"3xl-Jj-Rjw.text" = "删除";
 
 /* Class = "UILabel"; text = "Today"; ObjectID = "7FY-de-HMo"; */
 "7FY-de-HMo.text" = "今天";
 
+/* Class = "UILabel"; text = "Sync to plan"; ObjectID = "9P1-gH-bTN"; */
+"9P1-gH-bTN.text" = "同步到计划";
+
+/* Class = "UILabel"; text = "Delete"; ObjectID = "AcW-oS-seo"; */
+"AcW-oS-seo.text" = "删除";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "ai2-by-Efq"; */
+"ai2-by-Efq.normalTitle" = "取消";
+
+/* Class = "UILabel"; text = ":"; ObjectID = "AXY-ts-Jft"; */
+"AXY-ts-Jft.text" = ":";
+
+/* Class = "UILabel"; text = "Every"; ObjectID = "BgU-MM-aUS"; */
+"BgU-MM-aUS.text" = "每";
+
+/* Class = "UILabel"; text = "Rename"; ObjectID = "bnS-EA-ZBT"; */
+"bnS-EA-ZBT.text" = "重命名";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "CCC-Ub-5jy"; */
+"CCC-Ub-5jy.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Dt5-hT-h1k"; */
+"Dt5-hT-h1k.text" = "Label";
+
+/* Class = "UITextView"; text = "vhvhv"; ObjectID = "e0H-31-6BQ"; */
+"e0H-31-6BQ.text" = "vhvhv";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "eXK-xk-I1a"; */
+"eXK-xk-I1a.text" = "Label";
+
+/* Class = "UILabel"; text = "Sync to project"; ObjectID = "fWP-y0-4dh"; */
+"fWP-y0-4dh.text" = "同步到项目";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "gCd-tr-zDc"; */
+"gCd-tr-zDc.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "Confirm"; ObjectID = "jcU-Pp-dKx"; */
+"jcU-Pp-dKx.normalTitle" = "确定";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JE5-UB-U23"; */
+"JE5-UB-U23.normalTitle" = "取消";
+
+/* Class = "UITabBarItem"; title = "Project"; ObjectID = "Jgq-e2-SWp"; */
+"Jgq-e2-SWp.title" = "项目";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "jnl-qZ-TnO"; */
+"jnl-qZ-TnO.normalTitle" = "取消";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JvX-bv-9HO"; */
+"JvX-bv-9HO.normalTitle" = "取消";
+
+/* Class = "UILabel"; text = "Delete"; ObjectID = "KBS-A5-spz"; */
+"KBS-A5-spz.text" = "删除";
+
+/* Class = "UITabBarItem"; title = "Plan"; ObjectID = "Kjx-Jq-EwB"; */
+"Kjx-Jq-EwB.title" = "计划";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "KRB-ru-M88"; */
+"KRB-ru-M88.text" = "Label";
+
+/* Class = "UILabel"; text = "Repeat"; ObjectID = "l24-1m-CJ8"; */
+"l24-1m-CJ8.text" = "重复";
+
+/* Class = "UIButton"; normalTitle = "Confirm"; ObjectID = "lds-x8-9Lk"; */
+"lds-x8-9Lk.normalTitle" = "确定";
+
+/* Class = "UITabBarItem"; title = "Plan"; ObjectID = "Ljk-pd-FQh"; */
+"Ljk-pd-FQh.title" = "计划";
+
 /* Class = "UIButton"; normalTitle = "Plan"; ObjectID = "M7t-vJ-0Kx"; */
 "M7t-vJ-0Kx.normalTitle" = "计划";
+
+/* Class = "UILabel"; text = "Sync to project"; ObjectID = "OPP-8M-GNg"; */
+"OPP-8M-GNg.text" = "同步到项目";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "PFu-2g-GRx"; */
+"PFu-2g-GRx.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "phC-x2-ZXB"; */
+"phC-x2-ZXB.text" = "Label";
 
 /* Class = "UILabel"; text = "Project"; ObjectID = "qQ0-Q7-CT9"; */
 "qQ0-Q7-CT9.text" = "项目";
 
+/* Class = "UILabel"; text = "Repeat"; ObjectID = "Rmq-8S-Tr2"; */
+"Rmq-8S-Tr2.text" = "重复";
+
+/* Class = "UILabel"; text = "Sync to plan"; ObjectID = "rUV-Yc-oT7"; */
+"rUV-Yc-oT7.text" = "同步到计划";
+
+/* Class = "UILabel"; text = "Reminder"; ObjectID = "rvl-ZI-qgj"; */
+"rvl-ZI-qgj.text" = "提醒";
+
+/* Class = "UILabel"; text = "Reminder"; ObjectID = "Sb7-cp-B6r"; */
+"Sb7-cp-B6r.text" = "提醒";
+
+/* Class = "UIButton"; normalTitle = "Confirm"; ObjectID = "V8O-37-Mn9"; */
+"V8O-37-Mn9.normalTitle" = "确定";
+
 /* Class = "UIButton"; normalTitle = "Project"; ObjectID = "zdA-Fi-qVw"; */
 "zdA-Fi-qVw.normalTitle" = "项目";
+

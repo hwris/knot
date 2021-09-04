@@ -1,9 +1,10 @@
-/* 
-  InfoPlist.strings
+/* InfoPlist.strings
   Knot
 
   Created by 苏杨 on 2020/3/22.
-  Copyright © 2020 SUYANG. All rights reserved.
-*/
-
+  Copyright © 2020 SUYANG. All rights reserved. */
 "CFBundleDisplayName" = "绳结";
+
+/* Bundle name */
+"CFBundleName" = "Knot";
+

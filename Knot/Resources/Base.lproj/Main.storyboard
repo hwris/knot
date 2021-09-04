@@ -111,6 +111,10 @@
                                 </constraints>
                                 <state key="normal" image="ic_add"/>
                                 <state key="selected" image="ic_delete"/>
+                                <state key="highlighted" image="ic_add"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="selectedHighlightedImage" value="ic_delete"/>
+                                </userDefinedRuntimeAttributes>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZZ-L0-JeZ">
                                 <rect key="frame" x="354" y="54" width="60" height="40"/>
