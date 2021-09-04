@@ -23,15 +23,15 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
         flagColorButtonCliked(flagButtons.filter({ $0.tag == viewModel.selectedFlagColorIndex }).first!)
         
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardDidChangeFrame(_:)),
+                                               selector: #selector(keyboardFrameDidChanged(_:)),
                                                name: UIResponder.keyboardDidChangeFrameNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow(_:)),
+                                               selector: #selector(keyboardWillAppear(_:)),
                                                name: UIResponder.keyboardWillShowNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide(_:)),
+                                               selector: #selector(keyboardWillDisappear(_:)),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
     }
@@ -90,7 +90,7 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
         }
     }
     
-    @objc @IBAction func keyboardDidChangeFrame(_ not: Notification) {
+    @objc @IBAction func keyboardFrameDidChanged(_ not: Notification) {
         guard let frame = (not.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
         let keyboardAnimationDuration = not.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else {
             return
@@ -117,14 +117,14 @@ class KNOTEditViewController<VieModel: KNOTEditViewModel>: KNOTTranslucentViewCo
         }
     }
     
-    @objc @IBAction func keyboardWillShow(_ not: Notification) {
+    @objc @IBAction func keyboardWillAppear(_ not: Notification) {
         keyboardButton?.isHidden = false
-        keyboardDidChangeFrame(not)
+        keyboardFrameDidChanged(not)
     }
     
-    @objc @IBAction func keyboardWillHide(_ not: Notification) {
+    @objc @IBAction func keyboardWillDisappear(_ not: Notification) {
         keyboardButton?.isHidden = true
-        keyboardDidChangeFrame(not)
+        keyboardFrameDidChanged(not)
     }
     
     @IBAction func keyboardClicked(_ sender: UIButton) {
