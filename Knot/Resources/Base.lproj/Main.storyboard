@@ -110,10 +110,10 @@
                                     <constraint firstAttribute="width" secondItem="wEo-41-0sM" secondAttribute="height" id="r72-NC-TtT"/>
                                 </constraints>
                                 <state key="normal" image="ic_add"/>
-                                <state key="selected" image="ic_delete"/>
+                                <state key="selected" image="ic_add_selected"/>
                                 <state key="highlighted" image="ic_add"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="image" keyPath="selectedHighlightedImage" value="ic_delete"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="selectedHighlightedImage" value="ic_add_selected"/>
                                 </userDefinedRuntimeAttributes>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZZ-L0-JeZ">
@@ -1838,7 +1838,7 @@
                                     <constraint firstAttribute="width" secondItem="pL8-sw-zaA" secondAttribute="height" id="Nax-Sl-iRR"/>
                                 </constraints>
                                 <state key="normal" image="ic_add"/>
-                                <state key="selected" image="ic_delete"/>
+                                <state key="selected" image="ic_add_selected"/>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="fKX-DY-rJQ"/>
@@ -2609,6 +2609,7 @@
     <resources>
         <image name="ic_add" width="21" height="21"/>
         <image name="ic_add_project" width="74" height="63"/>
+        <image name="ic_add_selected" width="20" height="20"/>
         <image name="ic_add_thing" width="66" height="61"/>
         <image name="ic_alarm" width="20" height="20"/>
         <image name="ic_arrow_down" width="12" height="8"/>
