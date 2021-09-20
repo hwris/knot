@@ -120,22 +120,14 @@ class KNOTPlanItemCell: UITableViewCell {
     
     private func updateContentView() {
         resetDoneView()
-        contentLabel.text = nil
         contentLabel.attributedText = nil
-        
-        let useStrikethrough = viewModel.isDone
-        let notNeedsAttText = !useStrikethrough && viewModel.items.isEmpty
-        if notNeedsAttText {
-            contentLabel.text = viewModel.content
-            return
-        }
         
         if let attText = viewModel.cachedContent as? NSAttributedString {
             contentLabel.attributedText = attText
             return
         }
         
-        let attText = NSMutableAttributedString(string: viewModel.content + "\n")
+        let attText = NSMutableAttributedString(string: viewModel.content)
         attText.addAttributes([.font : UIFont.systemFont(ofSize: 18, weight: .medium),
                                .foregroundColor : UIColor(UInt32(0xFFFFFF), 0.87, UInt32(0x070D20), 1.0)],
                               range: NSRange(location: 0, length: viewModel.content.count))
@@ -161,7 +153,7 @@ class KNOTPlanItemCell: UITableViewCell {
         let attributes = [ NSAttributedString.Key.paragraphStyle : paragraphStyle as Any]
         attText.addAttributes(attributes, range: range)
         
-        if useStrikethrough {
+        if viewModel.isDone {
             attText.addAttribute(.strikethroughStyle, value: 2, range: NSMakeRange(0, attText.length))
         }
         

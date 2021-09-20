@@ -68,11 +68,13 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
     let model: KNOTPlanMoreModel
     let isRepeatSwitchOnSubject: Subject<Bool>
     let isReminderSwitchOnSubject: Subject<Bool>
+    let isSyncToProjSwitchOnSubject: Subject<Bool>
     
     override init(model: KNOTEditModel) {
         self.model = model as! KNOTPlanMoreModel
         isRepeatSwitchOnSubject = Subject(value: self.model.plan.repeat != nil)
         isReminderSwitchOnSubject = Subject(value: self.model.plan.remindTime != nil)
+        isSyncToProjSwitchOnSubject = Subject(value: self.model.plan.project != nil)
         super.init(model: model)
     }
     
@@ -98,8 +100,16 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
         return vm
     }
     
+    func closeSyncToProj() {
+        let vm = KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
+        vm.isSyncToProjSwitchOnSubject = isSyncToProjSwitchOnSubject
+        vm.closeSyncToProj()
+    }
+    
     var syncToProjViewModel: KNOTPickerViewModel {
-        KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
+        let vm = KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
+        vm.isSyncToProjSwitchOnSubject = isSyncToProjSwitchOnSubject
+        return vm
     }
     
     override func update() -> Task<Void> {
@@ -285,9 +295,11 @@ private class KNOTPlanReminderViewModel: KNOTPickerViewModel {
 private class KNOTPlanSyncToProjViewModel: KNOTPickerViewModel {
     private let model: KNOTPlanSyncToProjModel
     private var selectedProjIndex = 0
+    fileprivate var isSyncToProjSwitchOnSubject: Subject<Bool>!
     
     init(model: KNOTPlanSyncToProjModel) {
         self.model = model
+        selectedProjIndex = model.projs.firstIndex { model.plan.project == $0 } ?? 0
     }
     
     var numberOfComponents: Int {
@@ -310,9 +322,28 @@ private class KNOTPlanSyncToProjViewModel: KNOTPickerViewModel {
         selectedProjIndex = row
     }
     
+    func closeSyncToProj() {
+        guard let _ = model.plan.project else {
+            return
+        }
+        
+        model.closeSyncPlanToProj().continueOnSuccessWith {
+            self.isSyncToProjSwitchOnSubject.publish(false)
+        }.continueOnErrorWith { e in
+            // handle error
+            assert(false, e.localizedDescription)
+        }
+    }
+    
     func confirmButtonDidClicked() {
+        if model.projs.isEmpty {
+            return
+        }
+        
         let proj = model.projs[selectedProjIndex]
-        model.syncPlanTo(proj).continueOnErrorWith { e in
+        model.syncPlanTo(proj).continueOnSuccessWith {
+            self.isSyncToProjSwitchOnSubject.publish(true)
+        }.continueOnErrorWith { e in
             // handle error
             assert(false, e.localizedDescription)
         }

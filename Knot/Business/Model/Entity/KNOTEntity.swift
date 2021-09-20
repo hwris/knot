@@ -220,8 +220,7 @@ class KNOTPlanEntity: KNOTEntityBase {
             flagColor == otherPlan.flagColor &&
             isDone == otherPlan.isDone &&
             remindTime == otherPlan.remindTime &&
-            `repeat` == otherPlan.repeat &&
-            project == otherPlan.project
+            `repeat` == otherPlan.repeat
         
     }
 }

@@ -1350,6 +1350,7 @@
                     <connections>
                         <outlet property="reminderSwitch" destination="GSp-HY-mJJ" id="QuV-NE-5SR"/>
                         <outlet property="repeatSwitch" destination="s5k-4P-TVM" id="Hts-Qz-Rjr"/>
+                        <outlet property="syncToProjSwitch" destination="epu-4R-ENX" id="nqK-Zl-BjO"/>
                         <outletCollection property="flagButtons" destination="34l-x0-ehs" collectionClass="NSMutableArray" id="dNl-TJ-c7a"/>
                         <outletCollection property="flagButtons" destination="mE7-86-eKY" collectionClass="NSMutableArray" id="qdU-ES-kza"/>
                         <outletCollection property="flagButtons" destination="w0Z-bU-iXc" collectionClass="NSMutableArray" id="1HB-OX-2c4"/>

@@ -122,9 +122,11 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
     
     private var isRepeatSwitchOnSubscription: Subscription<Bool>?
     private var isReminderSwitchOnSubscription: Subscription<Bool>?
+    private var isSyncToProjSwitchOnSubscription: Subscription<Bool>?
     
-    @IBOutlet weak var repeatSwitch: UISwitch!
-    @IBOutlet weak var reminderSwitch: UISwitch!
+    @IBOutlet weak var repeatSwitch: UISwitch?
+    @IBOutlet weak var reminderSwitch: UISwitch?
+    @IBOutlet weak var syncToProjSwitch: UISwitch?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,6 +135,9 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
         })
         isReminderSwitchOnSubscription = viewModel.isReminderSwitchOnSubject.listen({ [weak self] (new, old) in
             self?.reminderSwitch?.isOn = new ?? false
+        })
+        isSyncToProjSwitchOnSubscription = viewModel.isSyncToProjSwitchOnSubject.listen({ [weak self] (new, old) in
+            self?.syncToProjSwitch?.isOn = new ?? false
         })
     }
     
@@ -164,6 +169,11 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
     }
     
     @IBAction func syncToProjSwitchChanged(_ sender: UISwitch) {
+        if !sender.isOn {
+            viewModel.closeSyncToProj()
+            return
+        }
+        
         sender.isOn = false
         performSegue(withIdentifier: syncToProjSegudId, sender: nil)
     }

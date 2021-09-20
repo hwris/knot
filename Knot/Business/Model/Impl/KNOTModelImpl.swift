@@ -435,6 +435,18 @@ extension KNOTModelImpl: KNOTProjectModel {
         return updateProjectRecord(proj)
     }
     
+    fileprivate func closeSyncPlanToProj(_ plan: KNOTPlanEntity) -> Task<Void> {
+        guard let proj = plan.project else {
+            return Task(())
+        }
+        
+        proj.plans?.removeAll { plan == $0 }
+        plan.project = nil
+        
+        updateProjectLocal(proj, projectsSubject)
+        return updateProjectRecord(proj)
+    }
+    
     private func add(_ plan: KNOTPlanEntity, to proj: KNOTProjectEntity) -> Bool {
         if let plans = proj.plans, plans.contains(plan) {
             return false
@@ -524,6 +536,10 @@ private class KNOTPlanMoreModelImpl: KNOTPlanDetailModelImpl,
     
     func syncPlanTo(_ proj: KNOTProjectEntity) -> Task<Void> {
         knotModel.sync(plan, to: proj)
+    }
+    
+    func closeSyncPlanToProj() -> Task<Void> {
+        knotModel.closeSyncPlanToProj(plan)
     }
     
     func syncToDate(_ date: Date) -> Task<Void> {

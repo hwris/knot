@@ -19,6 +19,8 @@ protocol KNOTPlanMoreModel: KNOTPlanDetailModel {
 }
 
 protocol KNOTPlanSyncToProjModel {
+    var plan: KNOTPlanEntity { get }
     var projs: [KNOTProjectEntity] { get }
     func syncPlanTo(_ proj: KNOTProjectEntity) -> Task<Void>
+    func closeSyncPlanToProj() -> Task<Void>
 }
