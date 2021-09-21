@@ -36,6 +36,7 @@ class KNOTPlanViewModel {
     
     private func planItemViewModel(model: KNOTPlanEntity) -> KNOTPlanItemViewModel {
         let vm = KNOTPlanItemViewModel(model: model)
+        vm.selectedDate = selectedDate
         vm.planDidDone = { [unowned self] in
             return self.model.updatePlan($0.model)
         }
@@ -144,10 +145,10 @@ class KNOTPlanItemViewModel {
     }
     
     fileprivate let model: KNOTPlanEntity
+    fileprivate var selectedDate: Date!
     fileprivate var planDidDone: ((KNOTPlanItemViewModel) -> Task<Void>)?
     
     let content: String
-    var isDone: Bool { return model.isDone }
     let items: [KNOTPlanItemItemViewModel]
     let colors: ItemColors!
     var cachedContent: Any?
@@ -159,11 +160,19 @@ class KNOTPlanItemViewModel {
         colors = ItemColors(flagColor: model.flagColor, alarm: model.remindTime != nil)
     }
     
+    var isDone: Bool {
+        model.isDone(for: selectedDate)
+    }
+    
     func makePlanDone(_ isDone: Bool) -> Task<Void> {
-        let old = model.isDone
-        model.isDone = isDone
+        let hasDone = model.isDone(for: selectedDate)
+        if hasDone == isDone {
+            return Task(())
+        }
+        
+        model.makeDone(isDone, for: selectedDate)
         return planDidDone?(self) ?? Task(()).continueOnErrorWith {_ in 
-            self.model.isDone = old
+            self.model.makeDone(hasDone, for: self.selectedDate)
         }
     }
 }

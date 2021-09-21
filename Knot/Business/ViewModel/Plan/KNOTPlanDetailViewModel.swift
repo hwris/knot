@@ -220,7 +220,9 @@ private class KNOTPlanRepeatViewModel: KNOTPickerViewModel {
         guard let type = KNOTPlanEntity.Repeat.Type_(rawValue: selectedTypeIndex) else {
             return
         }
-        let repeat_ = KNOTPlanEntity.Repeat(interval: selectedIntervalIndex + 1, type: type)
+        let repeat_ = KNOTPlanEntity.Repeat(interval: selectedIntervalIndex + 1,
+                                            type: type,
+                                            doneList: [])
         model.repeat = repeat_
         isRepeatSwitchOnSubject?.publish(true)
     }

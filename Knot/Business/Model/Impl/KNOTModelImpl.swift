@@ -178,7 +178,7 @@ private class KNOTModelImpl: KNOTModel {
         let records = [ plan.ckRecord ] + (plan.items?.map({ $0.ckRecord }) ?? [])
         return startModifyRecordsOperation(recordsToSave: records)
         { (_records, _recordIDs, _error) in
-            if let records = _records {
+            if let records = _records, records.isEmpty == false {
                 plan.ckRecord = records.first(where: { $0.recordID == plan.ckRecordID })!
                 plan.items?.forEach({ (item) in item.ckRecord = records.first(where: { $0.recordID == item.ckRecordID })! })
             }

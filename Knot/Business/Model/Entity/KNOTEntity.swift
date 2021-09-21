@@ -118,6 +118,7 @@ class KNOTPlanEntity: KNOTEntityBase {
         enum Type_: Int, CaseIterable { case Day, Week, Month, Year}
         var interval: Int
         var type: Type_
+        var doneList: [Date]
     }
     
     var remindDate: Date?
@@ -149,8 +150,11 @@ class KNOTPlanEntity: KNOTEntityBase {
         
         if let repeatInterval = record["repeatInterval"] as? Int,
            let repeatTypeRawValue = record["repeatType"] as? Int,
+           let doneList = record["repeatDoneList"] as? [Date]?,
            let repeatType = Repeat.Type_(rawValue: repeatTypeRawValue) {
-            `repeat` = Repeat(interval: repeatInterval, type: repeatType)
+            `repeat` = Repeat(interval: repeatInterval,
+                              type: repeatType,
+                              doneList: doneList ?? [])
         }
         
         super.init(from: record)
@@ -180,6 +184,7 @@ class KNOTPlanEntity: KNOTEntityBase {
             record["remindTime"] = remindTime
             record["repeatInterval"] = `repeat`?.interval
             record["repeatType"] = `repeat`?.type.rawValue
+            record["repeatDoneList"] = `repeat`?.doneList.isEmpty == true ? nil : `repeat`?.doneList
             record["items"] = items?.map({ CKRecord.Reference(recordID: $0.ckRecordID, action: .none) })
             
             return record
@@ -222,6 +227,46 @@ class KNOTPlanEntity: KNOTEntityBase {
             remindTime == otherPlan.remindTime &&
             `repeat` == otherPlan.repeat
         
+    }
+    
+    func isDone(for date: Date) -> Bool {
+        let day = date.knotFormatToDay
+        if day == remindDate?.knotFormatToDay {
+            return isDone
+        }
+        
+        guard let planRepeat = `repeat` else {
+            return isDone
+        }
+        
+        return planRepeat.doneList.contains(day)
+    }
+    
+    func makeDone(_ isDone: Bool, for date: Date) {
+        let day = date.knotFormatToDay
+        if day == remindDate?.knotFormatToDay {
+            self.isDone = isDone
+            return
+        }
+        
+        guard let planRepeat = `repeat` else {
+            self.isDone = isDone
+            return
+        }
+        
+        var doneList = planRepeat.doneList
+        
+        if isDone, !doneList.contains(date) {
+            doneList.append(day)
+        }
+        
+        if !isDone {
+            doneList.removeAll { day == $0 }
+        }
+        
+        `repeat` = Repeat(interval: planRepeat.interval,
+                          type: planRepeat.type,
+                          doneList: doneList)
     }
 }
 
@@ -272,5 +317,13 @@ class KNOTPlanItemEntity: KNOTEntityBase {
         return
             content == otherItem.content &&
             isDone == otherItem.isDone
+    }
+}
+
+extension Date {
+    var knotFormatToDay: Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([ .year, .month, .day ], from: self)
+        return calendar.date(from: dateComponents)!
     }
 }
