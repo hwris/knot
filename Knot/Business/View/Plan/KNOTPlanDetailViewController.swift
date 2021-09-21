@@ -154,7 +154,6 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
             return
         }
         
-        sender.isOn = false
         performSegue(withIdentifier: repeatSegueId, sender: nil)
     }
     
@@ -164,7 +163,6 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
             return
         }
         
-        sender.isOn = false
         performSegue(withIdentifier: reminderSegueId, sender: nil)
     }
     
@@ -174,7 +172,6 @@ class KNOTPlanMoreViewController: KNOTEditViewController<KNOTPlanMoreViewModel> 
             return
         }
         
-        sender.isOn = false
         performSegue(withIdentifier: syncToProjSegudId, sender: nil)
     }
     

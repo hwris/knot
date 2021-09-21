@@ -2315,6 +2315,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="syncToPlanSwitch" destination="8Ox-t7-Dan" id="p5W-s5-IY6"/>
                         <outletCollection property="flagButtons" destination="NPd-2U-kOk" collectionClass="NSMutableArray" id="AMf-YM-TSH"/>
                         <outletCollection property="flagButtons" destination="Xuy-yd-Nm7" collectionClass="NSMutableArray" id="il7-lP-bST"/>
                         <outletCollection property="flagButtons" destination="TcU-7c-GdJ" collectionClass="NSMutableArray" id="mhc-4t-zpH"/>

@@ -74,13 +74,8 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
         self.model = model as! KNOTPlanMoreModel
         isRepeatSwitchOnSubject = Subject(value: self.model.plan.repeat != nil)
         isReminderSwitchOnSubject = Subject(value: self.model.plan.remindTime != nil)
-        isSyncToProjSwitchOnSubject = Subject(value: self.model.plan.project != nil)
+        isSyncToProjSwitchOnSubject = Subject(value: false)
         super.init(model: model)
-    }
-    
-    func closeRepeat() {
-        model.plan.repeat = nil
-        isRepeatSwitchOnSubject.publish(false)
     }
     
     var repeatViewModel: KNOTPickerViewModel {
@@ -89,9 +84,8 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
         return vm
     }
     
-    func closeReminder() {
-        model.plan.remindTime = nil
-        isReminderSwitchOnSubject.publish(false)
+    func closeRepeat() {
+        (repeatViewModel as! KNOTPlanRepeatViewModel).closeRepeat()
     }
     
     var reminderViewModel: KNOTPickerViewModel {
@@ -100,16 +94,18 @@ class KNOTPlanMoreViewModel: KNOTEditViewModel {
         return vm
     }
     
-    func closeSyncToProj() {
-        let vm = KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
-        vm.isSyncToProjSwitchOnSubject = isSyncToProjSwitchOnSubject
-        vm.closeSyncToProj()
+    func closeReminder() {
+        (reminderViewModel as! KNOTPlanReminderViewModel).closeReminder()
     }
     
     var syncToProjViewModel: KNOTPickerViewModel {
         let vm = KNOTPlanSyncToProjViewModel(model: model.syncToProjModel)
         vm.isSyncToProjSwitchOnSubject = isSyncToProjSwitchOnSubject
         return vm
+    }
+    
+    func closeSyncToProj() {
+        (syncToProjViewModel as! KNOTPlanSyncToProjViewModel).closeSyncToProj()
     }
     
     override func update() -> Task<Void> {
@@ -211,6 +207,15 @@ private class KNOTPlanRepeatViewModel: KNOTPickerViewModel {
         }
     }
     
+    func closeRepeat() {
+        model.repeat = nil
+        isRepeatSwitchOnSubject?.publish(false)
+    }
+    
+    func cancelButtonDidClicked() {
+        isRepeatSwitchOnSubject?.publish(false)
+    }
+    
     func confirmButtonDidClicked() {
         guard let type = KNOTPlanEntity.Repeat.Type_(rawValue: selectedTypeIndex) else {
             return
@@ -283,6 +288,15 @@ private class KNOTPlanReminderViewModel: KNOTPickerViewModel {
         }
     }
     
+    func closeReminder() {
+        model.remindTime = nil
+        isReminderSwitchOnSubject?.publish(false)
+    }
+    
+    func cancelButtonDidClicked() {
+        isReminderSwitchOnSubject?.publish(false)
+    }
+    
     func confirmButtonDidClicked() {
         let sampleHour = selectedHourIndex + 1
         let hour = selectedTimePeriodIndex == 0 ? sampleHour : sampleHour + 12
@@ -333,6 +347,10 @@ private class KNOTPlanSyncToProjViewModel: KNOTPickerViewModel {
             // handle error
             assert(false, e.localizedDescription)
         }
+    }
+    
+    func cancelButtonDidClicked() {
+        isSyncToProjSwitchOnSubject.publish(false)
     }
     
     func confirmButtonDidClicked() {

@@ -541,15 +541,6 @@ private class KNOTPlanMoreModelImpl: KNOTPlanDetailModelImpl,
     func closeSyncPlanToProj() -> Task<Void> {
         knotModel.closeSyncPlanToProj(plan)
     }
-    
-    func syncToDate(_ date: Date) -> Task<Void> {
-        //todo
-//        if !plan.isOnlyInProject {
-//            return Task(error: "It has been added to the plan.")
-//        }
-        plan.remindDate = date
-        return knotModel.updatePlan(plan)
-    }
 }
 
 private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMoreModel {
@@ -594,7 +585,7 @@ private class KNOTProjectDetailModelImpl: KNOTProjectDetailModel, KNOTProjectMor
     }
 }
 
-private extension KNOTPlanEntity {
+extension KNOTPlanEntity {
     var isOnlyInProject: Bool {
         return remindDate == nil
     }

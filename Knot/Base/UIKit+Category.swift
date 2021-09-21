@@ -433,6 +433,11 @@ class KNOTPickerViewController: KNOTDialogViewController, UIPickerViewDelegate, 
         return 48
     }
     
+    override func cancelButtonClicked(_ sender: UIButton) {
+        super.cancelButtonClicked(sender)
+        viewModel.cancelButtonDidClicked()
+    }
+    
     override func confirmButtonClicked(_ sender: UIButton) {
         super.confirmButtonClicked(sender)
         viewModel.confirmButtonDidClicked()
@@ -446,6 +451,7 @@ protocol KNOTPickerViewModel {
     func title(forRow row: Int, forComponent component: Int) -> String?
     func width(forComponent component: Int) -> CGFloat
     func didSelect(row: Int, inComponent component: Int)
+    func cancelButtonDidClicked()
     func confirmButtonDidClicked()
 }
 

@@ -30,8 +30,23 @@ class KNOTProjectPlanViewController: KNOTDragAddViewController {
 class KNOTProjectPlanMoreViewController: KNOTPlanMoreViewController {
     private let syncToPlanSegudId = "syncToPlan"
     
+    private var isSyncToPlanSwitchOnSubscription: Subscription<Bool>?
+    
+    @IBOutlet weak var syncToPlanSwitch: UISwitch?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        isSyncToPlanSwitchOnSubscription = (viewModel as! KNOTProjectPlanMoreViewModel).isSyncToPlanSwitchOnSubject.listen({ [weak self] new, old in
+            self?.syncToPlanSwitch?.isOn = new ?? false
+        })
+    }
+    
     @IBAction func syncToPlanSwitchChanged(_ sender: UISwitch) {
-        sender.isOn = false
+        if !sender.isOn {
+            (viewModel as! KNOTProjectPlanMoreViewModel).closeSyncToPlan()
+            return
+        }
+        
         performSegue(withIdentifier: syncToPlanSegudId, sender: nil)
     }
     
@@ -59,6 +74,11 @@ class KNOTProjectPlanPickerViewController: KNOTDialogViewController {
     
     @IBAction func datePickerChanged(_ sender: UIDatePicker) {
         viewModel.selectedDate = sender.date
+    }
+    
+    override func cancelButtonClicked(_ sender: UIButton) {
+        super.cancelButtonClicked(sender)
+        viewModel.cancelButtonDidClicked()
     }
     
     override func confirmButtonClicked(_ sender: UIButton) {

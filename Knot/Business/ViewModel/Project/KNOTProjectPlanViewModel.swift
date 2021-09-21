@@ -18,14 +18,28 @@ class KNOTProjectPlanViewModel: KNOTPlanViewModel {
 }
 
 class KNOTProjectPlanMoreViewModel: KNOTPlanMoreViewModel {
+    let isSyncToPlanSwitchOnSubject: Subject<Bool>
+    
+    override init(model: KNOTEditModel) {
+        isSyncToPlanSwitchOnSubject = Subject(value: false)
+        super.init(model: model)
+    }
+    
     var syncToPlanViewModel: KNOTProjectSyncToPlanViewModel {
         let model = (model as! KNOTProjectPlanMoreModel).syncToPlanModel
-        return KNOTProjectSyncToPlanViewModel(model: model)
+        let vm = KNOTProjectSyncToPlanViewModel(model: model)
+        vm.isSyncToPlanSwitchOnSubject = isSyncToPlanSwitchOnSubject
+        return vm
+    }
+    
+    func closeSyncToPlan() {
+        syncToPlanViewModel.closeSyncToPlan()
     }
 }
 
 class KNOTProjectSyncToPlanViewModel {
     private let model: KNOTProjectSyncToPlanModel
+    fileprivate var isSyncToPlanSwitchOnSubject: Subject<Bool>?
     var selectedDate = Date()
     
     init(model: KNOTProjectSyncToPlanModel) {
@@ -34,9 +48,16 @@ class KNOTProjectSyncToPlanViewModel {
     }
     
     func confirmButtonDidClicked() {
-        model.syncToDate(selectedDate).continueOnErrorWith { e in
-            // handle error
-            assert(false, e.localizedDescription)
-        }
+        model.plan.remindDate = selectedDate
+        isSyncToPlanSwitchOnSubject?.publish(true)
+    }
+    
+    func cancelButtonDidClicked() {
+        isSyncToPlanSwitchOnSubject?.publish(false)
+    }
+    
+    func closeSyncToPlan() {
+        model.plan.remindDate = nil
+        isSyncToPlanSwitchOnSubject?.publish(false)
     }
 }

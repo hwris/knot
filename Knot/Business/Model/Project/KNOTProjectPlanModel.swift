@@ -14,5 +14,4 @@ protocol KNOTProjectPlanMoreModel: KNOTPlanMoreModel {
 
 protocol KNOTProjectSyncToPlanModel {
     var plan: KNOTPlanEntity { get }
-    func syncToDate(_ date: Date) -> Task<Void>
 }
