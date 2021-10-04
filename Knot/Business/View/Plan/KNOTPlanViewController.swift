@@ -127,10 +127,11 @@ class KNOTPlanItemCell: UITableViewCell {
             return
         }
         
-        let attText = NSMutableAttributedString(string: viewModel.content)
+        let content = viewModel.items.isEmpty ? viewModel.content : viewModel.content + "\n"
+        let attText = NSMutableAttributedString(string: content)
         attText.addAttributes([.font : UIFont.systemFont(ofSize: 18, weight: .medium),
                                .foregroundColor : UIColor(UInt32(0xFFFFFF), 0.87, UInt32(0x070D20), 1.0)],
-                              range: NSRange(location: 0, length: viewModel.content.count))
+                              range: NSRange(location: 0, length: content.count))
         for item in viewModel.items {
             let isDoneImage = NSTextAttachment()
             isDoneImage.image = UIImage(named: item.isDoneButtonSelected ? "ic_select_on_blue" : "ic_select_off_blue")
