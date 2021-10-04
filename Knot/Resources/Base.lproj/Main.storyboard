@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7dj-Mo-47S">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7dj-Mo-47S">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -233,7 +233,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="proj" id="fgt-lJ-VnP" customClass="KNOTSearchProjCell" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fgt-lJ-VnP" id="CrT-43-m0l">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -286,7 +286,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="plan" id="Tak-jI-ts3" customClass="KNOTSearchPlanCell" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="68.5" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="88.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Tak-jI-ts3" id="pVr-4H-IaB">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -457,7 +457,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="j6I-SD-986" customClass="KNOTPlanItemCell" customModule="Knot" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="24.5" width="414" height="100"/>
+                                                <rect key="frame" x="0.0" y="44.5" width="414" height="100"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="j6I-SD-986" id="xd4-35-ZL7">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -563,7 +563,7 @@
                                                 </connections>
                                             </tableViewCell>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="empty" id="TOg-03-WhP">
-                                                <rect key="frame" x="0.0" y="124.5" width="414" height="100"/>
+                                                <rect key="frame" x="0.0" y="144.5" width="414" height="100"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TOg-03-WhP" id="q3b-bL-JHw">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -647,13 +647,14 @@
                     <connections>
                         <outlet property="calendarView" destination="jy4-I5-J85" id="k1C-72-AdS"/>
                         <outlet property="calendarViewTop" destination="jTw-vg-KRR" id="Oit-lV-9tF"/>
+                        <outlet property="dateLabel" destination="7FY-de-HMo" id="CDT-4o-6ED"/>
                         <outlet property="tableView" destination="4Sp-JP-hyA" id="0ZC-SY-yC2"/>
                         <segue destination="owD-Bc-jJt" kind="presentation" identifier="detail" id="MdA-yL-8Mx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zcE-ws-GHb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2114" y="-554"/>
+            <point key="canvasLocation" x="1951" y="-508"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="hDu-eY-4qe">
@@ -698,7 +699,7 @@
                                 <color key="tintColor" systemColor="systemBlueColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="5Kx-LD-Gjx" customClass="KNOTProjectCell" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="99"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="99"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Kx-LD-Gjx" id="7iZ-Hk-G2G">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="99"/>
@@ -805,7 +806,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="empty" id="KFN-nE-sA7">
-                                        <rect key="frame" x="0.0" y="123.5" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="143.5" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KFN-nE-sA7" id="Nhh-k8-38z">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -890,11 +891,11 @@
             <objects>
                 <viewController modalPresentationStyle="overFullScreen" id="owD-Bc-jJt" customClass="KNOTPlanDetailViewController" customModule="Knot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fRa-dL-zMu">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="802"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DbJ-Mx-Vme" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="512" width="414" height="384"/>
+                                <rect key="frame" x="0.0" y="452" width="414" height="350"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Tvf-Gr-zOb">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
@@ -904,7 +905,7 @@
                                         </constraints>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="titleCell" id="Ys9-1j-ysg" customClass="KNOTPlanDetailListTitleCell" customModule="Knot" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="24.5" width="414" height="54.5"/>
+                                                <rect key="frame" x="0.0" y="44.5" width="414" height="54.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ys9-1j-ysg" id="6ca-LT-Ks6">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="54.5"/>
@@ -940,7 +941,7 @@
                                                 </connections>
                                             </tableViewCell>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="9YB-Qj-HA3" customClass="KNOTPlanDetailListCell" customModule="Knot" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="79" width="414" height="49.5"/>
+                                                <rect key="frame" x="0.0" y="99" width="414" height="49.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9YB-Qj-HA3" id="j2U-Pb-0xs">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="49.5"/>
@@ -998,7 +999,7 @@
                                         </connections>
                                     </tableView>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6D7-Ik-n0F">
-                                        <rect key="frame" x="0.0" y="300" width="414" height="84"/>
+                                        <rect key="frame" x="0.0" y="300" width="414" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1023,7 +1024,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fBQ-jn-ZvH" customClass="KNOTRoundCornersView" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="300" width="414" height="84"/>
+                                        <rect key="frame" x="0.0" y="300" width="414" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Naf-mk-CLR">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -1887,7 +1888,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="ZEs-PI-dyc" customClass="KNOTPlanItemCell" customModule="Knot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZEs-PI-dyc" id="uok-wb-B12">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -1993,7 +1994,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="empty" id="aQu-45-kvi">
-                                        <rect key="frame" x="0.0" y="124.5" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="144.5" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aQu-45-kvi" id="7Vq-6l-IZx">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -2606,7 +2607,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="SdL-zQ-1ww"/>
-        <segue reference="9k0-B7-1DX"/>
+        <segue reference="MdA-yL-8Mx"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="ic_add" width="21" height="21"/>

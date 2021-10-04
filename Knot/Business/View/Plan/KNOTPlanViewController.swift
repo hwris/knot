@@ -272,13 +272,18 @@ class KNOTPlanItemCell: UITableViewCell {
 class KNOTHomePlanViewController: KNOTPlanViewController {
     @IBOutlet weak var calendarView: KNOTCalendarView!
     @IBOutlet weak var calendarViewTop: NSLayoutConstraint!
+    @IBOutlet weak var dateLabel: UILabel!
     
     @IBAction func calendarViewDidClicked(_ sender: KNOTCalendarView) {
-        guard let date = sender.calendarView.presentedDate.convertedDate() else {
+        guard let cvDate = sender.calendarView.presentedDate, let date = cvDate.convertedDate() else {
             return
         }
         
         loadItems(at: date)
+        
+        let isToday = date.knotFormatToDay == Date().knotFormatToDay
+        dateLabel.text = isToday ? NSLocalizedString("Today", comment: "Today") :
+        "\(cvDate.year).\(cvDate.month).\(cvDate.day)"
     }
     
     //MARK: - KNOTSwipeTableViewDelegate
